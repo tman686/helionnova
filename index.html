@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helion Nova Energy Inc. — Nuclear Fusion Power | Lakeland, FL</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #050205;
+    --dark: #0e0509;
+    --deep: #180a0e;
+    --plasma: #ff3a1a;
+    --plasma2: #ff6b35;
+    --plasma3: #ffaa44;
+    --plasma4: #ffe088;
+    --white: #fff5f0;
+    --gray: #aa8888;
+    --dim: #664444;
+    --teal: #00e5cc;
+    --teal2: #00b8a4;
+    --glow: rgba(255,58,26,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:'Rajdhani',sans-serif; overflow-x:hidden; cursor:none; }
+  .cursor { position:fixed; width:6px; height:6px; background:var(--plasma); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+  .cursor-ring { position:fixed; width:28px; height:28px; border:1px solid rgba(255,58,26,0.6); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all 0.12s ease; }
+  #plasma-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.25; }
+  nav { position:fixed; top:0; width:100%; z-index:100; padding:18px 60px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(to bottom,rgba(5,2,5,0.98),transparent); }
+  .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:4px; color:var(--plasma); text-decoration:none; }
+  .nav-logo span { color:var(--teal); }
+  .nav-links { display:flex; gap:30px; list-style:none; }
+  .nav-links a { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:2px; color:var(--gray); text-decoration:none; text-transform:uppercase; transition:color 0.3s; }
+  .nav-links a:hover { color:var(--plasma); }
+  .nav-cta { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:2px; text-transform:uppercase; padding:9px 22px; border:1px solid var(--plasma); color:var(--plasma); text-decoration:none; transition:all 0.3s; }
+  .nav-cta:hover { background:var(--plasma); color:var(--black); }
+  .hero { position:relative; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:0 10vw; z-index:1; overflow:hidden; }
+  .plasma-sphere { position:absolute; right:5vw; top:50%; transform:translateY(-50%); width:45vw; height:45vw; max-width:680px; max-height:680px; }
+  .plasma-sphere-inner { width:100%; height:100%; border-radius:50%; background:radial-gradient(circle at 40% 40%, rgba(255,180,80,0.9) 0%, rgba(255,80,20,0.7) 25%, rgba(180,20,5,0.5) 50%, rgba(60,5,10,0.3) 75%, transparent 100%); animation:pulseSphere 4s ease-in-out infinite; box-shadow: 0 0 80px rgba(255,80,20,0.4), 0 0 200px rgba(255,58,26,0.2), 0 0 400px rgba(255,58,26,0.08); }
+  @keyframes pulseSphere { 0%,100%{transform:scale(1); opacity:0.8} 50%{transform:scale(1.06); opacity:1} }
+  .plasma-ring { position:absolute; top:50%; left:50%; border-radius:50%; border:1px solid rgba(255,100,30,0.3); animation:expandRing 3s ease-out infinite; }
+  @keyframes expandRing { 0%{width:40%; height:40%; transform:translate(-50%,-50%); opacity:0.8} 100%{width:140%; height:140%; transform:translate(-50%,-50%); opacity:0} }
+  .plasma-ring:nth-child(2) { animation-delay:1s; }
+  .plasma-ring:nth-child(3) { animation-delay:2s; }
+  .hero-eyebrow { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:4px; text-transform:uppercase; color:var(--teal); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+  .hero-eyebrow::before { content:''; width:32px; height:1px; background:var(--teal); }
+  .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,7vw,8rem); line-height:0.95; letter-spacing:3px; margin-bottom:6px; }
+  .hero-title .l1 { color:var(--white); }
+  .hero-title .l2 { color:var(--plasma); text-shadow:0 0 40px rgba(255,58,26,0.6); }
+  .hero-title .l3 { color:transparent; -webkit-text-stroke:1px var(--plasma2); }
+  .hero-sub { font-family:'Rajdhani',sans-serif; font-size:1.05rem; color:var(--gray); max-width:440px; line-height:1.8; margin:24px 0 18px; font-weight:400; }
+  .hero-loc { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:3px; color:var(--dim); text-transform:uppercase; margin-bottom:34px; }
+  .hero-loc span { color:var(--plasma3); }
+  .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+  .btn-fire { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; padding:15px 32px; background:linear-gradient(135deg,var(--plasma),var(--plasma2)); color:var(--black); text-decoration:none; font-weight:700; transition:all 0.3s; }
+  .btn-fire:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(255,58,26,0.4); }
+  .btn-ghost { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; padding:15px 32px; border:1px solid var(--dim); color:var(--gray); text-decoration:none; transition:all 0.3s; }
+  .btn-ghost:hover { border-color:var(--teal); color:var(--teal); }
+  .energy-bar { position:relative; z-index:1; background:rgba(14,5,9,0.9); border-top:1px solid rgba(255,58,26,0.2); border-bottom:1px solid rgba(255,58,26,0.2); padding:10px 0; overflow:hidden; }
+  .energy-inner { display:flex; gap:64px; animation:eScroll 30s linear infinite; white-space:nowrap; }
+  @keyframes eScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .e-item { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); display:flex; align-items:center; gap:10px; }
+  .e-item .sym { color:var(--plasma); font-weight:700; }
+  .e-item .hot { color:#ff8844; }
+  .e-item .lbl { color:var(--dim); font-size:0.5rem; }
+  section { position:relative; z-index:1; padding:108px 10vw; }
+  .s-tag { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:4px; text-transform:uppercase; color:var(--teal); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .s-tag::before { content:attr(data-n); color:var(--dim); }
+  .s-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.4rem,4.5vw,4rem); letter-spacing:2px; color:var(--white); margin-bottom:52px; line-height:1.1; }
+  .s-title em { color:var(--plasma); font-style:normal; }
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,58,26,0.1); margin-bottom:78px; }
+  .stat { background:var(--dark); padding:40px 28px; transition:background 0.3s; position:relative; overflow:hidden; }
+  .stat::after { content:''; position:absolute; bottom:0; left:0; width:0; height:2px; background:var(--plasma); transition:width 0.4s; }
+  .stat:hover::after { width:100%; }
+  .stat:hover { background:var(--deep); }
+  .stat-n { font-family:'Bebas Neue',sans-serif; font-size:3rem; letter-spacing:2px; color:var(--plasma); line-height:1; margin-bottom:6px; }
+  .stat-l { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); }
+  .stat-d { font-size:0.8rem; color:var(--dim); margin-top:7px; line-height:1.4; }
+  .timeline { position:relative; padding-left:52px; }
+  .timeline::before { content:''; position:absolute; left:12px; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--plasma),var(--teal),transparent); }
+  .t-item { position:relative; margin-bottom:52px; opacity:0; transform:translateX(26px); transition:all 0.6s ease; }
+  .t-item.vis { opacity:1; transform:translateX(0); }
+  .t-dot { position:absolute; left:-46px; top:4px; width:13px; height:13px; border-radius:50%; background:var(--black); border:2px solid var(--plasma); display:flex; align-items:center; justify-content:center; }
+  .t-dot::after { content:''; width:5px; height:5px; border-radius:50%; background:var(--plasma); }
+  .t-phase { font-family:'JetBrains Mono',monospace; font-size:0.5rem; letter-spacing:3px; text-transform:uppercase; color:var(--teal); margin-bottom:7px; }
+  .t-head { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:1px; color:var(--white); margin-bottom:10px; }
+  .t-body { font-size:0.9rem; color:var(--gray); line-height:1.7; max-width:580px; }
+  .reactor-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,58,26,0.06); }
+  .r-card { background:var(--dark); padding:42px 34px; transition:all 0.4s; border-top:2px solid transparent; }
+  .r-card:hover { background:var(--deep); border-top-color:var(--plasma); transform:translateY(-4px); }
+  .r-icon { font-size:2rem; margin-bottom:16px; display:block; }
+  .r-name { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:2px; color:var(--plasma); margin-bottom:12px; }
+  .r-desc { font-size:0.85rem; color:var(--gray); line-height:1.7; }
+  .r-spec { margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,58,26,0.15); font-family:'JetBrains Mono',monospace; font-size:0.53rem; color:var(--teal); letter-spacing:1px; }
+  .reactor-panel { background:var(--dark); border:1px solid rgba(255,58,26,0.16); padding:52px; }
+  .rp-grid { display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:start; }
+  .rp-info h3 { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:1px; color:var(--plasma); margin-bottom:16px; }
+  .rp-info p { color:var(--gray); line-height:1.8; font-size:0.9rem; margin-bottom:26px; }
+  .prog-wrap { margin-bottom:15px; }
+  .prog-lbl { font-family:'JetBrains Mono',monospace; font-size:0.52rem; letter-spacing:2px; color:var(--dim); text-transform:uppercase; display:flex; justify-content:space-between; margin-bottom:5px; }
+  .prog-bar { height:3px; background:rgba(255,255,255,0.07); }
+  .prog-fill { height:100%; animation:pfill 2s ease-out forwards; }
+  @keyframes pfill{from{width:0}}
+  .data-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,58,26,0.1); }
+  .d-lbl { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:2px; text-transform:uppercase; color:var(--dim); }
+  .d-val { font-family:'JetBrains Mono',monospace; font-size:0.74rem; color:var(--teal); }
+  .team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,58,26,0.06); }
+  .tm-card { background:var(--dark); padding:42px 30px; transition:background 0.3s; }
+  .tm-card:hover { background:var(--deep); }
+  .tm-av { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,rgba(255,58,26,0.2),rgba(255,100,40,0.1)); border:2px solid var(--plasma); display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin-bottom:16px; }
+  .tm-name { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:1px; color:var(--white); margin-bottom:4px; }
+  .tm-role { font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--plasma2); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .tm-bio { font-size:0.82rem; color:var(--gray); line-height:1.6; }
+  .invest-panel { background:linear-gradient(135deg,var(--dark),var(--deep)); border:1px solid rgba(255,58,26,0.14); padding:52px; }
+  .inv-grid { display:grid; grid-template-columns:1fr 1fr; gap:68px; align-items:start; }
+  .raise-amt { font-family:'Bebas Neue',sans-serif; font-size:4.5rem; letter-spacing:3px; color:var(--plasma); line-height:1; text-shadow:0 0 40px rgba(255,58,26,0.3); }
+  .raise-lbl { font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:3px; color:var(--dim); text-transform:uppercase; margin-top:6px; margin-bottom:22px; }
+  .raise-desc { color:var(--gray); line-height:1.8; font-size:0.9rem; }
+  .inv-addr { font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--dim); letter-spacing:1px; line-height:2; margin-top:18px; }
+  .f-input { background:rgba(255,255,255,0.03); border:1px solid rgba(255,58,26,0.2); padding:12px 16px; color:var(--white); font-family:'JetBrains Mono',monospace; font-size:0.7rem; transition:border-color 0.3s; outline:none; width:100%; display:block; margin-bottom:11px; }
+  .f-input:focus { border-color:var(--plasma); }
+  .f-input::placeholder { color:var(--dim); }
+  .f-btn { font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; padding:14px 28px; background:linear-gradient(135deg,var(--plasma),var(--plasma2)); color:var(--black); border:none; cursor:pointer; font-weight:700; transition:all 0.3s; width:100%; }
+  .f-btn:hover { box-shadow:0 6px 24px rgba(255,58,26,0.4); }
+  footer { background:var(--black); border-top:1px solid rgba(255,58,26,0.12); padding:68px 10vw 34px; position:relative; z-index:1; }
+  .ft-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:52px; margin-bottom:52px; }
+  .ft-logo { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:4px; color:var(--plasma); margin-bottom:12px; }
+  .ft-logo span { color:var(--teal); }
+  .ft-tag { color:var(--dim); font-size:0.85rem; line-height:1.7; max-width:250px; }
+  .ft-addr { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--dim); letter-spacing:1px; line-height:1.9; }
+  .ft-col h4 { font-family:'JetBrains Mono',monospace; font-size:0.55rem; letter-spacing:3px; text-transform:uppercase; color:var(--plasma); margin-bottom:16px; }
+  .ft-col ul { list-style:none; }
+  .ft-col li { margin-bottom:8px; }
+  .ft-col a { color:var(--dim); text-decoration:none; font-size:0.85rem; transition:color 0.3s; }
+  .ft-col a:hover { color:var(--plasma2); }
+  .ft-bot { border-top:1px solid rgba(255,58,26,0.1); padding-top:24px; display:flex; justify-content:space-between; }
+  .ft-copy { font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--dim); letter-spacing:1px; }
+  .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,58,26,0.2),transparent); position:relative; z-index:1; }
+  .reveal { opacity:0; transform:translateY(34px); transition:all 0.8s ease; }
+  .reveal.vis { opacity:1; transform:translateY(0); }
+  .temp-display { font-family:'Bebas Neue',sans-serif; font-size:3rem; color:var(--plasma); letter-spacing:2px; margin:20px 0 8px; text-shadow:0 0 20px rgba(255,58,26,0.5); }
+  .temp-lbl { font-family:'JetBrains Mono',monospace; font-size:0.52rem; letter-spacing:2px; color:var(--dim); text-transform:uppercase; }
+  @media(max-width:768px){
+    nav{padding:14px 22px;} .nav-links{display:none;}
+    section{padding:76px 5vw;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .reactor-grid,.team-grid,.rp-grid,.inv-grid,.ft-grid{grid-template-columns:1fr;}
+    .plasma-sphere{opacity:0.2;}
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+<canvas id="plasma-canvas"></canvas>
+
+<nav>
+  <a class="nav-logo" href="#">HELION<span>NOVA</span></a>
+  <ul class="nav-links">
+    <li><a href="#science">Science</a></li>
+    <li><a href="#tech">Reactor</a></li>
+    <li><a href="#status">Status</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#invest">Invest</a></li>
+  </ul>
+  <a href="#invest" class="nav-cta">Investor Portal</a>
+</nav>
+
+<section class="hero" id="home">
+  <div class="plasma-sphere">
+    <div class="plasma-sphere-inner"></div>
+    <div class="plasma-ring"></div>
+    <div class="plasma-ring"></div>
+    <div class="plasma-ring"></div>
+  </div>
+  <div class="hero-eyebrow">Est. 2025 — Lakeland, Florida</div>
+  <h1 class="hero-title">
+    <div class="l1">INFINITE</div>
+    <div class="l2">CLEAN</div>
+    <div class="l3">ENERGY</div>
+  </h1>
+  <p class="hero-sub">Helion Nova Energy is building the world's first commercially viable fusion reactor — delivering unlimited clean electricity from Lakeland, Florida to the global grid.</p>
+  <div class="hero-loc">HQ: <span>890 Research Parkway, Lakeland, FL 33803</span></div>
+  <div class="hero-btns">
+    <a href="#science" class="btn-fire">Explore the Science</a>
+    <a href="#invest" class="btn-ghost">Investor Relations →</a>
+  </div>
+</section>
+
+<div class="energy-bar">
+  <div class="energy-inner">
+    <div class="e-item"><span class="sym">NOVA-0</span> Plasma Device <span class="lbl">BUILD PHASE</span></div>
+    <div class="e-item"><span class="sym">TEMP</span> Target Plasma <span class="hot">100M °C</span></div>
+    <div class="e-item"><span class="sym">D-T</span> Fusion Fuel <span class="lbl">DEUTERIUM + TRITIUM</span></div>
+    <div class="e-item"><span class="sym">Q&gt;1</span> Net Energy Gain <span class="lbl">TARGET: 2027</span></div>
+    <div class="e-item"><span class="sym">CO₂</span> Emissions <span style="color:#4ade80">0.00 g/kWh</span></div>
+    <div class="e-item"><span class="sym">SEED</span> Funding Round <span class="lbl">OPEN</span> <span class="hot">$10M TARGET</span></div>
+    <div class="e-item"><span class="sym">NOVA-0</span> Plasma Device <span class="lbl">BUILD PHASE</span></div>
+    <div class="e-item"><span class="sym">TEMP</span> Target Plasma <span class="hot">100M °C</span></div>
+    <div class="e-item"><span class="sym">D-T</span> Fusion Fuel <span class="lbl">DEUTERIUM + TRITIUM</span></div>
+    <div class="e-item"><span class="sym">Q&gt;1</span> Net Energy Gain <span class="lbl">TARGET: 2027</span></div>
+    <div class="e-item"><span class="sym">CO₂</span> Emissions <span style="color:#4ade80">0.00 g/kWh</span></div>
+    <div class="e-item"><span class="sym">SEED</span> Funding Round <span class="lbl">OPEN</span> <span class="hot">$10M TARGET</span></div>
+  </div>
+</div>
+
+<section id="science">
+  <div class="s-tag" data-n="01">The Science</div>
+  <h2 class="s-title reveal">Fusion Is Not <em>Science Fiction.</em><br>It's Science <em>Fact.</em></h2>
+  <div class="stats-grid reveal">
+    <div class="stat"><div class="stat-n">100M°C</div><div class="stat-l">Target Plasma Temp</div><div class="stat-d">7× hotter than the core of the Sun — the threshold for commercial D-T fusion</div></div>
+    <div class="stat"><div class="stat-n">Q &gt; 1</div><div class="stat-l">Net Energy Gain</div><div class="stat-d">More energy out than in — the critical physics milestone for commercial viability</div></div>
+    <div class="stat"><div class="stat-n">0 g</div><div class="stat-l">CO₂ Per kWh</div><div class="stat-d">Fusion produces zero carbon emissions and no long-lived radioactive waste</div></div>
+    <div class="stat"><div class="stat-n">Lakeland</div><div class="stat-l">Research HQ</div><div class="stat-d">890 Research Parkway, Lakeland FL — Central Florida's fusion energy hub</div></div>
+  </div>
+  <div class="timeline">
+    <div class="t-item"><div class="t-dot"></div><div class="t-phase">Phase 1 · 2025</div><div class="t-head">Legal Foundation & NRC Engagement</div><div class="t-body">Delaware C-Corp incorporation, USPTO trademark filing, and proactive engagement with the NRC — fusion reactors have no nuclear fuel licensing for D-T fuel. Operations launched from 890 Research Parkway, Lakeland, FL.</div></div>
+    <div class="t-item"><div class="t-dot"></div><div class="t-phase">Phase 2 · 2025–2026</div><div class="t-head">Build NOVA-0 — First Plasma Device</div><div class="t-body">Construction of our compact Field-Reversed Configuration (FRC) plasma device at our Lakeland research campus. Target: plasma temperature exceeding 100 million degrees Celsius in controlled laboratory shots.</div></div>
+    <div class="t-item"><div class="t-dot"></div><div class="t-phase">Phase 3 · 2026–2027</div><div class="t-head">NOVA-1 — Net Energy Gain</div><div class="t-body">Scale-up to NOVA-1 targeting Q > 1 — the historic milestone where fusion energy output exceeds energy input. First direct-conversion electricity demonstration. Series A funding close: $100M target.</div></div>
+    <div class="t-item"><div class="t-dot"></div><div class="t-phase">Phase 4 · 2028–2030</div><div class="t-head">NOVA-2 Pilot Power Plant</div><div class="t-body">Construction of commercial pilot facility in Polk County, FL. Target: 50 MW net electrical output, enough to power 40,000 Florida homes. First grid connection and utility power purchase agreement executed.</div></div>
+    <div class="t-item"><div class="t-dot"></div><div class="t-phase">Phase 5 · 2031–2035</div><div class="t-head">Global Commercial Deployment</div><div class="t-body">NOVA-3 modular units (200 MW) manufactured and deployed to utilities worldwide. 10 commercial reactors online globally by 2035. Florida's Lakeland campus becomes the beating heart of the fusion energy industry.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="tech">
+  <div class="s-tag" data-n="02">Reactor Technology</div>
+  <h2 class="s-title reveal">Built in <em>Lakeland.</em> Powering the <em>Planet.</em></h2>
+  <div class="reactor-grid reveal">
+    <div class="r-card"><span class="r-icon">⚛️</span><div class="r-name">FRC Plasma Core</div><div class="r-desc">Field-Reversed Configuration plasma geometry — compact, efficient, and scalable. Our proprietary coil design achieves higher plasma pressure than conventional tokamaks at a fraction of the size and cost.</div><div class="r-spec">TEMP: 100M°C · DENSITY: 10²¹ /M³ · CONFINEMENT: FRC</div></div>
+    <div class="r-card"><span class="r-icon">🧲</span><div class="r-name">HTS Magnet Array</div><div class="r-desc">High-temperature superconducting (HTS) magnets generating 20+ Tesla fields. Our Lakeland engineering team developed a novel winding geometry enabling 40% higher field strength at lower operating cost.</div><div class="r-spec">FIELD: 20T · MATERIAL: REBCO · TEMP: 20K</div></div>
+    <div class="r-card"><span class="r-icon">⚡</span><div class="r-name">Direct Energy Conversion</div><div class="r-desc">Proprietary charged-particle energy recovery system that captures fusion product energy directly as electricity — bypassing steam turbines for dramatically higher efficiency than any existing power technology.</div><div class="r-spec">EFFICIENCY: 70%+ · TYPE: DEC · PATENT PENDING</div></div>
+    <div class="r-card"><span class="r-icon">🔋</span><div class="r-name">Tritium Breeding Blanket</div><div class="r-desc">Lithium-6 breeding blanket surrounds the plasma core, generating tritium fuel from the neutron flux — making our reactor fuel self-sustaining from abundant lithium and seawater deuterium.</div><div class="r-spec">FUEL: D-T · BREED RATIO: 1.05 · SOURCE: SEAWATER</div></div>
+    <div class="r-card"><span class="r-icon">🖥️</span><div class="r-name">NOVA Control System</div><div class="r-desc">AI-driven plasma control system executing 10,000 feedback adjustments per second to maintain optimal confinement. Developed at our Lakeland software engineering lab using custom neural architectures.</div><div class="r-spec">LATENCY: 0.1MS · SENSORS: 2,400 · AI: CUSTOM LLM</div></div>
+    <div class="r-card"><span class="r-icon">🏭</span><div class="r-name">Lakeland Test Campus</div><div class="r-desc">50,000 sq ft research and engineering facility at 890 Research Parkway, Lakeland, FL. Houses NOVA-0 prototype, high-bay assembly area, cryogenics lab, and power systems test bay.</div><div class="r-spec">LOCATION: LAKELAND, FL 33803 · AREA: 50,000 SQ FT</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="status" style="background:var(--dark);">
+  <div class="s-tag" data-n="03">Live Reactor Status</div>
+  <h2 class="s-title reveal">NOVA-0 Development Status</h2>
+  <div class="reactor-panel reveal">
+    <div class="rp-grid">
+      <div class="rp-info">
+        <h3>NOVA-0 First Plasma</h3>
+        <p>Our first experimental plasma device is under construction at our Lakeland research campus. NOVA-0 will execute 100+ plasma shots per day targeting the 100 million degree temperature threshold required for D-T fusion ignition.</p>
+        <div class="temp-display">0 °C</div>
+        <div class="temp-lbl" id="tempLabel">Plasma temperature · Standby</div>
+        <br>
+        <div class="prog-wrap"><div class="prog-lbl"><span>Device Construction</span><span>44%</span></div><div class="prog-bar"><div class="prog-fill" style="width:44%; background:linear-gradient(90deg,var(--plasma),var(--plasma2))"></div></div></div>
+        <div class="prog-wrap"><div class="prog-lbl"><span>Magnet Assembly</span><span>71%</span></div><div class="prog-bar"><div class="prog-fill" style="width:71%; background:linear-gradient(90deg,var(--teal),#00ffcc)"></div></div></div>
+        <div class="prog-wrap"><div class="prog-lbl"><span>Funding Milestone</span><span>58%</span></div><div class="prog-bar"><div class="prog-fill" style="width:58%; background:linear-gradient(90deg,#ff88cc,var(--plasma))"></div></div></div>
+      </div>
+      <div>
+        <div class="data-row"><span class="d-lbl">Device Status</span><span class="d-val">Construction Phase</span></div>
+        <div class="data-row"><span class="d-lbl">Plasma Type</span><span class="d-val">Field-Reversed Config</span></div>
+        <div class="data-row"><span class="d-lbl">Fuel</span><span class="d-val">Deuterium + Tritium</span></div>
+        <div class="data-row"><span class="d-lbl">Target Temperature</span><span class="d-val">100,000,000 °C</span></div>
+        <div class="data-row"><span class="d-lbl">Confinement Goal</span><span class="d-val">50 ms</span></div>
+        <div class="data-row"><span class="d-lbl">First Plasma Target</span><span class="d-val">Q2 2026</span></div>
+        <div class="data-row"><span class="d-lbl">Net Energy Target</span><span class="d-val">Q4 2027 (NOVA-1)</span></div>
+        <div class="data-row"><span class="d-lbl">Grid Target</span><span class="d-val">2030 (NOVA-2)</span></div>
+        <div class="data-row"><span class="d-lbl">Campus</span><span class="d-val" style="color:var(--plasma2)">Lakeland, FL 33803</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="team">
+  <div class="s-tag" data-n="04">Leadership</div>
+  <h2 class="s-title reveal">The <em>Scientists</em> Behind the Spark</h2>
+  <div class="team-grid reveal">
+    <div class="tm-card"><div class="tm-av">👨‍🔬</div><div class="tm-name">Dr. Elena Vasquez</div><div class="tm-role">CEO & Co-Founder</div><div class="tm-bio">Former plasma physicist at Princeton PPPL and NIF. 20 years of fusion research culminating in co-founding Helion Nova in her adopted home of Lakeland, FL. PhD Physics, Caltech.</div></div>
+    <div class="tm-card"><div class="tm-av">👨‍💻</div><div class="tm-name">Dr. James Okafor</div><div class="tm-role">CTO & Co-Founder</div><div class="tm-bio">Superconducting magnet pioneer with 15 years at MIT PSFC developing REBCO HTS coil technology. Led magnet design for SPARC high-field tokamak. Relocated to Lakeland to build NOVA.</div></div>
+    <div class="tm-card"><div class="tm-av">👩‍💼</div><div class="tm-name">Sarah Hutchins</div><div class="tm-role">CFO</div><div class="tm-bio">Clean energy finance veteran, 12 years structuring $6B+ in utility-scale clean energy transactions at Morgan Stanley. Florida State University alumna. Proud Lakeland, FL resident.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="invest" style="background:var(--dark);">
+  <div class="s-tag" data-n="05">Investor Relations</div>
+  <h2 class="s-title reveal">Join the <em>Seed Round</em></h2>
+  <div class="invest-panel reveal">
+    <div class="inv-grid">
+      <div>
+        <div class="raise-amt">$10M</div>
+        <div class="raise-lbl">Seed Round · Open 2025</div>
+        <p class="raise-desc">Helion Nova is raising its seed round to fund NOVA-0 construction, hire 25 world-class scientists and engineers, and secure our Lakeland research campus through first plasma. Minimum investment: $500,000. Accredited investors only.</p>
+        <div class="inv-addr">890 RESEARCH PARKWAY, SUITE 100<br>LAKELAND, FLORIDA 33803<br>(863) 555-0271<br>INVEST@HELIONNOVA.COM<br>WWW.HELIONNOVA.COM</div>
+      </div>
+      <div>
+        <input class="f-input" type="text" placeholder="Full Name">
+        <input class="f-input" type="email" placeholder="Email Address">
+        <input class="f-input" type="text" placeholder="Organization / Fund">
+        <input class="f-input" type="text" placeholder="Investment Range (e.g. $1M–$5M)">
+        <textarea class="f-input" rows="3" placeholder="Message / Questions"></textarea>
+        <button class="f-btn">Request Investor Deck →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo">HELION<span>NOVA</span></div>
+      <div class="ft-tag">Making fusion energy commercially viable before 2035. Unlimited clean electricity — built in Lakeland, Florida for the world.</div>
+      <div class="ft-addr">890 RESEARCH PARKWAY, SUITE 100<br>LAKELAND, FLORIDA 33803<br>(863) 555-0271 · CONTACT@HELIONNOVA.COM</div>
+    </div>
+    <div class="ft-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Mission</a></li><li><a href="#">Team</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+    <div class="ft-col"><h4>Technology</h4><ul><li><a href="#">NOVA-0 Device</a></li><li><a href="#">FRC Plasma</a></li><li><a href="#">HTS Magnets</a></li><li><a href="#">Energy Conversion</a></li><li><a href="#">Publications</a></li></ul></div>
+    <div class="ft-col"><h4>Investors</h4><ul><li><a href="#">Investor Portal</a></li><li><a href="#">Financials</a></li><li><a href="#">Term Sheet</a></li><li><a href="#">Board Updates</a></li><li><a href="#">Legal Docs</a></li></ul></div>
+  </div>
+  <div class="ft-bot">
+    <div class="ft-copy">© 2025 HELION NOVA ENERGY INC. · LAKELAND, FLORIDA · ALL RIGHTS RESERVED</div>
+    <div class="ft-copy">WWW.HELIONNOVA.COM</div>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
+  setTimeout(()=>{curR.style.left=e.clientX+'px'; curR.style.top=e.clientY+'px';},80);
+});
+
+// Plasma canvas bg
+const canvas=document.getElementById('plasma-canvas'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}
+resize(); window.addEventListener('resize',resize);
+let t=0;
+const particles=Array.from({length:60},()=>({
+  x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+  vx:(Math.random()-0.5)*0.4, vy:(Math.random()-0.5)*0.4,
+  r:Math.random()*2+0.5, life:Math.random()*Math.PI*2
+}));
+function drawPlasma(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  t+=0.008;
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.life+=0.02;
+    if(p.x<0||p.x>canvas.width) p.vx*=-1;
+    if(p.y<0||p.y>canvas.height) p.vy*=-1;
+    const op=0.3+0.3*Math.sin(p.life);
+    const r=Math.floor(200+55*Math.sin(p.life));
+    const g=Math.floor(60+40*Math.sin(p.life+1));
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${r},${g},20,${op})`; ctx.fill();
+  });
+  requestAnimationFrame(drawPlasma);
+}
+drawPlasma();
+
+// Scroll reveal
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');}});},{threshold:0.08});
+document.querySelectorAll('.reveal,.t-item').forEach(r=>obs.observe(r));
+
+// Animated temperature counter
+const tempEl=document.querySelector('.temp-display');
+const tempLbl=document.getElementById('tempLabel');
+let animTemp=false;
+const tempObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting&&!animTemp){
+      animTemp=true;
+      let val=0; const target=108000000;
+      const inc=target/120;
+      const iv=setInterval(()=>{
+        val+=inc; if(val>=target){val=target; clearInterval(iv); tempLbl.textContent='Target plasma temperature · NOVA-1 goal';}
+        else{tempLbl.textContent='Plasma temperature · Counting to target...';}
+        tempEl.textContent=Math.floor(val).toLocaleString()+' °C';
+      },16);
+    }
+  });
+},{threshold:0.5});
+tempObs.observe(tempEl);
+</script>
+</body>
+</html>
