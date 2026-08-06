@@ -23,6 +23,14 @@ die() { printf '%s\n' "$*" >&2; exit 1; }
 remote=false
 case "${1:-}" in
   --remote|-r) remote=true; shift ;;
+  --brain|-b)
+    shift
+    command -v python3 >/dev/null || die "python3 not found. In Termux: pkg install python"
+    if [ $# -eq 0 ]; then
+      exec python3 "$here/architecture/command.py" --interactive --brain
+    fi
+    exec python3 "$here/architecture/command.py" --brain "$*"
+    ;;
   '')
     # No message: drop into the prompt. Easier than retyping `hn` each time,
     # which is the whole game on a phone keyboard.
@@ -67,7 +75,18 @@ Locally this never writes, so nothing you type can break the repo. Add
 --remote to run it on GitHub and commit the result; that needs GH_TOKEN,
 and the workflow obeys the repo owner only.
 
+With a local Ollama running, --brain handles anything the patterns miss:
+
+  hn --brain                       prompt, with the model as backup
+  hn --brain which storage bits matter most
+
+The model only rewrites your message into a command from the list above --
+it cannot do anything you could not type yourself, and edits still face the
+same validation. Nothing leaves your device.
+
 Environment:
+  OLLAMA_HOST  default http://localhost:11434
+  OLLAMA_MODEL default llama3.2 -- set it to whatever you have pulled
   GH_TOKEN     required for --remote
   HN_REPO      default tman686/helionnova
   HN_BRANCH    default main

@@ -629,7 +629,40 @@ def load_roundtrip() -> dict:
     return yaml_rt.load(scaffold.SPEC.read_text(encoding="utf-8"))
 
 
-def run(message: str, apply: bool = False) -> tuple[Reply, int]:
+def ask_brain(spec: dict, message: str) -> Reply:
+    """Fall back to a local model when the router recognises nothing.
+
+    The model only ever rewrites the message into a command that already
+    exists — its answer is re-dispatched through the same router, so it cannot
+    reach anything a typed command could not. Treat its output as untrusted.
+    """
+    import brain
+
+    try:
+        command_text = brain.translate(spec, message)
+    except brain.BrainUnavailable as exc:
+        return Reply(f"{exc}", ok=False, _handled=False)
+
+    if not command_text or command_text.upper().startswith("UNKNOWN"):
+        # No command fits. Let it answer in prose instead, from graph facts.
+        try:
+            prose = brain.explain(spec, message, brain.context_for(spec, message))
+        except brain.BrainUnavailable as exc:
+            return Reply(f"{exc}", ok=False, _handled=False)
+        return Reply(prose or f"I have nothing for **{message}**.", ok=bool(prose))
+
+    reply = dispatch(spec, command_text)
+    if not reply._handled:
+        return Reply(
+            f"The model suggested `{command_text}`, which is not a command I know.",
+            ok=False,
+            _handled=False,
+        )
+    return Reply(f"_read as:_ `{command_text}`\n\n{reply.text}", changed=reply.changed,
+                 ok=reply.ok, summary=reply.summary)
+
+
+def run(message: str, apply: bool = False, brain_enabled: bool = False) -> tuple[Reply, int]:
     """Interpret the message; write only when `apply` and the result validates.
 
     ruamel is a *writing* dependency — it exists to keep comments and
@@ -638,6 +671,11 @@ def run(message: str, apply: bool = False) -> tuple[Reply, int]:
     """
     spec = yaml.safe_load(scaffold.SPEC.read_text(encoding="utf-8"))
     reply = dispatch(spec, message)
+
+    # Pattern matching first: it is instant, free, and deterministic. The model
+    # is only worth its latency on messages nothing else could parse.
+    if not reply._handled and brain_enabled:
+        reply = ask_brain(spec, message)
 
     if not reply.changed:
         return reply, (0 if reply.ok else (2 if not reply._handled else 1))
@@ -696,7 +734,7 @@ def emit(reply: Reply, apply: bool, colour: bool) -> None:
     print(for_terminal(text, colour) if sys.stdout.isatty() else text)
 
 
-def interactive(apply: bool) -> int:
+def interactive(apply: bool, brain_enabled: bool = False) -> int:
     """Type messages one after another instead of re-invoking the command."""
     colour = sys.stdout.isatty()
     total = scaffold.count_leaves(yaml.safe_load(scaffold.SPEC.read_text(encoding="utf-8")))
@@ -717,7 +755,7 @@ def interactive(apply: bool) -> int:
         if line.lower() in QUIT:
             return 0
         try:
-            reply, _ = run(line, apply=apply)
+            reply, _ = run(line, apply=apply, brain_enabled=brain_enabled)
             emit(reply, apply, colour)
         except Exception as exc:  # a bad message must not end the session
             print(f"Something went wrong: {exc}")
@@ -732,13 +770,18 @@ def main() -> int:
     parser.add_argument(
         "--apply", action="store_true", help="write spec changes (default is a dry run)"
     )
+    parser.add_argument(
+        "--brain",
+        action="store_true",
+        help="fall back to a local Ollama model for messages the router cannot parse",
+    )
     parser.add_argument("--summary-to", help="append a one-line summary to this file")
     args = parser.parse_args()
 
     if args.interactive or not args.message:
-        return interactive(args.apply)
+        return interactive(args.apply, args.brain)
 
-    reply, code = run(args.message, apply=args.apply)
+    reply, code = run(args.message, apply=args.apply, brain_enabled=args.brain)
     emit(reply, args.apply, sys.stdout.isatty())
 
     if args.summary_to and reply.summary:
