@@ -8,6 +8,7 @@ Nuclear energy — Helion Nova Energy Inc., Lakeland, FL.
 | --- | --- |
 | [`index.html`](./index.html) | The public site — a single self-contained page. |
 | [`architecture/`](./architecture/) | The platform component tree: what the platform is planned to run. |
+| [`TERMUX.md`](./TERMUX.md) | Cloning, editing, and pushing this repo from Android. |
 
 ## Architecture
 
