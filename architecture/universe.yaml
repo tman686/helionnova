@@ -1,0 +1,476 @@
+# Universe — Helion Nova platform architecture
+#
+# Single source of truth for the platform component tree.
+#
+# `architecture/scaffold.py` reads this file and regenerates:
+#   - architecture/universe/**            the physical directory tree, one README per node
+#   - architecture/ARCHITECTURE.md        the rendered tree + component index
+#
+# Edit this file, then run `python3 architecture/scaffold.py`. Do not hand-edit
+# generated output — it is overwritten.
+#
+# `aliases` record earlier names for a component so older diagrams and docs
+# still resolve to the node that superseded them.
+
+name: Universe
+description: >-
+  Top of the platform hierarchy. Everything Helion Nova runs — globally
+  distributed infrastructure and the server tiers inside each region.
+
+children:
+  - name: Global Infrastructure
+    description: >-
+      Cross-region, cross-cloud, cross-tenant control. Decides where capacity
+      lives and where traffic goes; the tiers below execute within that frame.
+    children:
+      - name: Global Control Plane
+        description: Single authoritative control surface for every region, cloud, and tenant in the fleet.
+      - name: Multi-Cloud Manager
+        description: Normalizes provisioning and policy across cloud providers and bare metal.
+      - name: Multi-Region Manager
+        description: Owns region topology, placement rules, and cross-region promotion.
+        aliases: [Multi-Region Deployment]
+      - name: Multi-Tenant Manager
+        description: Tenant isolation boundaries, quotas, and per-tenant configuration.
+      - name: Global DNS
+        description: Authoritative DNS with health-aware records and geographic routing.
+      - name: CDN
+        description: Edge distribution of static and cacheable-dynamic responses, with purge control.
+      - name: Traffic Director
+        description: Policy-driven steering of traffic across regions and service versions.
+        aliases: [Traffic Manager]
+      - name: Global Load Balancer
+        description: Anycast entry point distributing requests to the healthiest nearby region.
+      - name: Disaster Recovery Controller
+        description: Drives failover drills, RPO/RTO tracking, and real region evacuations.
+        aliases: [Disaster Recovery]
+      - name: Edge Fabric
+        description: Network of edge points of presence running latency-sensitive compute near users.
+        aliases: [Edge Deployment]
+      - name: Region Manager
+        description: Lifecycle of an individual region — build out, drain, decommission.
+      - name: Zone Manager
+        description: Availability-zone placement, spread, and zone-level fault isolation.
+      - name: Capacity Planner
+        description: Forecasts demand and reserves compute, storage, and accelerator capacity ahead of it.
+      - name: Cost Optimizer
+        description: Continuous rightsizing, commitment coverage, and waste elimination.
+      - name: Infrastructure Telemetry
+        description: Fleet-wide inventory and signal feed the global control plane reasons over.
+
+  - name: Server Infrastructure
+    description: >-
+      The tiers that run inside a region. Requests enter at the gateway, are
+      served by compute, and are backed by data, identity, and messaging —
+      with observability, platform operations, and the developer platform
+      supporting all of it.
+    children:
+      - name: Gateway Tier
+        description: >-
+          North–south entry point. Terminates transport, authenticates, shapes,
+          and routes traffic before it reaches any service.
+        children:
+          - name: API Gateway
+            description: Single front door for external traffic — auth, routing, quotas, and transforms.
+            aliases: [Gateway Server]
+          - name: Reverse Proxy
+            description: Layer-7 proxy handling connection termination, buffering, and upstream selection.
+          - name: GraphQL Gateway
+            description: Federated GraphQL schema stitched across backing services.
+            aliases: [GraphQL Server]
+          - name: REST Gateway
+            description: REST surface with versioned resources and OpenAPI contracts.
+            aliases: [REST Server]
+          - name: gRPC Gateway
+            description: gRPC ingress with protobuf contracts and HTTP/JSON transcoding.
+            aliases: [gRPC Server]
+          - name: WebSocket Gateway
+            description: Long-lived bidirectional connections with backpressure and fan-out.
+            aliases: [WebSocket Server]
+          - name: HTTP/3 Gateway
+            description: HTTP/3 termination for multiplexed transport without head-of-line blocking.
+            aliases: [HTTP/3 Server]
+          - name: QUIC Gateway
+            description: QUIC transport endpoint with 0-RTT resumption and connection migration.
+            aliases: [QUIC Server]
+          - name: TLS Terminator
+            description: Certificate presentation, cipher policy, and mutual-TLS enforcement at the edge.
+          - name: API Firewall
+            description: Schema-aware filtering that blocks malformed, abusive, and injection traffic.
+          - name: Request Router
+            description: Path, host, and header routing plus traffic splitting for progressive delivery.
+          - name: Rate Limiter
+            description: Per-tenant, per-key, and per-route quota enforcement with burst budgets.
+          - name: DDoS Protection
+            description: Volumetric and application-layer attack absorption and scrubbing.
+          - name: API Version Manager
+            description: Version negotiation, deprecation windows, and sunset signalling.
+          - name: Edge Gateway
+            description: Regional and edge ingress that serves cacheable traffic and shields the origin.
+            aliases: [Edge Server]
+
+      - name: Compute Tier
+        description: >-
+          Where work actually executes. Pools are shaped by workload profile —
+          synchronous, batch, streaming, accelerated — and packed by a scheduler.
+        children:
+          - name: API Cluster
+            description: Stateless request-serving nodes for synchronous API workloads.
+          - name: AI Cluster
+            description: Accelerator-backed nodes dedicated to inference and training.
+          - name: Batch Cluster
+            description: Scheduled, throughput-oriented jobs tolerant of preemption.
+          - name: Streaming Cluster
+            description: Continuous stream processors with checkpointing and exactly-once semantics.
+          - name: GPU Cluster
+            description: GPU pools with topology-aware scheduling and device partitioning.
+          - name: CPU Cluster
+            description: General-purpose compute for services with no accelerator requirement.
+          - name: Worker Cluster
+            description: Queue-driven workers that drain asynchronous job backlogs.
+          - name: Background Services
+            description: Long-running daemons — reconcilers, sweepers, and periodic tasks.
+          - name: Microservice Runtime
+            description: The standard runtime contract every service ships against.
+          - name: Serverless Runtime
+            description: Scale-to-zero functions for spiky, short-lived work.
+          - name: Edge Runtime
+            description: Constrained runtime executing at points of presence near the user.
+          - name: HPC Cluster
+            description: Tightly coupled low-latency-interconnect nodes for simulation workloads.
+          - name: Compute Scheduler
+            description: Bin-packs workloads across the tier by cost, locality, and priority.
+
+      - name: AI Services
+        description: >-
+          The model lifecycle end to end — data and training on one side,
+          serving, retrieval, and monitoring on the other.
+        children:
+          - name: Inference
+            description: Low-latency online model serving with request batching and autoscaling.
+            aliases: [Inference Server]
+          - name: Model Registry
+            description: System of record for models, lineage, and promotion state.
+            aliases: [Model Registry Server]
+          - name: Model Versioning
+            description: Immutable versions with reproducible build and data provenance.
+          - name: Model Deployment
+            description: Rollout of model versions behind traffic splits and quality guardrails.
+          - name: Embeddings
+            description: Text, image, and audio embedding generation for retrieval and clustering.
+            aliases: [Embedding Server]
+          - name: RAG
+            description: Retrieval-augmented generation pipeline joining retrieved context to prompts.
+            aliases: [RAG Server]
+          - name: Knowledge Service
+            description: Curated, permission-aware corpus that retrieval draws from.
+          - name: Vector Search
+            description: Approximate nearest-neighbour index serving similarity queries at scale.
+            aliases: [Vector Search Server]
+          - name: Agent Runtime
+            description: Executes tool-using agents with budgets, tracing, and sandboxing.
+            aliases: [Agent Orchestrator]
+          - name: Vision
+            description: Image and video understanding — detection, classification, segmentation.
+            aliases: [Vision Server]
+          - name: Speech
+            description: Speech-to-text, text-to-speech, and speaker diarization.
+            aliases: [Speech Server]
+          - name: OCR
+            description: Document text extraction with layout and table recovery.
+            aliases: [OCR Server]
+          - name: Model Cache
+            description: Warm weights and prefix/KV cache tiers that cut cold-start and repeat cost.
+            aliases: [Model Cache Server]
+          - name: Dataset Manager
+            description: Versioned datasets, splits, labels, and access control.
+          - name: Experiment Tracking
+            description: Runs, hyperparameters, metrics, and artifacts, comparable over time.
+          - name: Training Pipeline
+            description: Distributed training orchestration with checkpointing and resumption.
+            aliases: [Training Server]
+          - name: Evaluation
+            description: Offline and online evaluation suites that gate model promotion.
+          - name: Model Monitoring
+            description: Drift, quality, latency, and cost monitoring for deployed models.
+
+      - name: Data Tier
+        description: >-
+          Durable state. Each store is chosen for an access pattern, with
+          replication, backup, and lifecycle managed alongside.
+        children:
+          - name: SQL Cluster
+            description: Transactional relational storage with replicas and automatic failover.
+            aliases: [SQL Server]
+          - name: NoSQL Cluster
+            description: Horizontally partitioned document and wide-column storage.
+            aliases: [NoSQL Server]
+          - name: Graph Database
+            description: Relationship-first storage for traversal-heavy queries.
+            aliases: [Graph Database Server]
+          - name: Time-Series Database
+            description: High-cardinality metric and event series with retention tiers.
+          - name: Vector Database
+            description: Persistent embedding store backing vector search.
+            aliases: [Vector Database Server]
+          - name: Search Engine
+            description: Inverted-index search with ranking, facets, and highlighting.
+            aliases: [Search Server]
+          - name: Object Storage
+            description: Durable versioned object store for large immutable payloads.
+            aliases: [Object Storage Server]
+          - name: Blob Storage
+            description: Hot binary storage for media and generated assets.
+          - name: File Storage
+            description: Shared POSIX-style filesystems for workloads that require them.
+            aliases: [File Server]
+          - name: Cache Cluster
+            description: Distributed in-memory cache sitting in front of hot data paths.
+            aliases: [Cache Server]
+          - name: Data Lake
+            description: Raw and curated zones over open table formats.
+          - name: Data Warehouse
+            description: Modeled analytical store for business intelligence and reporting.
+          - name: ETL Platform
+            description: Batch and streaming ingestion, transformation, and data-quality checks.
+            aliases: [ETL Server]
+          - name: Backup Manager
+            description: Scheduled backups, rehearsed restores, and retention policy.
+            aliases: [Backup Server]
+          - name: Replication Manager
+            description: Cross-zone and cross-region replication with lag monitoring.
+          - name: Archive Manager
+            description: Cold-tier lifecycle transitions and legal-hold enforcement.
+
+      - name: Identity & Security
+        description: >-
+          Who a caller is, what they may do, and proof of what they did.
+          Also the cryptographic material everything else depends on.
+        children:
+          - name: Identity Provider
+            description: Authoritative directory of accounts, groups, and service identities.
+            aliases: [Identity Server]
+          - name: OAuth
+            description: Delegated authorization flows and token issuance for clients.
+            aliases: [OAuth Server]
+          - name: OpenID Connect
+            description: Federated authentication and identity-token issuance.
+            aliases: [OpenID Connect Server]
+          - name: MFA
+            description: Second-factor enrollment and verification, including WebAuthn.
+            aliases: [MFA Server]
+          - name: Session Store
+            description: Server-side session state with revocation and device binding.
+            aliases: [Session Server]
+          - name: Token Service
+            description: Mints, rotates, and introspects access, refresh, and service tokens.
+            aliases: [Token Server]
+          - name: Authorization
+            description: Central permission decisions for users, services, and tenants.
+            aliases: [Authorization Server]
+          - name: Policy Engine
+            description: Declarative policy evaluation at admission time and request time.
+            aliases: [Policy Server]
+          - name: PKI
+            description: Internal certificate hierarchy and issuance workflow.
+            aliases: [PKI Server]
+          - name: Certificate Authority
+            description: Signs and revokes certificates for services and edge endpoints.
+          - name: Key Management
+            description: Envelope-encryption keys with scheduled rotation and hardware backing.
+            aliases: [Key Management Server]
+          - name: Secret Vault
+            description: Dynamic secrets and short-lived credential leasing for workloads.
+          - name: Security Monitoring
+            description: Continuous signal collection across the fleet's security surface.
+          - name: Threat Detection
+            description: Behavioural and signature-based detection of active threats.
+            aliases: [Threat Analytics Server]
+          - name: SIEM
+            description: Correlates security events fleet-wide into investigable incidents.
+            aliases: [Security Information & Event Management (SIEM)]
+          - name: Vulnerability Scanner
+            description: Scans images, dependencies, and hosts against advisory feeds.
+          - name: Compliance
+            description: Control mapping, evidence collection, and audit readiness.
+            aliases: [Compliance Server]
+          - name: Audit Pipeline
+            description: Tamper-evident log of privileged and tenant-visible actions.
+            aliases: [Audit Server]
+          - name: Security Operations
+            description: Response workflows, on-call rotation, and containment runbooks.
+            aliases: [Security Operations Dashboard]
+
+      - name: Messaging
+        description: >-
+          Asynchronous movement of events, jobs, and notifications — the
+          decoupling layer between services and the path out to users.
+        children:
+          - name: Event Bus
+            description: Backbone carrying domain events between services.
+            aliases: [Event Bus Server]
+          - name: Message Queue
+            description: Durable point-to-point queues with retries and dead-letter handling.
+          - name: Job Queue
+            description: Prioritized background work with leases and idempotent execution.
+            aliases: [Job Queue Server]
+          - name: Kafka Cluster
+            description: Partitioned, replayable log for high-throughput streams.
+          - name: MQTT Broker
+            description: Lightweight publish/subscribe for constrained and IoT clients.
+          - name: Redis Streams
+            description: Low-latency stream primitives with consumer groups.
+          - name: Pub/Sub
+            description: Topic fan-out to many independent subscribers.
+          - name: Notification Hub
+            description: Routes notifications across channels according to user preferences.
+            aliases: [Notification Server]
+          - name: Email Service
+            description: Transactional email delivery, templating, and bounce handling.
+          - name: SMS Service
+            description: SMS delivery with carrier failover and opt-out handling.
+          - name: Push Notifications
+            description: Mobile and web push with device-token lifecycle management.
+          - name: Webhook Dispatcher
+            description: Outbound webhooks with payload signing, retries, and delivery receipts.
+
+      - name: Observability
+        description: >-
+          What the platform knows about itself: signals, the views built on
+          them, and the workflow that turns a bad signal into a fix.
+        children:
+          - name: Metrics
+            description: Time-series collection, aggregation, and recording rules.
+            aliases: [Metrics Server]
+          - name: Logging
+            description: Structured log ingestion, indexing, and retention tiers.
+            aliases: [Logging Server]
+          - name: Distributed Tracing
+            description: End-to-end spans across services with configurable sampling.
+            aliases: [Trace Collector]
+          - name: Dashboards
+            description: Curated views by service, tenant, and user journey.
+            aliases: [Dashboard Server]
+          - name: Alerting
+            description: Symptom-based alerts routed to the owning on-call.
+            aliases: [Alert Server]
+          - name: Incident Manager
+            description: Declares, tracks, and reviews incidents end to end.
+          - name: Error Tracking
+            description: Deduplicated exception grouping with release attribution.
+          - name: Performance Analytics
+            description: Latency and throughput profiling down to the individual endpoint.
+            aliases: [Performance Server]
+          - name: Capacity Analytics
+            description: Headroom and saturation analysis feeding capacity planning.
+          - name: Cost Analytics
+            description: Spend attribution by service, tenant, and request.
+          - name: Health Monitoring
+            description: Liveness and readiness aggregated into service-level health state.
+            aliases: [Health Server, Monitoring Server, Cluster Monitor]
+          - name: Uptime Monitoring
+            description: External synthetic probes measuring user-visible availability.
+
+      - name: Platform Operations
+        description: >-
+          Running the fleet: scheduling workloads onto nodes, shipping changes
+          safely, and taking them back when they go wrong.
+        children:
+          - name: Kubernetes
+            description: Cluster control planes and workload APIs.
+            aliases: [Kubernetes Control Plane, Orchestrator]
+          - name: Container Runtime
+            description: OCI runtime, image pulls, and sandbox isolation.
+            aliases: [Docker Runtime]
+          - name: Service Mesh
+            description: Mutual TLS, retries, and traffic policy between services.
+          - name: Load Balancer
+            description: In-cluster layer-4 and layer-7 balancing across service endpoints.
+          - name: Autoscaler
+            description: Horizontal, vertical, and cluster autoscaling driven by live signals.
+          - name: Node Manager
+            description: Node lifecycle — provisioning, draining, patching, and repair.
+          - name: Cluster Scheduler
+            description: Placement by affinity, taints, priority, and preemption.
+            aliases: [Scheduler Server, Resource Scheduler]
+          - name: Service Discovery
+            description: Resolves service endpoints as instances come and go.
+            aliases: [Service Discovery Server]
+          - name: Service Registry
+            description: Authoritative catalog of services, owners, and dependencies.
+            aliases: [Registry Server]
+          - name: Rolling Deployments
+            description: Incremental instance replacement behind health gates.
+            aliases: [Rolling Updates]
+          - name: Blue/Green Deployments
+            description: Parallel environment cutover with instant switchback.
+            aliases: [Blue/Green Deployment]
+          - name: Canary Deployments
+            description: Small-slice exposure with automated metric analysis.
+            aliases: [Canary Deployment]
+          - name: Rollback Manager
+            description: One-command return to the last known-good version.
+          - name: Failover Manager
+            description: Promotes standbys and reroutes traffic when a component fails.
+          - name: Update Service
+            description: Delivers signed updates to agents, edge nodes, and clients.
+            aliases: [Update Server]
+          - name: Infrastructure as Code
+            description: Declarative infrastructure with reviewed plan and apply.
+          - name: Configuration Management
+            description: Layered, environment-aware configuration with safe reload.
+            aliases: [Configuration Server]
+          - name: Secret Distribution
+            description: Delivers vault-issued secrets to workloads without persisting them.
+          - name: Fleet Manager
+            description: Inventory and rollout targeting across the whole fleet.
+          - name: Resource Optimizer
+            description: Rightsizes requests and limits from observed usage.
+
+      - name: Developer Platform
+        description: >-
+          The path from a commit to a running release, plus the surfaces
+          engineers use to discover, extend, and test the platform.
+        children:
+          - name: CI
+            description: Builds and tests every change on push and pull request.
+            aliases: [CI Server]
+          - name: CD
+            description: Promotes verified artifacts through environments.
+          - name: Build Farm
+            description: Distributed cached builds for large compilation workloads.
+            aliases: [Build Server]
+          - name: Artifact Repository
+            description: Immutable build outputs with provenance attestations.
+          - name: Package Registry
+            description: Language and container package hosting.
+            aliases: [Package Repository]
+          - name: SDK Registry
+            description: Versioned client SDKs generated from API contracts.
+          - name: Plugin Marketplace
+            description: Third-party extensions with review and signing.
+            aliases: [Plugin Repository Server]
+          - name: Documentation Portal
+            description: Product, API, and runbook documentation.
+            aliases: [Documentation Server]
+          - name: Symbol Server
+            description: Debug symbols and source indexes for crash symbolication.
+          - name: Benchmark Platform
+            description: Repeatable performance benchmarks with regression alerting.
+            aliases: [Benchmark Server]
+          - name: Test Infrastructure
+            description: Ephemeral environments and fixtures for integration testing.
+            aliases: [Test Server]
+          - name: Release Manager
+            description: Release trains, changelogs, and approval gates.
+          - name: API Explorer
+            description: Interactive request builder against live and mock endpoints.
+          - name: Developer Portal
+            description: Single entry point to services, ownership, and self-service actions.
+          - name: Template Generator
+            description: Scaffolds new services from golden-path templates.
+          - name: Internal Package Manager
+            description: Private dependency resolution and mirroring.
+          - name: License Service
+            description: Entitlement and license validation for distributed builds.
+            aliases: [License Server]

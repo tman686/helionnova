@@ -1,0 +1,27 @@
+name: Architecture
+
+on:
+  push:
+    paths:
+      - 'architecture/**'
+      - '.github/workflows/architecture.yml'
+  pull_request:
+    paths:
+      - 'architecture/**'
+      - '.github/workflows/architecture.yml'
+
+jobs:
+  check:
+    name: Spec is valid and output is current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install pyyaml
+
+      - name: Validate spec and check generated output
+        run: python3 architecture/scaffold.py --check
