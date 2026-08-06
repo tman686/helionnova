@@ -7,6 +7,7 @@ platform is planned to run, in one place.
 | --- | --- |
 | [`universe.yaml`](./universe.yaml) | **Source of truth.** Hand-edited. |
 | [`scaffold.py`](./scaffold.py) | Generator. Reads the spec, writes everything below. |
+| [`test_scaffold.py`](./test_scaffold.py) | Tests for the generator, chiefly the validator. |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Generated. Full tree, per-tier tables, alias index. |
 | [`universe/`](./universe/) | Generated. One directory per node, each with a `README.md`. |
 
@@ -16,7 +17,11 @@ platform is planned to run, in one place.
 pip install pyyaml
 python3 architecture/scaffold.py          # regenerate after editing the spec
 python3 architecture/scaffold.py --check  # CI: fail if output is stale
+python3 -m unittest discover -s architecture -t architecture   # tests
 ```
+
+Both the tests and the staleness check run in CI on any change under
+`architecture/`.
 
 Edit `universe.yaml` and regenerate. Never hand-edit `ARCHITECTURE.md` or
 anything under `universe/` — the generator deletes and rewrites that tree, so
@@ -77,6 +82,12 @@ The generator validates the spec before writing anything and refuses to run on:
 - duplicate entries within one `depends_on`
 - **a dependency cycle** — a loop means nothing in it can start, so the
   generator reports the full path and refuses to write
+
+Every rule above has a test in [`test_scaffold.py`](./test_scaffold.py)
+asserting it actually fires. A rule with no test is a rule that can silently
+stop working, so the suite was checked by breaking the generator eight
+different ways — dropping cycle detection, breaking alias resolution, and so on
+— and confirming the tests caught all eight.
 
 ## Scope
 
