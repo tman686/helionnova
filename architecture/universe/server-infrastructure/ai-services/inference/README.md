@@ -13,6 +13,12 @@ Low-latency online model serving with request batching and autoscaling.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Model Registry](../../../../universe/server-infrastructure/ai-services/model-registry/), [Model Cache](../../../../universe/server-infrastructure/ai-services/model-cache/), [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/), [Model Deployment](../../../../universe/server-infrastructure/ai-services/model-deployment/)
+
+**Depended on by:** [Agent Runtime](../../../../universe/server-infrastructure/ai-services/agent-runtime/), [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/), [Entity Extraction](../../../../universe/server-infrastructure/external-data/entity-extraction/), [Language Detection](../../../../universe/server-infrastructure/external-data/language-detection/), [OCR](../../../../universe/server-infrastructure/ai-services/ocr/), [RAG](../../../../universe/server-infrastructure/ai-services/rag/), [Speech](../../../../universe/server-infrastructure/ai-services/speech/), [Translation](../../../../universe/server-infrastructure/external-data/translation/), [Vision](../../../../universe/server-infrastructure/ai-services/vision/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

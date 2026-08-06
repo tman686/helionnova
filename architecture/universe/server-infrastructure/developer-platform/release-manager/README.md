@@ -11,6 +11,12 @@ Release trains, changelogs, and approval gates.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/), [CI](../../../../universe/server-infrastructure/developer-platform/ci/)
+
+**Depended on by:** [CD](../../../../universe/server-infrastructure/developer-platform/cd/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

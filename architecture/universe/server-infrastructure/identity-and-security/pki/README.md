@@ -13,6 +13,12 @@ Internal certificate hierarchy and issuance workflow.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/)
+
+**Depended on by:** [Certificate Authority](../../../../universe/server-infrastructure/identity-and-security/certificate-authority/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

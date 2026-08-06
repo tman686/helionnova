@@ -13,6 +13,12 @@ Latency and throughput profiling down to the individual endpoint.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Rightsizes requests and limits from observed usage.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Capacity Analytics](../../../../universe/server-infrastructure/observability/capacity-analytics/)
+
+**Depended on by:** [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/), [Cost Optimizer](../../../../universe/global-infrastructure/cost-optimizer/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

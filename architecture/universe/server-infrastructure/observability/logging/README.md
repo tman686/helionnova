@@ -13,6 +13,12 @@ Structured log ingestion, indexing, and retention tiers.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Search Engine](../../../../universe/server-infrastructure/data-tier/search-engine/)
+
+**Depended on by:** [Audit Pipeline](../../../../universe/server-infrastructure/identity-and-security/audit-pipeline/), [Dashboards](../../../../universe/server-infrastructure/observability/dashboards/), [Error Tracking](../../../../universe/server-infrastructure/observability/error-tracking/), [SIEM](../../../../universe/server-infrastructure/identity-and-security/siem/), [Security Monitoring](../../../../universe/server-infrastructure/identity-and-security/security-monitoring/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

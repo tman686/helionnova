@@ -11,6 +11,12 @@ Immutable build outputs with provenance attestations.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [CD](../../../../universe/server-infrastructure/developer-platform/cd/), [CI](../../../../universe/server-infrastructure/developer-platform/ci/), [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/), [Release Manager](../../../../universe/server-infrastructure/developer-platform/release-manager/), [Rollback Manager](../../../../universe/server-infrastructure/platform-operations/rollback-manager/), [Symbol Server](../../../../universe/server-infrastructure/developer-platform/symbol-server/), [Update Service](../../../../universe/server-infrastructure/platform-operations/update-service/), [Vulnerability Scanner](../../../../universe/server-infrastructure/identity-and-security/vulnerability-scanner/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

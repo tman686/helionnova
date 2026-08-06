@@ -11,6 +11,12 @@ Node lifecycle — provisioning, draining, patching, and repair.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Update Service](../../../../universe/server-infrastructure/platform-operations/update-service/)
+
+**Depended on by:** [CPU Cluster](../../../../universe/server-infrastructure/compute-tier/cpu-cluster/), [GPU Cluster](../../../../universe/server-infrastructure/compute-tier/gpu-cluster/), [HPC Cluster](../../../../universe/server-infrastructure/compute-tier/hpc-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

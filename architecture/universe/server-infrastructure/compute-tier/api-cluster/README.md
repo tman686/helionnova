@@ -11,6 +11,12 @@ Stateless request-serving nodes for synchronous API workloads.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Microservice Runtime](../../../../universe/server-infrastructure/compute-tier/microservice-runtime/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/), [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -13,6 +13,12 @@ OCI runtime, image pulls, and sandbox isolation.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/)
+
+**Depended on by:** [CPU Cluster](../../../../universe/server-infrastructure/compute-tier/cpu-cluster/), [Edge Runtime](../../../../universe/server-infrastructure/compute-tier/edge-runtime/), [GPU Cluster](../../../../universe/server-infrastructure/compute-tier/gpu-cluster/), [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Microservice Runtime](../../../../universe/server-infrastructure/compute-tier/microservice-runtime/), [Serverless Runtime](../../../../universe/server-infrastructure/compute-tier/serverless-runtime/), [Test Infrastructure](../../../../universe/server-infrastructure/developer-platform/test-infrastructure/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

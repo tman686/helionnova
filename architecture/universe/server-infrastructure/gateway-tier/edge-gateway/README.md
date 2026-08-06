@@ -13,6 +13,12 @@ Regional and edge ingress that serves cacheable traffic and shields the origin.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Edge Runtime](../../../../universe/server-infrastructure/compute-tier/edge-runtime/), [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/)
+
+**Depended on by:** [Edge Fabric](../../../../universe/global-infrastructure/edge-fabric/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

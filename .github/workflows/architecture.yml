@@ -23,5 +23,8 @@ jobs:
 
       - run: pip install pyyaml
 
+      - name: Unit tests
+        run: python3 -m unittest discover -s architecture -t architecture -v
+
       - name: Validate spec and check generated output
         run: python3 architecture/scaffold.py --check

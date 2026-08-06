@@ -11,6 +11,12 @@ Inventory and rollout targeting across the whole fleet.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Service Registry](../../../../universe/server-infrastructure/platform-operations/service-registry/), [Update Service](../../../../universe/server-infrastructure/platform-operations/update-service/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

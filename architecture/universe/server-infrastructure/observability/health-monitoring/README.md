@@ -13,6 +13,12 @@ Liveness and readiness aggregated into service-level health state.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/)
+
+**Depended on by:** [Failover Manager](../../../../universe/server-infrastructure/platform-operations/failover-manager/), [Global DNS](../../../../universe/global-infrastructure/global-dns/), [Global Load Balancer](../../../../universe/global-infrastructure/global-load-balancer/), [Load Balancer](../../../../universe/server-infrastructure/platform-operations/load-balancer/), [Rolling Deployments](../../../../universe/server-infrastructure/platform-operations/rolling-deployments/), [Traffic Director](../../../../universe/global-infrastructure/traffic-director/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

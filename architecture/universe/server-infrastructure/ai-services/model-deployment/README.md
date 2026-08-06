@@ -11,6 +11,12 @@ Rollout of model versions behind traffic splits and quality guardrails.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Model Registry](../../../../universe/server-infrastructure/ai-services/model-registry/), [Canary Deployments](../../../../universe/server-infrastructure/platform-operations/canary-deployments/), [Evaluation](../../../../universe/server-infrastructure/ai-services/evaluation/)
+
+**Depended on by:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

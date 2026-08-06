@@ -11,6 +11,12 @@ Version negotiation, deprecation windows, and sunset signalling.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [REST Gateway](../../../../universe/server-infrastructure/gateway-tier/rest-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

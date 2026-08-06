@@ -11,6 +11,12 @@ Topic fan-out to many independent subscribers.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Event Bus](../../../../universe/server-infrastructure/messaging/event-bus/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

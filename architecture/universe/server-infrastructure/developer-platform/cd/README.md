@@ -11,6 +11,12 @@ Promotes verified artifacts through environments.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/), [Release Manager](../../../../universe/server-infrastructure/developer-platform/release-manager/), [Rolling Deployments](../../../../universe/server-infrastructure/platform-operations/rolling-deployments/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -13,6 +13,12 @@ Network of edge points of presence running latency-sensitive compute near users.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Edge Runtime](../../../universe/server-infrastructure/compute-tier/edge-runtime/), [Edge Gateway](../../../universe/server-infrastructure/gateway-tier/edge-gateway/)
+
+**Depended on by:** [CDN](../../../universe/global-infrastructure/cdn/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

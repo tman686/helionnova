@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Generated on demand by architecture/page.py, never committed —
+# a committed copy could disagree with the spec.
+architecture.html

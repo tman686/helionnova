@@ -13,6 +13,12 @@ Long-lived bidirectional connections with backpressure and fan-out.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/), [Session Store](../../../../universe/server-infrastructure/identity-and-security/session-store/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Deduplicated exception grouping with release attribution.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Logging](../../../../universe/server-infrastructure/observability/logging/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -13,6 +13,12 @@ Central permission decisions for users, services, and tenants.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/), [Identity Provider](../../../../universe/server-infrastructure/identity-and-security/identity-provider/)
+
+**Depended on by:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/), [Data Catalog](../../../../universe/server-infrastructure/data-tier/data-catalog/), [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Multi-Tenant Manager](../../../../universe/global-infrastructure/multi-tenant-manager/), [Plugin Marketplace](../../../../universe/server-infrastructure/developer-platform/plugin-marketplace/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

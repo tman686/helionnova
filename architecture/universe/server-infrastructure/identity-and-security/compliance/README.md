@@ -13,6 +13,12 @@ Control mapping, evidence collection, and audit readiness.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Audit Pipeline](../../../../universe/server-infrastructure/identity-and-security/audit-pipeline/), [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

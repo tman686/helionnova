@@ -13,6 +13,12 @@ Batch and streaming ingestion, transformation, and data-quality checks.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Kafka Cluster](../../../../universe/server-infrastructure/messaging/kafka-cluster/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Schema Registry](../../../../universe/server-infrastructure/data-tier/schema-registry/), [Data Quality](../../../../universe/server-infrastructure/data-tier/data-quality/)
+
+**Depended on by:** [Data Lake](../../../../universe/server-infrastructure/data-tier/data-lake/), [Data Warehouse](../../../../universe/server-infrastructure/data-tier/data-warehouse/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

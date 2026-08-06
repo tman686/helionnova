@@ -7,6 +7,13 @@ platform is planned to run, in one place.
 | --- | --- |
 | [`universe.yaml`](./universe.yaml) | **Source of truth.** Hand-edited. |
 | [`scaffold.py`](./scaffold.py) | Generator. Reads the spec, writes everything below. |
+| [`page.py`](./page.py) | Renders the spec as a self-contained browsable page. |
+| [`command.py`](./command.py) | Interprets a plain-English message and acts on the spec. |
+| [`brain.py`](./brain.py) | Optional Ollama fallback for messages the patterns miss. |
+| [`../bin/hn`](../bin/hn) | The client. Prompt, one-shot, or `--remote`. |
+| [`../bin/hn-up`](../bin/hn-up) | Starts Ollama quietly, then opens the prompt. |
+| [`test_scaffold.py`](./test_scaffold.py) | Tests for the generator, chiefly the validator. |
+| [`test_page.py`](./test_page.py) | Tests for the page generator. |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Generated. Full tree, per-tier tables, alias index. |
 | [`universe/`](./universe/) | Generated. One directory per node, each with a `README.md`. |
 
@@ -16,7 +23,35 @@ platform is planned to run, in one place.
 pip install pyyaml
 python3 architecture/scaffold.py          # regenerate after editing the spec
 python3 architecture/scaffold.py --check  # CI: fail if output is stale
+python3 -m unittest discover -s architecture -t architecture   # tests
 ```
+
+Both the tests and the staleness check run in CI on any change under
+`architecture/`.
+
+## The browsable page
+
+`page.py` renders the whole tree as one self-contained page — every component
+as a chip with its status and dependency degree, plus the tier map, the
+load-bearing chart, and the coupling matrix, over a filter box.
+
+```sh
+python3 architecture/page.py --standalone -o /tmp/architecture.html   # open locally
+python3 architecture/page.py -o /tmp/fragment.html                    # for publishing
+```
+
+The output is **not committed** — regenerate it when you want a current view, so
+it can never disagree with the spec. Every figure on the page is computed from
+`universe.yaml`; none is written by hand.
+
+The default output is a fragment with no `<html>`/`<head>`/`<body>`, because a
+publishing host supplies its own skeleton and a nested document breaks it.
+`--standalone` wraps it into a real document you can open in a browser.
+
+Two constraints are load-bearing and fail *silently* rather than erroring, so
+`test_page.py` asserts both: no external resources of any kind (a blocked font
+would just fall back to something arbitrary), and no document wrapper on the
+fragment.
 
 Edit `universe.yaml` and regenerate. Never hand-edit `ARCHITECTURE.md` or
 anything under `universe/` — the generator deletes and rewrites that tree, so
@@ -33,8 +68,17 @@ stale commit fails loudly instead of drifting.
   status: building               # optional; planned | building | running
   owner: platform-edge           # optional; lowercase team slug
   aliases: [Throttle Server]     # optional
+  depends_on: [Cache Cluster]    # optional; other components, by name or alias
   children: []                   # optional; omit for a leaf component
 ```
+
+`depends_on` turns the containment tree into a dependency graph. Targets are
+matched by name **or alias**, so an edge written against an old name still
+resolves. Dependencies belong on components — a tier cannot declare one.
+
+Each component's page gets a **Depends on** / **Depended on by** section, and
+`ARCHITECTURE.md` gains a dependency summary: the most depended-on components, a
+tier coupling matrix, and a diagram of the strong links.
 
 `status` and `owner` are **inherited** — set them once on a tier and every
 component beneath it picks them up, unless that component overrides it. `status`
@@ -64,6 +108,94 @@ The generator validates the spec before writing anything and refuses to run on:
 - sibling names that slugify to the same directory
 - duplicate component names anywhere in the tree
 - an alias claimed by two components, or shadowing a real component name
+- a `depends_on` naming an unknown component, a group, or the component itself
+- duplicate entries within one `depends_on`
+- **a dependency cycle** — a loop means nothing in it can start, so the
+  generator reports the full path and refuses to write
+
+Every rule above has a test in [`test_scaffold.py`](./test_scaffold.py)
+asserting it actually fires. A rule with no test is a rule that can silently
+stop working, so the suite was checked by breaking the generator eight
+different ways — dropping cycle detection, breaking alias resolution, and so on
+— and confirming the tests caught all eight.
+
+## Adding to it
+
+Four places, depending on what you are adding.
+
+### A command `hn` understands
+
+Three edits in [`command.py`](./command.py), then a test. Say you want
+`riskiest`, listing components with the widest blast radius:
+
+```python
+# 1. a handler. It takes the spec and the regex match, returns a Reply.
+def cmd_riskiest(spec: dict, m: re.Match) -> Reply:
+    up = scaffold.adjacency(spec, reverse=True)
+    scored = sorted(
+        ((len(scaffold.reachable(up, n["name"])), n["name"]) for n in scaffold.leaves(spec)),
+        reverse=True,
+    )[:10]
+    return Reply(
+        "**Widest blast radius:**\n\n"
+        + "\n".join(f"- {name} — {count} components" for count, name in scored),
+        summary="riskiest",
+    )
+
+# 2. a route, in ROUTES. First match wins, so put specific patterns above
+#    general ones.
+(r"^\s*(riskiest|most dangerous|biggest risk)\s*$", cmd_riskiest),
+
+# 3. add the phrasing to cmd_help, or a test will fail: the help text is
+#    checked against what the interpreter actually knows.
+```
+
+Then a test in [`test_command.py`](./test_command.py):
+
+```python
+def test_riskiest(self):
+    self.assertIn("Object Storage", ask("riskiest").text)
+```
+
+A handler returning `Reply(..., changed=True)` mutates `spec` in place; the
+caller validates the whole tree afterwards and refuses to write if the edit
+broke anything, so a handler does not need to check for cycles itself.
+
+### A script you run
+
+Drop it in [`bin/`](../bin/) next to `hn` and `hn-up`, and `chmod +x` it.
+Nothing registers scripts — they are just executables on a path you type.
+
+### Something that reads the spec and writes files
+
+Alongside `scaffold.py` and `page.py` in this directory. Import `scaffold`
+for the tree and the graph helpers rather than parsing the YAML again:
+
+```python
+import scaffold, yaml
+spec = yaml.safe_load(scaffold.SPEC.read_text())
+scaffold.leaves(spec)            # every component
+scaffold.adjacency(spec)         # name -> what it depends on
+scaffold.reachable(graph, name)  # transitive closure
+scaffold.build_layers(spec)      # topological layers
+```
+
+### Something that runs on GitHub
+
+A workflow in [`.github/workflows/`](../.github/workflows/). Gate anything
+that can commit on the repo owner — `command.yml` shows the pattern, and an
+ungated one hands write access to anyone who can open an issue.
+
+### Tests
+
+Any `architecture/test_*.py` is picked up automatically:
+
+```sh
+python3 -m unittest discover -s architecture -t architecture
+```
+
+CI runs them before the staleness check, so a broken generator fails before
+its output is compared.
 
 ## Scope
 

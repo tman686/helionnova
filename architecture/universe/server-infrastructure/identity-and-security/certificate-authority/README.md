@@ -11,6 +11,12 @@ Signs and revokes certificates for services and edge endpoints.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [PKI](../../../../universe/server-infrastructure/identity-and-security/pki/)
+
+**Depended on by:** [Service Mesh](../../../../universe/server-infrastructure/platform-operations/service-mesh/), [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -13,6 +13,12 @@ Cluster control planes and workload APIs.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/), [Cluster Scheduler](../../../../universe/server-infrastructure/platform-operations/cluster-scheduler/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
+**Depended on by:** [Blue/Green Deployments](../../../../universe/server-infrastructure/platform-operations/blue-green-deployments/), [Node Manager](../../../../universe/server-infrastructure/platform-operations/node-manager/), [Rollback Manager](../../../../universe/server-infrastructure/platform-operations/rollback-manager/), [Rolling Deployments](../../../../universe/server-infrastructure/platform-operations/rolling-deployments/), [Test Infrastructure](../../../../universe/server-infrastructure/developer-platform/test-infrastructure/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

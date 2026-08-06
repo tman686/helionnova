@@ -11,6 +11,12 @@ Versioned client SDKs generated from API contracts.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Package Registry](../../../../universe/server-infrastructure/developer-platform/package-registry/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

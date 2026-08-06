@@ -11,6 +11,12 @@ Drift, quality, latency, and cost monitoring for deployed models.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Alerting](../../../../universe/server-infrastructure/observability/alerting/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

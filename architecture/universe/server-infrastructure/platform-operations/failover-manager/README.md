@@ -11,6 +11,12 @@ Promotes standbys and reroutes traffic when a component fails.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Health Monitoring](../../../../universe/server-infrastructure/observability/health-monitoring/), [Replication Manager](../../../../universe/server-infrastructure/data-tier/replication-manager/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

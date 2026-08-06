@@ -13,6 +13,12 @@ Authoritative catalog of services, owners, and dependencies.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Developer Portal](../../../../universe/server-infrastructure/developer-platform/developer-portal/), [Fleet Manager](../../../../universe/server-infrastructure/platform-operations/fleet-manager/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

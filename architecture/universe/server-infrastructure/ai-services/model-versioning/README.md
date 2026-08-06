@@ -11,6 +11,12 @@ Immutable versions with reproducible build and data provenance.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/)
+
+**Depended on by:** [Model Registry](../../../../universe/server-infrastructure/ai-services/model-registry/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

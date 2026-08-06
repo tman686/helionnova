@@ -13,6 +13,12 @@ Mints, rotates, and introspects access, refresh, and service tokens.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/), [Identity Provider](../../../../universe/server-infrastructure/identity-and-security/identity-provider/)
+
+**Depended on by:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/), [OAuth](../../../../universe/server-infrastructure/identity-and-security/oauth/), [OpenID Connect](../../../../universe/server-infrastructure/identity-and-security/openid-connect/), [Session Store](../../../../universe/server-infrastructure/identity-and-security/session-store/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

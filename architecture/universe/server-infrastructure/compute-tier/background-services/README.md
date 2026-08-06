@@ -11,6 +11,12 @@ Long-running daemons — reconcilers, sweepers, and periodic tasks.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Configuration Management](../../../../universe/server-infrastructure/platform-operations/configuration-management/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

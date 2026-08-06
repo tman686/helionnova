@@ -13,6 +13,12 @@ Correlates security events fleet-wide into investigable incidents.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Logging](../../../../universe/server-infrastructure/observability/logging/), [Security Monitoring](../../../../universe/server-infrastructure/identity-and-security/security-monitoring/)
+
+**Depended on by:** [Security Operations](../../../../universe/server-infrastructure/identity-and-security/security-operations/), [Threat Detection](../../../../universe/server-infrastructure/identity-and-security/threat-detection/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

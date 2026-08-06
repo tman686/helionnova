@@ -11,6 +11,12 @@ Constrained runtime executing at points of presence near the user.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/)
+
+**Depended on by:** [Edge Fabric](../../../../universe/global-infrastructure/edge-fabric/), [Edge Gateway](../../../../universe/server-infrastructure/gateway-tier/edge-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

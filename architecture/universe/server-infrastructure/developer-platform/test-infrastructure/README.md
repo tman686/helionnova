@@ -13,6 +13,12 @@ Ephemeral environments and fixtures for integration testing.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/)
+
+**Depended on by:** [Benchmark Platform](../../../../universe/server-infrastructure/developer-platform/benchmark-platform/), [CI](../../../../universe/server-infrastructure/developer-platform/ci/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

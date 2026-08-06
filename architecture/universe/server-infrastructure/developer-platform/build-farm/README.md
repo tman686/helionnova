@@ -13,6 +13,12 @@ Distributed cached builds for large compilation workloads.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/), [Internal Package Manager](../../../../universe/server-infrastructure/developer-platform/internal-package-manager/)
+
+**Depended on by:** [CI](../../../../universe/server-infrastructure/developer-platform/ci/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

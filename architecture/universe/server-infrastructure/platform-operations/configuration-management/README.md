@@ -13,6 +13,12 @@ Layered, environment-aware configuration with safe reload.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Background Services](../../../../universe/server-infrastructure/compute-tier/background-services/), [Infrastructure as Code](../../../../universe/server-infrastructure/platform-operations/infrastructure-as-code/), [Microservice Runtime](../../../../universe/server-infrastructure/compute-tier/microservice-runtime/), [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

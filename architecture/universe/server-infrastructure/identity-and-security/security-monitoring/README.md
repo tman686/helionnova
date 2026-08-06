@@ -11,6 +11,12 @@ Continuous signal collection across the fleet's security surface.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Logging](../../../../universe/server-infrastructure/observability/logging/), [Metrics](../../../../universe/server-infrastructure/observability/metrics/)
+
+**Depended on by:** [SIEM](../../../../universe/server-infrastructure/identity-and-security/siem/), [Threat Detection](../../../../universe/server-infrastructure/identity-and-security/threat-detection/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

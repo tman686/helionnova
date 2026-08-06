@@ -13,6 +13,12 @@ Relationship-first storage for traversal-heavy queries.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Backup Manager](../../../../universe/server-infrastructure/data-tier/backup-manager/)
+
+**Depended on by:** [Data Lineage](../../../../universe/server-infrastructure/data-tier/data-lineage/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Scheduled, throughput-oriented jobs tolerant of preemption.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

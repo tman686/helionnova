@@ -11,6 +11,12 @@ Interactive request builder against live and mock endpoints.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/), [Documentation Portal](../../../../universe/server-infrastructure/developer-platform/documentation-portal/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

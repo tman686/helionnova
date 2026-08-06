@@ -11,6 +11,12 @@ Forecasts demand and reserves compute, storage, and accelerator capacity ahead o
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Capacity Analytics](../../../universe/server-infrastructure/observability/capacity-analytics/), [Infrastructure Telemetry](../../../universe/global-infrastructure/infrastructure-telemetry/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

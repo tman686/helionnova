@@ -11,6 +11,12 @@ GPU pools with topology-aware scheduling and device partitioning.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Node Manager](../../../../universe/server-infrastructure/platform-operations/node-manager/), [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/)
+
+**Depended on by:** [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

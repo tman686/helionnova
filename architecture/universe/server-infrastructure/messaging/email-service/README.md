@@ -11,6 +11,12 @@ Transactional email delivery, templating, and bounce handling.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Message Queue](../../../../universe/server-infrastructure/messaging/message-queue/)
+
+**Depended on by:** [Notification Hub](../../../../universe/server-infrastructure/messaging/notification-hub/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

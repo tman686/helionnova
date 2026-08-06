@@ -11,6 +11,12 @@ Bin-packs workloads across the tier by cost, locality, and priority.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Cluster Scheduler](../../../../universe/server-infrastructure/platform-operations/cluster-scheduler/), [Resource Optimizer](../../../../universe/server-infrastructure/platform-operations/resource-optimizer/)
+
+**Depended on by:** [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/), [API Cluster](../../../../universe/server-infrastructure/compute-tier/api-cluster/), [Batch Cluster](../../../../universe/server-infrastructure/compute-tier/batch-cluster/), [Streaming Cluster](../../../../universe/server-infrastructure/compute-tier/streaming-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Normalizes provisioning and policy across cloud providers and bare metal.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Infrastructure as Code](../../../universe/server-infrastructure/platform-operations/infrastructure-as-code/)
+
+**Depended on by:** [Global Control Plane](../../../universe/global-infrastructure/global-control-plane/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

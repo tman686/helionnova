@@ -13,6 +13,12 @@ Routes notifications across channels according to user preferences.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Email Service](../../../../universe/server-infrastructure/messaging/email-service/), [SMS Service](../../../../universe/server-infrastructure/messaging/sms-service/), [Push Notifications](../../../../universe/server-infrastructure/messaging/push-notifications/), [Message Queue](../../../../universe/server-infrastructure/messaging/message-queue/)
+
+**Depended on by:** [Alerting](../../../../universe/server-infrastructure/observability/alerting/), [Incident Manager](../../../../universe/server-infrastructure/observability/incident-manager/), [MFA](../../../../universe/server-infrastructure/identity-and-security/mfa/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

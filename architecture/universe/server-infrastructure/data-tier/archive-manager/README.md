@@ -11,6 +11,12 @@ Cold-tier lifecycle transitions and legal-hold enforcement.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [Backup Manager](../../../../universe/server-infrastructure/data-tier/backup-manager/), [Time-Series Database](../../../../universe/server-infrastructure/data-tier/time-series-database/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

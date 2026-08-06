@@ -13,6 +13,12 @@ Drives failover drills, RPO/RTO tracking, and real region evacuations.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Replication Manager](../../../universe/server-infrastructure/data-tier/replication-manager/), [Backup Manager](../../../universe/server-infrastructure/data-tier/backup-manager/), [Multi-Region Manager](../../../universe/global-infrastructure/multi-region-manager/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

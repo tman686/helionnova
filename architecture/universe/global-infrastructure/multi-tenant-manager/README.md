@@ -11,6 +11,12 @@ Tenant isolation boundaries, quotas, and per-tenant configuration.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Authorization](../../../universe/server-infrastructure/identity-and-security/authorization/), [Identity Provider](../../../universe/server-infrastructure/identity-and-security/identity-provider/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Tightly coupled low-latency-interconnect nodes for simulation workloads.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Node Manager](../../../../universe/server-infrastructure/platform-operations/node-manager/), [File Storage](../../../../universe/server-infrastructure/data-tier/file-storage/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

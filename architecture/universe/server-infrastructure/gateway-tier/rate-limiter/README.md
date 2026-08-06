@@ -11,6 +11,12 @@ Per-tenant, per-key, and per-route quota enforcement with burst budgets.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/)
+
+**Depended on by:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

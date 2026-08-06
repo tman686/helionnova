@@ -11,6 +11,12 @@ Runs, hyperparameters, metrics, and artifacts, comparable over time.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [Evaluation](../../../../universe/server-infrastructure/ai-services/evaluation/), [Training Pipeline](../../../../universe/server-infrastructure/ai-services/training-pipeline/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

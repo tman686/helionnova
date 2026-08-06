@@ -11,6 +11,12 @@ Durable point-to-point queues with retries and dead-letter handling.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Email Service](../../../../universe/server-infrastructure/messaging/email-service/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Notification Hub](../../../../universe/server-infrastructure/messaging/notification-hub/), [Push Notifications](../../../../universe/server-infrastructure/messaging/push-notifications/), [SMS Service](../../../../universe/server-infrastructure/messaging/sms-service/), [Worker Cluster](../../../../universe/server-infrastructure/compute-tier/worker-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

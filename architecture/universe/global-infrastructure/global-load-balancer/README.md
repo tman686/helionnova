@@ -11,6 +11,12 @@ Anycast entry point distributing requests to the healthiest nearby region.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Global DNS](../../../universe/global-infrastructure/global-dns/), [Health Monitoring](../../../universe/server-infrastructure/observability/health-monitoring/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

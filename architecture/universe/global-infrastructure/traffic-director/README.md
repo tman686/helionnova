@@ -13,6 +13,12 @@ Policy-driven steering of traffic across regions and service versions.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Global DNS](../../../universe/global-infrastructure/global-dns/), [Health Monitoring](../../../universe/server-infrastructure/observability/health-monitoring/), [Infrastructure Telemetry](../../../universe/global-infrastructure/infrastructure-telemetry/)
+
+**Depended on by:** [Blue/Green Deployments](../../../universe/server-infrastructure/platform-operations/blue-green-deployments/), [Canary Deployments](../../../universe/server-infrastructure/platform-operations/canary-deployments/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

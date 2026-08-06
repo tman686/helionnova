@@ -11,6 +11,12 @@ The standard runtime contract every service ships against.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/), [Configuration Management](../../../../universe/server-infrastructure/platform-operations/configuration-management/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
+**Depended on by:** [API Cluster](../../../../universe/server-infrastructure/compute-tier/api-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

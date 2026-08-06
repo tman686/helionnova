@@ -13,6 +13,12 @@ Authoritative directory of accounts, groups, and service identities.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/)
+
+**Depended on by:** [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [MFA](../../../../universe/server-infrastructure/identity-and-security/mfa/), [Multi-Tenant Manager](../../../../universe/global-infrastructure/multi-tenant-manager/), [OAuth](../../../../universe/server-infrastructure/identity-and-security/oauth/), [OpenID Connect](../../../../universe/server-infrastructure/identity-and-security/openid-connect/), [Token Service](../../../../universe/server-infrastructure/identity-and-security/token-service/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

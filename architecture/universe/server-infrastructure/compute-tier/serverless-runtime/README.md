@@ -11,6 +11,12 @@ Scale-to-zero functions for spiky, short-lived work.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Container Runtime](../../../../universe/server-infrastructure/platform-operations/container-runtime/), [Event Bus](../../../../universe/server-infrastructure/messaging/event-bus/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

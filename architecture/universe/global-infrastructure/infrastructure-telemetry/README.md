@@ -11,6 +11,12 @@ Fleet-wide inventory and signal feed the global control plane reasons over.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../universe/server-infrastructure/observability/metrics/)
+
+**Depended on by:** [Capacity Planner](../../../universe/global-infrastructure/capacity-planner/), [Cost Analytics](../../../universe/server-infrastructure/observability/cost-analytics/), [Global Control Plane](../../../universe/global-infrastructure/global-control-plane/), [Traffic Director](../../../universe/global-infrastructure/traffic-director/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

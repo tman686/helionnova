@@ -13,6 +13,12 @@ QUIC transport endpoint with 0-RTT resumption and connection migration.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/)
+
+**Depended on by:** [HTTP/3 Gateway](../../../../universe/server-infrastructure/gateway-tier/http-3-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

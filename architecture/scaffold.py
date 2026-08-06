@@ -103,6 +103,155 @@ def owner_of(node: dict, ancestors: list[dict]) -> str:
     return inherited(node, ancestors, "owner", DEFAULT_OWNER)
 
 
+def build_index(spec: dict) -> dict[str, tuple[dict, list[dict]]]:
+    """Lowercased component name AND alias -> (node, ancestors).
+
+    Aliases resolve too, so a `depends_on` written against an old name still
+    points at the component that superseded it.
+    """
+    index: dict[str, tuple[dict, list[dict]]] = {}
+    for node, ancestors in walk(spec):
+        if not node.get("name"):
+            continue
+        index[node["name"].lower()] = (node, ancestors)
+        for alias in node.get("aliases") or []:
+            index.setdefault(alias.lower(), (node, ancestors))
+    return index
+
+
+def depends_on(node: dict) -> list[str]:
+    return node.get("depends_on") or []
+
+
+def dependency_edges(spec: dict) -> list[tuple[str, str]]:
+    """(source name, resolved target name) for every declared dependency."""
+    index = build_index(spec)
+    edges = []
+    for node, _ in walk(spec):
+        for target in depends_on(node):
+            found = index.get(target.lower())
+            if found:
+                edges.append((node["name"], found[0]["name"]))
+    return edges
+
+
+def find_cycles(spec: dict) -> list[list[str]]:
+    """Every dependency cycle, as name paths. A cycle means nothing can boot."""
+    index = build_index(spec)
+    graph: dict[str, list[str]] = {}
+    for node, _ in walk(spec):
+        if not node.get("name"):
+            continue
+        resolved = []
+        for target in depends_on(node):
+            found = index.get(target.lower())
+            if found:
+                resolved.append(found[0]["name"])
+        graph[node["name"]] = resolved
+
+    cycles: list[list[str]] = []
+    seen_cycles: set[tuple[str, ...]] = set()
+    WHITE, GREY, BLACK = 0, 1, 2
+    colour = {name: WHITE for name in graph}
+
+    def visit(name: str, path: list[str]) -> None:
+        colour[name] = GREY
+        path.append(name)
+        for nxt in graph.get(name, []):
+            if colour.get(nxt) == GREY:
+                cycle = path[path.index(nxt):] + [nxt]
+                # Normalise rotation so one cycle is not reported many times.
+                core = tuple(cycle[:-1])
+                spin = min(range(len(core)), key=lambda i: core[i:] + core[:i])
+                key = core[spin:] + core[:spin]
+                if key not in seen_cycles:
+                    seen_cycles.add(key)
+                    cycles.append(list(key) + [key[0]])
+            elif colour.get(nxt) == WHITE:
+                visit(nxt, path)
+        path.pop()
+        colour[name] = BLACK
+
+    for name in graph:
+        if colour[name] == WHITE:
+            visit(name, [])
+    return cycles
+
+
+def adjacency(spec: dict, reverse: bool = False) -> dict[str, list[str]]:
+    """Component -> what it depends on, or -> what depends on it."""
+    graph: dict[str, list[str]] = {n["name"]: [] for n in leaves(spec)}
+    for source, target in dependency_edges(spec):
+        if reverse:
+            graph.setdefault(target, []).append(source)
+        else:
+            graph.setdefault(source, []).append(target)
+    return graph
+
+
+def reachable(graph: dict[str, list[str]], start: str) -> set[str]:
+    """Everything reachable from `start`, excluding `start` itself."""
+    seen: set[str] = set()
+    stack = list(graph.get(start, []))
+    while stack:
+        node = stack.pop()
+        if node in seen:
+            continue
+        seen.add(node)
+        stack.extend(graph.get(node, []))
+    seen.discard(start)
+    return seen
+
+
+def shortest_path(graph: dict[str, list[str]], start: str, end: str) -> list[str] | None:
+    """Fewest hops from start to end, or None if end is unreachable."""
+    if start == end:
+        return [start]
+    queue = [[start]]
+    seen = {start}
+    while queue:
+        path = queue.pop(0)
+        for nxt in graph.get(path[-1], []):
+            if nxt == end:
+                return path + [nxt]
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(path + [nxt])
+    return None
+
+
+def build_layers(spec: dict) -> list[list[str]]:
+    """Components grouped into build order.
+
+    Layer 0 depends on nothing. Layer n depends only on layers below it, so
+    everything in a layer can be built in parallel once the previous one exists.
+    Requires an acyclic graph — validate first.
+    """
+    graph = adjacency(spec)
+    depth: dict[str, int] = {}
+    remaining = set(graph)
+    while remaining:
+        ready = [name for name in remaining if all(d in depth for d in graph[name])]
+        if not ready:  # only reachable with a cycle, which validation rejects
+            break
+        for name in ready:
+            depth[name] = 1 + max((depth[d] for d in graph[name]), default=-1)
+        remaining -= set(ready)
+
+    layers: list[list[str]] = [[] for _ in range(max(depth.values(), default=-1) + 1)]
+    for name, level in depth.items():
+        layers[level].append(name)
+    return [sorted(layer) for layer in layers]
+
+
+def dependents_map(spec: dict) -> dict[str, list[str]]:
+    """Reverse edges: component -> everything that depends on it."""
+    reverse: dict[str, list[str]] = {}
+    for source, target in dependency_edges(spec):
+        reverse.setdefault(target, []).append(source)
+    return {k: sorted(set(v)) for k, v in reverse.items()}
+
+
 def status_rollup(node: dict, ancestors: list[dict]) -> dict[str, int]:
     """Component counts by status for everything beneath `node`."""
     counts = {s: 0 for s in STATUSES}
@@ -169,7 +318,14 @@ def breadcrumb(node: dict, ancestors: list[dict]) -> str:
     return " › ".join(parts)
 
 
-def readme_for(node: dict, ancestors: list[dict]) -> str:
+def path_to(target: dict, target_ancestors: list[dict], from_ancestors: list[dict]) -> str:
+    """Relative link from one node's directory to another's."""
+    up = "../" * (len(from_ancestors) + 1)
+    down = "/".join(slugify(n["name"]) for n in target_ancestors[1:] + [target])
+    return f"{up}universe/{down}/"
+
+
+def readme_for(node: dict, ancestors: list[dict], spec: dict | None = None) -> str:
     lines = [
         GENERATED_NOTE,
         "",
@@ -211,6 +367,32 @@ def readme_for(node: dict, ancestors: list[dict]) -> str:
             f"| **Status** | {STATUS_BADGE[status_of(node, ancestors)]} |",
             f"| **Owner** | `{owner_of(node, ancestors)}` |",
             "",
+        ]
+
+        if spec is not None:
+            index = build_index(spec)
+            reverse = dependents_map(spec)
+
+            def links(names: list[str]) -> str:
+                out = []
+                for name in names:
+                    found = index.get(name.lower())
+                    if found:
+                        out.append(f"[{found[0]['name']}]({path_to(found[0], found[1], ancestors)})")
+                return ", ".join(out)
+
+            upstream = depends_on(node)
+            downstream = reverse.get(node["name"], [])
+            lines += [
+                "## Dependencies",
+                "",
+                f"**Depends on:** {links(upstream) if upstream else '_nothing — this is a foundation._'}",
+                "",
+                f"**Depended on by:** {links(downstream) if downstream else '_nothing yet._'}",
+                "",
+            ]
+
+        lines += [
             "This directory holds the component's implementation, config, and runbook.",
             "Change its status in `architecture/universe.yaml` and regenerate.",
             "",
@@ -231,7 +413,7 @@ def write_tree(spec: dict) -> None:
         if ancestors:  # everything below the root gets its own directory
             path = path / slugify(node["name"])
         path.mkdir(parents=True, exist_ok=True)
-        (path / "README.md").write_text(readme_for(node, ancestors), encoding="utf-8")
+        (path / "README.md").write_text(readme_for(node, ancestors, spec), encoding="utf-8")
 
 
 # --------------------------------------------------------------------------- doc
@@ -313,6 +495,8 @@ def write_doc(spec: dict) -> None:
             ]
             lines += component_table(domain, [], [spec])
 
+    lines += dependency_section(spec)
+
     lines += [
         "## Ownership",
         "",
@@ -348,6 +532,90 @@ def write_doc(spec: dict) -> None:
     lines.append("")
 
     DOC.write_text("\n".join(lines), encoding="utf-8")
+
+
+def tier_of(ancestors: list[dict]) -> str:
+    """The tier (or domain, for a domain whose children are components) a node sits in."""
+    return ancestors[-1]["name"] if len(ancestors) > 1 else ancestors[-1]["name"]
+
+
+def dependency_section(spec: dict) -> list[str]:
+    index = build_index(spec)
+    edges = dependency_edges(spec)
+    reverse = dependents_map(spec)
+    total = count_leaves(spec)
+    with_deps = sum(1 for n in leaves(spec) if depends_on(n))
+    foundations = [n["name"] for n in leaves(spec) if not depends_on(n)]
+
+    lines = [
+        "## Dependencies",
+        "",
+        f"{len(edges)} edges across {total} components. {with_deps} declare a dependency; "
+        f"{len(foundations)} are foundations that depend on nothing.",
+        "",
+        "The generator rejects a cycle outright — a dependency loop means nothing in it",
+        "can start.",
+        "",
+        "### Most depended on",
+        "",
+        "The load-bearing components. An outage here fans out furthest.",
+        "",
+        "| Component | Depended on by |",
+        "| --- | --- |",
+    ]
+    ranked = sorted(reverse.items(), key=lambda kv: (-len(kv[1]), kv[0]))[:12]
+    for name, dependents in ranked:
+        node, ancestors = index[name.lower()]
+        path = "/".join(slugify(a["name"]) for a in ancestors[1:] + [node])
+        lines.append(f"| [{name}](./universe/{path}/) | {len(dependents)} |")
+
+    # Aggregate component edges up to tier level; the per-component graph is a hairball.
+    pair_counts: dict[tuple[str, str], int] = {}
+    for source, target in edges:
+        s_tier = tier_of(index[source.lower()][1])
+        t_tier = tier_of(index[target.lower()][1])
+        if s_tier != t_tier:
+            pair_counts[(s_tier, t_tier)] = pair_counts.get((s_tier, t_tier), 0) + 1
+
+    tier_names = sorted({t for pair in pair_counts for t in pair})
+    lines += [
+        "",
+        "### Coupling between tiers",
+        "",
+        "Cross-tier edges only. Edges inside a tier are omitted, as is the per-component",
+        "graph — 157 nodes on one canvas is unreadable. Each component's own page lists",
+        "its exact upstreams and downstreams.",
+        "",
+        "Rows depend on columns.",
+        "",
+        "| depends on → | " + " | ".join(abbreviate(t) for t in tier_names) + " |",
+        "| --- |" + " ---:|" * len(tier_names),
+    ]
+    for source in tier_names:
+        cells = [str(pair_counts.get((source, target), "") or "·") for target in tier_names]
+        lines.append(f"| **{source}** | " + " | ".join(cells) + " |")
+
+    threshold = 3
+    strong = {pair: n for pair, n in pair_counts.items() if n >= threshold}
+    lines += [
+        "",
+        f"Only the strong links ({threshold}+ edges), so the shape stays legible:",
+        "",
+        "```mermaid",
+        "flowchart LR",
+    ]
+    for tier in sorted({t for pair in strong for t in pair}):
+        lines.append(f'    {mermaid_id(tier)}["{mermaid_label(tier)}"]')
+    for (s_tier, t_tier), n in sorted(strong.items(), key=lambda kv: (-kv[1], kv[0])):
+        lines.append(f"    {mermaid_id(s_tier)} -->|{n}| {mermaid_id(t_tier)}")
+    lines += ["```", ""]
+    return lines
+
+
+def abbreviate(tier: str) -> str:
+    """Column headers for the coupling matrix; full names make it far too wide."""
+    words = tier.replace("&", "").split()
+    return "".join(w[0] for w in words if w).upper()
 
 
 def component_table(group: dict, trail: list[dict], ancestors: list[dict]) -> list[str]:
@@ -402,6 +670,25 @@ def validate(spec: dict) -> list[str]:
             if lowered in names:
                 errors.append(f"{where}: duplicate component name, also at {names[lowered]}")
             names[lowered] = where
+
+    index = build_index(spec)
+    for node, ancestors in walk(spec):
+        where = breadcrumb(node, ancestors)
+        declared = depends_on(node)
+        if declared and not is_leaf(node):
+            errors.append(f"{where}: depends_on belongs on components, not groups")
+        for target in declared:
+            if target.lower() == str(node.get("name", "")).lower():
+                errors.append(f"{where}: depends on itself")
+            elif target.lower() not in index:
+                errors.append(f"{where}: depends on unknown component {target!r}")
+            elif not is_leaf(index[target.lower()][0]):
+                errors.append(f"{where}: depends on {target!r}, which is a group not a component")
+        if len(declared) != len(set(t.lower() for t in declared)):
+            errors.append(f"{where}: duplicate entries in depends_on")
+
+    for cycle in find_cycles(spec):
+        errors.append("dependency cycle: " + " -> ".join(cycle))
 
     seen: dict[str, str] = {}
     for node, ancestors in walk(spec):

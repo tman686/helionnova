@@ -11,6 +11,12 @@ Raw and curated zones over open table formats.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Metadata Store](../../../../universe/server-infrastructure/data-tier/metadata-store/)
+
+**Depended on by:** [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

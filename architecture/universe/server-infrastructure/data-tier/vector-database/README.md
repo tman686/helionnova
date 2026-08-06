@@ -13,6 +13,12 @@ Persistent embedding store backing vector search.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Backup Manager](../../../../universe/server-infrastructure/data-tier/backup-manager/)
+
+**Depended on by:** [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

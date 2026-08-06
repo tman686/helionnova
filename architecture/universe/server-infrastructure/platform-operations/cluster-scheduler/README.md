@@ -13,6 +13,12 @@ Placement by affinity, taints, priority, and preemption.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Autoscaler](../../../../universe/server-infrastructure/platform-operations/autoscaler/), [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/), [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Private dependency resolution and mirroring.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Package Registry](../../../../universe/server-infrastructure/developer-platform/package-registry/)
+
+**Depended on by:** [Build Farm](../../../../universe/server-infrastructure/developer-platform/build-farm/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

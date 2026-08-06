@@ -13,6 +13,12 @@ Third-party extensions with review and signing.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Package Registry](../../../../universe/server-infrastructure/developer-platform/package-registry/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ Outbound webhooks with payload signing, retries, and delivery receipts.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 
