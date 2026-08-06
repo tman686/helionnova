@@ -48,6 +48,28 @@ class Routing(unittest.TestCase):
         ):
             self.assertIn("**RAG** needs", ask(message).text, message)
 
+    def test_asking_what_is_in_a_tier(self):
+        for message in ("what's in messaging", "whats in messaging",
+                        "what is in the messaging", "show messaging"):
+            self.assertIn("**Messaging** (12 components", ask(message).text, message)
+
+    def test_every_example_in_the_client_help_is_understood(self):
+        """The help text is the first thing anyone copies, so nothing in it
+        may be a phrasing the interpreter does not actually know."""
+        import pathlib
+
+        usage = (pathlib.Path(__file__).resolve().parent.parent / "bin" / "hn").read_text()
+        block = usage.split("USAGE", 1)[1].split("USAGE", 1)[0]
+        # Examples are the indented "  hn ..." lines; the title starts at column 0.
+        examples = [
+            line.strip()[3:].strip().strip('"')
+            for line in block.splitlines()
+            if line.startswith("  hn ") and not line.strip().startswith("hn --")
+        ]
+        self.assertGreater(len(examples), 5, "help text stopped listing examples")
+        for message in examples:
+            self.assertTrue(ask(message)._handled, f"help offers {message!r} but it is unknown")
+
     def test_case_and_punctuation_are_forgiven(self):
         self.assertIn("Object Storage", ask("WHAT DEPENDS ON object storage?").text)
 

@@ -305,6 +305,7 @@ ROUTES: list[tuple[str, callable]] = [
     (rf"^\s*dependents\s+(?:of\s+)?{NAME}\s*$", cmd_dependents),
     (rf"^\s*what\s+does\s+{NAME}\s+(?:need|depend on|use)\s*$", cmd_dependencies),
     (rf"^\s*(?:dependencies|upstreams)\s+(?:of\s+)?{NAME}\s*$", cmd_dependencies),
+    (r"^\s*what(?:'s|s| is)\s+in\s+(?:the\s+)?(?P<tier>.+?)\s*$", cmd_show),
     (r"^\s*(?:show|list)\s+(?:me\s+)?(?:the\s+)?(?P<tier>.+?)\s*$", cmd_show),
     (r"^\s*(?:find|search|where is|look up)\s+(?P<term>.+?)\s*$", cmd_find),
     (

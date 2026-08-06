@@ -26,19 +26,33 @@ case "${1:-}" in
   --help|-h|'') cat <<'USAGE'
 hn — talk to the architecture spec in plain English
 
-  hn <message>              answer locally and instantly
-  hn --remote <message>     run on GitHub and commit the result
+Type your question as ordinary words. Copy any of these as-is:
 
-Try:
-  hn help                   what it understands
   hn status
   hn tiers
-  hn what depends on object storage
   hn find kafka
-  hn mark inference as building
+  hn show messaging
+  hn what depends on object storage
+  hn what does rag need
 
-Local mode never writes. Only --remote commits, and only the repo owner's
-token is accepted by the workflow.
+To change something:
+
+  hn mark inference as building
+  hn set owner of data tier to storage-crew
+  hn make web search depend on metrics
+  hn add Redis Cache to Data Tier: Caches hot queries.
+
+No quotes needed, and do not type any < > brackets you see in the docs —
+they mean "your own words go here". The shell treats them as redirection
+and will just report a syntax error.
+
+Apostrophes do need quoting, because the shell eats them:
+
+  hn "what's in messaging"
+
+Locally this never writes, so nothing you type can break the repo. Add
+--remote to run it on GitHub and commit the result; that needs GH_TOKEN,
+and the workflow obeys the repo owner only.
 
 Environment:
   GH_TOKEN     required for --remote
