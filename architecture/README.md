@@ -8,6 +8,10 @@ platform is planned to run, in one place.
 | [`universe.yaml`](./universe.yaml) | **Source of truth.** Hand-edited. |
 | [`scaffold.py`](./scaffold.py) | Generator. Reads the spec, writes everything below. |
 | [`page.py`](./page.py) | Renders the spec as a self-contained browsable page. |
+| [`command.py`](./command.py) | Interprets a plain-English message and acts on the spec. |
+| [`brain.py`](./brain.py) | Optional Ollama fallback for messages the patterns miss. |
+| [`../bin/hn`](../bin/hn) | The client. Prompt, one-shot, or `--remote`. |
+| [`../bin/hn-up`](../bin/hn-up) | Starts Ollama quietly, then opens the prompt. |
 | [`test_scaffold.py`](./test_scaffold.py) | Tests for the generator, chiefly the validator. |
 | [`test_page.py`](./test_page.py) | Tests for the page generator. |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Generated. Full tree, per-tier tables, alias index. |
