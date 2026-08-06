@@ -29,12 +29,28 @@ GENERATED_NOTE = (
     "Do not edit by hand. -->"
 )
 
+# Lifecycle a component moves through. Order is meaningful — rollups render in it.
+STATUSES = ("planned", "building", "running")
+DEFAULT_STATUS = "planned"
+DEFAULT_OWNER = "unassigned"
+STATUS_BADGE = {"planned": "○ Planned", "building": "◐ Building", "running": "● Running"}
+OWNER_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
 
 def slugify(name: str) -> str:
     """'HTTP/3 Gateway' -> 'http-3-gateway', 'Identity & Security' -> 'identity-and-security'."""
     slug = name.lower().replace("&", " and ")
     slug = re.sub(r"[^a-z0-9]+", "-", slug)
     return slug.strip("-")
+
+
+def mermaid_id(name: str) -> str:
+    return "n_" + slugify(name).replace("-", "_")
+
+
+def mermaid_label(text: str) -> str:
+    """Mermaid chokes on bare & " and #; entity-encode them."""
+    return text.replace("&", "&amp;").replace('"', "&quot;").replace("#", "&#35;")
 
 
 def children(node: dict) -> list[dict]:
@@ -53,15 +69,52 @@ def walk(node: dict, trail: list[dict] | None = None):
         yield from walk(child, trail + [node])
 
 
+def leaves(node: dict):
+    for candidate, _ in walk(node):
+        if is_leaf(candidate):
+            yield candidate
+
+
 def count_leaves(node: dict) -> int:
-    if is_leaf(node):
-        return 1
-    return sum(count_leaves(c) for c in children(node))
+    return sum(1 for _ in leaves(node))
 
 
 def clean(text: str) -> str:
     """Collapse YAML folded-scalar whitespace into a single line."""
     return " ".join((text or "").split())
+
+
+def inherited(node: dict, ancestors: list[dict], key: str, default: str) -> str:
+    """Nearest explicit value walking up from the node, else the default.
+
+    Lets a tier set `owner` once instead of repeating it on all 20 components.
+    """
+    for candidate in [node, *reversed(ancestors)]:
+        if candidate.get(key):
+            return candidate[key]
+    return default
+
+
+def status_of(node: dict, ancestors: list[dict]) -> str:
+    return inherited(node, ancestors, "status", DEFAULT_STATUS)
+
+
+def owner_of(node: dict, ancestors: list[dict]) -> str:
+    return inherited(node, ancestors, "owner", DEFAULT_OWNER)
+
+
+def status_rollup(node: dict, ancestors: list[dict]) -> dict[str, int]:
+    """Component counts by status for everything beneath `node`."""
+    counts = {s: 0 for s in STATUSES}
+    for candidate, trail in walk(node):
+        if is_leaf(candidate):
+            counts[status_of(candidate, ancestors + trail)] += 1
+    return counts
+
+
+def rollup_text(counts: dict[str, int]) -> str:
+    parts = [f"{n} {name}" for name, n in counts.items() if n]
+    return ", ".join(parts) or "no components"
 
 
 # --------------------------------------------------------------------------- tree
@@ -87,6 +140,27 @@ def render_tree(node: dict, prefix: str = "", is_last: bool = True, is_root: boo
     return lines
 
 
+def render_diagram(spec: dict) -> list[str]:
+    """Tier-level Mermaid flowchart.
+
+    Deliberately stops at tiers — all 157 components on one canvas is a hairball,
+    and the ASCII tree already covers full depth.
+    """
+    lines = ["```mermaid", "flowchart TD", f'    {mermaid_id(spec["name"])}(["{spec["name"]}"])']
+    for domain in children(spec):
+        d_id = mermaid_id(domain["name"])
+        label = f'{mermaid_label(domain["name"])}<br/><small>{count_leaves(domain)} components</small>'
+        lines.append(f'    {mermaid_id(spec["name"])} --> {d_id}["{label}"]')
+        # Only descend into real tiers. A domain whose children are components
+        # (Global Infrastructure) stops here rather than spilling 15 leaf nodes.
+        for tier in [c for c in children(domain) if children(c)]:
+            t_id = mermaid_id(tier["name"])
+            t_label = f'{mermaid_label(tier["name"])}<br/><small>{count_leaves(tier)}</small>'
+            lines.append(f'    {d_id} --> {t_id}["{t_label}"]')
+    lines += ["```", ""]
+    return lines
+
+
 # --------------------------------------------------------------------------- readmes
 
 
@@ -109,29 +183,36 @@ def readme_for(node: dict, ancestors: list[dict]) -> str:
 
     aliases = node.get("aliases")
     if aliases:
-        lines += [
-            "**Also known as:** " + ", ".join(aliases),
-            "",
-        ]
+        lines += ["**Also known as:** " + ", ".join(aliases), ""]
 
     kids = children(node)
     if kids:
+        counts = status_rollup(node, ancestors)
         lines += [
-            f"## Components ({len(kids)})",
-            "",
-            "| Component | Purpose |",
+            "| | |",
             "| --- | --- |",
+            f"| **Owner** | `{owner_of(node, ancestors)}` |",
+            f"| **Components** | {len(kids)} ({rollup_text(counts)}) |",
+            "",
+            "## Components",
+            "",
+            "| Component | Status | Purpose |",
+            "| --- | --- | --- |",
         ]
         for child in kids:
             link = f"[{child['name']}](./{slugify(child['name'])}/)"
-            lines.append(f"| {link} | {clean(child.get('description', ''))} |")
+            badge = STATUS_BADGE[status_of(child, ancestors + [node])]
+            lines.append(f"| {link} | {badge} | {clean(child.get('description', ''))} |")
         lines.append("")
     else:
         lines += [
-            "## Status",
+            "| | |",
+            "| --- | --- |",
+            f"| **Status** | {STATUS_BADGE[status_of(node, ancestors)]} |",
+            f"| **Owner** | `{owner_of(node, ancestors)}` |",
             "",
-            "Not implemented. This directory reserves the component's place in the",
-            "tree and is where its implementation, config, and runbook belong.",
+            "This directory holds the component's implementation, config, and runbook.",
+            "Change its status in `architecture/universe.yaml` and regenerate.",
             "",
         ]
 
@@ -158,8 +239,9 @@ def write_tree(spec: dict) -> None:
 
 def write_doc(spec: dict) -> None:
     total = sum(1 for _ in walk(spec)) - 1
-    leaves = count_leaves(spec)
-    tiers = children(spec)
+    total_leaves = count_leaves(spec)
+    domains = children(spec)
+    counts = status_rollup(spec, [])
 
     lines = [
         GENERATED_NOTE,
@@ -168,35 +250,87 @@ def write_doc(spec: dict) -> None:
         "",
         clean(spec.get("description", "")),
         "",
-        f"**{total} nodes · {leaves} components · {len(tiers)} top-level domains.**",
+        f"**{total} nodes · {total_leaves} components · {len(domains)} top-level domains.**",
         "",
         "Source of truth: [`universe.yaml`](./universe.yaml). Regenerate this file and",
         "the [`universe/`](./universe/) tree with `python3 architecture/scaffold.py`.",
         "",
-        "## Contents",
+        "## Status",
+        "",
+        "| Status | Components | Share |",
+        "| --- | --- | --- |",
+    ]
+    for status in STATUSES:
+        n = counts[status]
+        share = f"{100 * n / total_leaves:.0f}%" if total_leaves else "—"
+        lines.append(f"| {STATUS_BADGE[status]} | {n} | {share} |")
+    lines += [
+        "",
+        "A component having a directory does not mean it is running — this tree is a",
+        "map, not an inventory.",
+        "",
+        "## Map",
+        "",
+        "Tier level only; the [tree](#tree) below goes to full depth.",
         "",
     ]
+    lines += render_diagram(spec)
 
-    for tier in tiers:
-        lines.append(f"- [{tier['name']}](#{slugify(tier['name'])}) — {count_leaves(tier)} components")
-        for group in children(tier):
-            if children(group):
+    lines += ["## Contents", ""]
+    for domain in domains:
+        lines.append(
+            f"- [{domain['name']}](#{slugify(domain['name'])}) — {count_leaves(domain)} components"
+        )
+        for tier in children(domain):
+            if children(tier):
                 lines.append(
-                    f"  - [{group['name']}](#{slugify(group['name'])}) — {count_leaves(group)} components"
+                    f"  - [{tier['name']}](#{slugify(tier['name'])}) — {count_leaves(tier)} components"
                 )
     lines += ["", "## Tree", "", "```", *render_tree(spec), "```", ""]
 
-    for tier in tiers:
-        lines += [f"## {tier['name']}", "", clean(tier.get("description", "")), ""]
-        groups = [c for c in children(tier) if children(c)]
-        if groups:
-            for group in groups:
-                lines += [f"### {group['name']}", "", clean(group.get("description", "")), ""]
-                lines += component_table(group, [tier])
+    for domain in domains:
+        lines += [f"## {domain['name']}", "", clean(domain.get("description", "")), ""]
+        tiers = [c for c in children(domain) if children(c)]
+        if tiers:
+            for tier in tiers:
+                lines += [
+                    f"### {tier['name']}",
+                    "",
+                    clean(tier.get("description", "")),
+                    "",
+                    f"**Owner:** `{owner_of(tier, [spec, domain])}` · "
+                    f"**{count_leaves(tier)} components** "
+                    f"({rollup_text(status_rollup(tier, [spec, domain]))})",
+                    "",
+                ]
+                lines += component_table(tier, [domain], [spec, domain])
         else:
-            lines += component_table(tier, [])
+            lines += [
+                f"**Owner:** `{owner_of(domain, [spec])}` · "
+                f"**{count_leaves(domain)} components** "
+                f"({rollup_text(status_rollup(domain, [spec]))})",
+                "",
+            ]
+            lines += component_table(domain, [], [spec])
 
     lines += [
+        "## Ownership",
+        "",
+        "Owners are inherited down the tree — a tier's owner applies to every",
+        "component under it unless that component overrides it.",
+        "",
+        "| Owner | Components |",
+        "| --- | --- |",
+    ]
+    owners: dict[str, int] = {}
+    for node, ancestors in walk(spec):
+        if is_leaf(node):
+            owners[owner_of(node, ancestors)] = owners.get(owner_of(node, ancestors), 0) + 1
+    for owner, n in sorted(owners.items(), key=lambda kv: (-kv[1], kv[0])):
+        lines.append(f"| `{owner}` | {n} |")
+
+    lines += [
+        "",
         "## Alias index",
         "",
         "Earlier names, and the component that now owns each one.",
@@ -216,14 +350,15 @@ def write_doc(spec: dict) -> None:
     DOC.write_text("\n".join(lines), encoding="utf-8")
 
 
-def component_table(group: dict, trail: list[dict]) -> list[str]:
+def component_table(group: dict, trail: list[dict], ancestors: list[dict]) -> list[str]:
     """`trail` is the group's ancestor chain below the root, outermost first."""
     path = "/".join(slugify(n["name"]) for n in trail + [group])
-    lines = ["| Component | Purpose |", "| --- | --- |"]
+    lines = ["| Component | Status | Purpose |", "| --- | --- | --- |"]
     for child in children(group):
+        badge = STATUS_BADGE[status_of(child, ancestors + [group])]
         lines.append(
             f"| [{child['name']}](./universe/{path}/{slugify(child['name'])}/) "
-            f"| {clean(child.get('description', ''))} |"
+            f"| {badge} | {clean(child.get('description', ''))} |"
         )
     lines.append("")
     return lines
@@ -245,6 +380,14 @@ def validate(spec: dict) -> list[str]:
             continue
         if not clean(node.get("description", "")):
             errors.append(f"{where}: missing description")
+
+        status = node.get("status")
+        if status is not None and status not in STATUSES:
+            errors.append(f"{where}: status {status!r} not one of {', '.join(STATUSES)}")
+
+        owner = node.get("owner")
+        if owner is not None and not OWNER_RE.match(str(owner)):
+            errors.append(f"{where}: owner {owner!r} is not a lowercase team slug")
 
         # Sibling slugs must be unique or directories collide.
         parent = ancestors[-1]["name"] if ancestors else ""

@@ -6,19 +6,24 @@
 
 The tiers that run inside a region. Requests enter at the gateway, are served by compute, and are backed by data, identity, and messaging — with observability, platform operations, and the developer platform supporting all of it.
 
-## Components (9)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Gateway Tier](./gateway-tier/) | North–south entry point. Terminates transport, authenticates, shapes, and routes traffic before it reaches any service. |
-| [Compute Tier](./compute-tier/) | Where work actually executes. Pools are shaped by workload profile — synchronous, batch, streaming, accelerated — and packed by a scheduler. |
-| [AI Services](./ai-services/) | The model lifecycle end to end — data and training on one side, serving, retrieval, and monitoring on the other. |
-| [Data Tier](./data-tier/) | Durable state. Each store is chosen for an access pattern, with replication, backup, and lifecycle managed alongside. |
-| [Identity & Security](./identity-and-security/) | Who a caller is, what they may do, and proof of what they did. Also the cryptographic material everything else depends on. |
-| [Messaging](./messaging/) | Asynchronous movement of events, jobs, and notifications — the decoupling layer between services and the path out to users. |
-| [Observability](./observability/) | What the platform knows about itself: signals, the views built on them, and the workflow that turns a bad signal into a fix. |
-| [Platform Operations](./platform-operations/) | Running the fleet: scheduling workloads onto nodes, shipping changes safely, and taking them back when they go wrong. |
-| [Developer Platform](./developer-platform/) | The path from a commit to a running release, plus the surfaces engineers use to discover, extend, and test the platform. |
+| **Owner** | `unassigned` |
+| **Components** | 9 (142 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Gateway Tier](./gateway-tier/) | ○ Planned | North–south entry point. Terminates transport, authenticates, shapes, and routes traffic before it reaches any service. |
+| [Compute Tier](./compute-tier/) | ○ Planned | Where work actually executes. Pools are shaped by workload profile — synchronous, batch, streaming, accelerated — and packed by a scheduler. |
+| [AI Services](./ai-services/) | ○ Planned | The model lifecycle end to end — data and training on one side, serving, retrieval, and monitoring on the other. |
+| [Data Tier](./data-tier/) | ○ Planned | Durable state. Each store is chosen for an access pattern, with replication, backup, and lifecycle managed alongside. |
+| [Identity & Security](./identity-and-security/) | ○ Planned | Who a caller is, what they may do, and proof of what they did. Also the cryptographic material everything else depends on. |
+| [Messaging](./messaging/) | ○ Planned | Asynchronous movement of events, jobs, and notifications — the decoupling layer between services and the path out to users. |
+| [Observability](./observability/) | ○ Planned | What the platform knows about itself: signals, the views built on them, and the workflow that turns a bad signal into a fix. |
+| [Platform Operations](./platform-operations/) | ○ Planned | Running the fleet: scheduling workloads onto nodes, shipping changes safely, and taking them back when they go wrong. |
+| [Developer Platform](./developer-platform/) | ○ Planned | The path from a commit to a running release, plus the surfaces engineers use to discover, extend, and test the platform. |
 
 ---
 

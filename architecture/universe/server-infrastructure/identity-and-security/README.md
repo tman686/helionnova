@@ -6,29 +6,34 @@
 
 Who a caller is, what they may do, and proof of what they did. Also the cryptographic material everything else depends on.
 
-## Components (19)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Identity Provider](./identity-provider/) | Authoritative directory of accounts, groups, and service identities. |
-| [OAuth](./oauth/) | Delegated authorization flows and token issuance for clients. |
-| [OpenID Connect](./openid-connect/) | Federated authentication and identity-token issuance. |
-| [MFA](./mfa/) | Second-factor enrollment and verification, including WebAuthn. |
-| [Session Store](./session-store/) | Server-side session state with revocation and device binding. |
-| [Token Service](./token-service/) | Mints, rotates, and introspects access, refresh, and service tokens. |
-| [Authorization](./authorization/) | Central permission decisions for users, services, and tenants. |
-| [Policy Engine](./policy-engine/) | Declarative policy evaluation at admission time and request time. |
-| [PKI](./pki/) | Internal certificate hierarchy and issuance workflow. |
-| [Certificate Authority](./certificate-authority/) | Signs and revokes certificates for services and edge endpoints. |
-| [Key Management](./key-management/) | Envelope-encryption keys with scheduled rotation and hardware backing. |
-| [Secret Vault](./secret-vault/) | Dynamic secrets and short-lived credential leasing for workloads. |
-| [Security Monitoring](./security-monitoring/) | Continuous signal collection across the fleet's security surface. |
-| [Threat Detection](./threat-detection/) | Behavioural and signature-based detection of active threats. |
-| [SIEM](./siem/) | Correlates security events fleet-wide into investigable incidents. |
-| [Vulnerability Scanner](./vulnerability-scanner/) | Scans images, dependencies, and hosts against advisory feeds. |
-| [Compliance](./compliance/) | Control mapping, evidence collection, and audit readiness. |
-| [Audit Pipeline](./audit-pipeline/) | Tamper-evident log of privileged and tenant-visible actions. |
-| [Security Operations](./security-operations/) | Response workflows, on-call rotation, and containment runbooks. |
+| **Owner** | `security` |
+| **Components** | 19 (19 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Identity Provider](./identity-provider/) | ○ Planned | Authoritative directory of accounts, groups, and service identities. |
+| [OAuth](./oauth/) | ○ Planned | Delegated authorization flows and token issuance for clients. |
+| [OpenID Connect](./openid-connect/) | ○ Planned | Federated authentication and identity-token issuance. |
+| [MFA](./mfa/) | ○ Planned | Second-factor enrollment and verification, including WebAuthn. |
+| [Session Store](./session-store/) | ○ Planned | Server-side session state with revocation and device binding. |
+| [Token Service](./token-service/) | ○ Planned | Mints, rotates, and introspects access, refresh, and service tokens. |
+| [Authorization](./authorization/) | ○ Planned | Central permission decisions for users, services, and tenants. |
+| [Policy Engine](./policy-engine/) | ○ Planned | Declarative policy evaluation at admission time and request time. |
+| [PKI](./pki/) | ○ Planned | Internal certificate hierarchy and issuance workflow. |
+| [Certificate Authority](./certificate-authority/) | ○ Planned | Signs and revokes certificates for services and edge endpoints. |
+| [Key Management](./key-management/) | ○ Planned | Envelope-encryption keys with scheduled rotation and hardware backing. |
+| [Secret Vault](./secret-vault/) | ○ Planned | Dynamic secrets and short-lived credential leasing for workloads. |
+| [Security Monitoring](./security-monitoring/) | ○ Planned | Continuous signal collection across the fleet's security surface. |
+| [Threat Detection](./threat-detection/) | ○ Planned | Behavioural and signature-based detection of active threats. |
+| [SIEM](./siem/) | ○ Planned | Correlates security events fleet-wide into investigable incidents. |
+| [Vulnerability Scanner](./vulnerability-scanner/) | ○ Planned | Scans images, dependencies, and hosts against advisory feeds. |
+| [Compliance](./compliance/) | ○ Planned | Control mapping, evidence collection, and audit readiness. |
+| [Audit Pipeline](./audit-pipeline/) | ○ Planned | Tamper-evident log of privileged and tenant-visible actions. |
+| [Security Operations](./security-operations/) | ○ Planned | Response workflows, on-call rotation, and containment runbooks. |
 
 ---
 

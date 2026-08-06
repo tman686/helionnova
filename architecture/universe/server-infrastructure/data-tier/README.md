@@ -6,26 +6,31 @@
 
 Durable state. Each store is chosen for an access pattern, with replication, backup, and lifecycle managed alongside.
 
-## Components (16)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [SQL Cluster](./sql-cluster/) | Transactional relational storage with replicas and automatic failover. |
-| [NoSQL Cluster](./nosql-cluster/) | Horizontally partitioned document and wide-column storage. |
-| [Graph Database](./graph-database/) | Relationship-first storage for traversal-heavy queries. |
-| [Time-Series Database](./time-series-database/) | High-cardinality metric and event series with retention tiers. |
-| [Vector Database](./vector-database/) | Persistent embedding store backing vector search. |
-| [Search Engine](./search-engine/) | Inverted-index search with ranking, facets, and highlighting. |
-| [Object Storage](./object-storage/) | Durable versioned object store for large immutable payloads. |
-| [Blob Storage](./blob-storage/) | Hot binary storage for media and generated assets. |
-| [File Storage](./file-storage/) | Shared POSIX-style filesystems for workloads that require them. |
-| [Cache Cluster](./cache-cluster/) | Distributed in-memory cache sitting in front of hot data paths. |
-| [Data Lake](./data-lake/) | Raw and curated zones over open table formats. |
-| [Data Warehouse](./data-warehouse/) | Modeled analytical store for business intelligence and reporting. |
-| [ETL Platform](./etl-platform/) | Batch and streaming ingestion, transformation, and data-quality checks. |
-| [Backup Manager](./backup-manager/) | Scheduled backups, rehearsed restores, and retention policy. |
-| [Replication Manager](./replication-manager/) | Cross-zone and cross-region replication with lag monitoring. |
-| [Archive Manager](./archive-manager/) | Cold-tier lifecycle transitions and legal-hold enforcement. |
+| **Owner** | `data-platform` |
+| **Components** | 16 (16 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [SQL Cluster](./sql-cluster/) | ○ Planned | Transactional relational storage with replicas and automatic failover. |
+| [NoSQL Cluster](./nosql-cluster/) | ○ Planned | Horizontally partitioned document and wide-column storage. |
+| [Graph Database](./graph-database/) | ○ Planned | Relationship-first storage for traversal-heavy queries. |
+| [Time-Series Database](./time-series-database/) | ○ Planned | High-cardinality metric and event series with retention tiers. |
+| [Vector Database](./vector-database/) | ○ Planned | Persistent embedding store backing vector search. |
+| [Search Engine](./search-engine/) | ○ Planned | Inverted-index search with ranking, facets, and highlighting. |
+| [Object Storage](./object-storage/) | ○ Planned | Durable versioned object store for large immutable payloads. |
+| [Blob Storage](./blob-storage/) | ○ Planned | Hot binary storage for media and generated assets. |
+| [File Storage](./file-storage/) | ○ Planned | Shared POSIX-style filesystems for workloads that require them. |
+| [Cache Cluster](./cache-cluster/) | ○ Planned | Distributed in-memory cache sitting in front of hot data paths. |
+| [Data Lake](./data-lake/) | ○ Planned | Raw and curated zones over open table formats. |
+| [Data Warehouse](./data-warehouse/) | ○ Planned | Modeled analytical store for business intelligence and reporting. |
+| [ETL Platform](./etl-platform/) | ○ Planned | Batch and streaming ingestion, transformation, and data-quality checks. |
+| [Backup Manager](./backup-manager/) | ○ Planned | Scheduled backups, rehearsed restores, and retention policy. |
+| [Replication Manager](./replication-manager/) | ○ Planned | Cross-zone and cross-region replication with lag monitoring. |
+| [Archive Manager](./archive-manager/) | ○ Planned | Cold-tier lifecycle transitions and legal-hold enforcement. |
 
 ---
 

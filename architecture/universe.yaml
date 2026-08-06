@@ -22,6 +22,7 @@ children:
     description: >-
       Cross-region, cross-cloud, cross-tenant control. Decides where capacity
       lives and where traffic goes; the tiers below execute within that frame.
+    owner: infra-global
     children:
       - name: Global Control Plane
         description: Single authoritative control surface for every region, cloud, and tenant in the fleet.
@@ -69,6 +70,7 @@ children:
         description: >-
           North–south entry point. Terminates transport, authenticates, shapes,
           and routes traffic before it reaches any service.
+        owner: platform-edge
         children:
           - name: API Gateway
             description: Single front door for external traffic — auth, routing, quotas, and transforms.
@@ -113,6 +115,7 @@ children:
         description: >-
           Where work actually executes. Pools are shaped by workload profile —
           synchronous, batch, streaming, accelerated — and packed by a scheduler.
+        owner: platform-compute
         children:
           - name: API Cluster
             description: Stateless request-serving nodes for synchronous API workloads.
@@ -145,6 +148,7 @@ children:
         description: >-
           The model lifecycle end to end — data and training on one side,
           serving, retrieval, and monitoring on the other.
+        owner: ai-platform
         children:
           - name: Inference
             description: Low-latency online model serving with request batching and autoscaling.
@@ -198,6 +202,7 @@ children:
         description: >-
           Durable state. Each store is chosen for an access pattern, with
           replication, backup, and lifecycle managed alongside.
+        owner: data-platform
         children:
           - name: SQL Cluster
             description: Transactional relational storage with replicas and automatic failover.
@@ -246,6 +251,7 @@ children:
         description: >-
           Who a caller is, what they may do, and proof of what they did.
           Also the cryptographic material everything else depends on.
+        owner: security
         children:
           - name: Identity Provider
             description: Authoritative directory of accounts, groups, and service identities.
@@ -305,6 +311,7 @@ children:
         description: >-
           Asynchronous movement of events, jobs, and notifications — the
           decoupling layer between services and the path out to users.
+        owner: platform-messaging
         children:
           - name: Event Bus
             description: Backbone carrying domain events between services.
@@ -338,6 +345,7 @@ children:
         description: >-
           What the platform knows about itself: signals, the views built on
           them, and the workflow that turns a bad signal into a fix.
+        owner: observability
         children:
           - name: Metrics
             description: Time-series collection, aggregation, and recording rules.
@@ -375,6 +383,7 @@ children:
         description: >-
           Running the fleet: scheduling workloads onto nodes, shipping changes
           safely, and taking them back when they go wrong.
+        owner: platform-ops
         children:
           - name: Kubernetes
             description: Cluster control planes and workload APIs.
@@ -431,6 +440,7 @@ children:
         description: >-
           The path from a commit to a running release, plus the surfaces
           engineers use to discover, extend, and test the platform.
+        owner: developer-experience
         children:
           - name: CI
             description: Builds and tests every change on push and pull request.

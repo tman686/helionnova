@@ -6,30 +6,35 @@
 
 Running the fleet: scheduling workloads onto nodes, shipping changes safely, and taking them back when they go wrong.
 
-## Components (20)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Kubernetes](./kubernetes/) | Cluster control planes and workload APIs. |
-| [Container Runtime](./container-runtime/) | OCI runtime, image pulls, and sandbox isolation. |
-| [Service Mesh](./service-mesh/) | Mutual TLS, retries, and traffic policy between services. |
-| [Load Balancer](./load-balancer/) | In-cluster layer-4 and layer-7 balancing across service endpoints. |
-| [Autoscaler](./autoscaler/) | Horizontal, vertical, and cluster autoscaling driven by live signals. |
-| [Node Manager](./node-manager/) | Node lifecycle — provisioning, draining, patching, and repair. |
-| [Cluster Scheduler](./cluster-scheduler/) | Placement by affinity, taints, priority, and preemption. |
-| [Service Discovery](./service-discovery/) | Resolves service endpoints as instances come and go. |
-| [Service Registry](./service-registry/) | Authoritative catalog of services, owners, and dependencies. |
-| [Rolling Deployments](./rolling-deployments/) | Incremental instance replacement behind health gates. |
-| [Blue/Green Deployments](./blue-green-deployments/) | Parallel environment cutover with instant switchback. |
-| [Canary Deployments](./canary-deployments/) | Small-slice exposure with automated metric analysis. |
-| [Rollback Manager](./rollback-manager/) | One-command return to the last known-good version. |
-| [Failover Manager](./failover-manager/) | Promotes standbys and reroutes traffic when a component fails. |
-| [Update Service](./update-service/) | Delivers signed updates to agents, edge nodes, and clients. |
-| [Infrastructure as Code](./infrastructure-as-code/) | Declarative infrastructure with reviewed plan and apply. |
-| [Configuration Management](./configuration-management/) | Layered, environment-aware configuration with safe reload. |
-| [Secret Distribution](./secret-distribution/) | Delivers vault-issued secrets to workloads without persisting them. |
-| [Fleet Manager](./fleet-manager/) | Inventory and rollout targeting across the whole fleet. |
-| [Resource Optimizer](./resource-optimizer/) | Rightsizes requests and limits from observed usage. |
+| **Owner** | `platform-ops` |
+| **Components** | 20 (20 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Kubernetes](./kubernetes/) | ○ Planned | Cluster control planes and workload APIs. |
+| [Container Runtime](./container-runtime/) | ○ Planned | OCI runtime, image pulls, and sandbox isolation. |
+| [Service Mesh](./service-mesh/) | ○ Planned | Mutual TLS, retries, and traffic policy between services. |
+| [Load Balancer](./load-balancer/) | ○ Planned | In-cluster layer-4 and layer-7 balancing across service endpoints. |
+| [Autoscaler](./autoscaler/) | ○ Planned | Horizontal, vertical, and cluster autoscaling driven by live signals. |
+| [Node Manager](./node-manager/) | ○ Planned | Node lifecycle — provisioning, draining, patching, and repair. |
+| [Cluster Scheduler](./cluster-scheduler/) | ○ Planned | Placement by affinity, taints, priority, and preemption. |
+| [Service Discovery](./service-discovery/) | ○ Planned | Resolves service endpoints as instances come and go. |
+| [Service Registry](./service-registry/) | ○ Planned | Authoritative catalog of services, owners, and dependencies. |
+| [Rolling Deployments](./rolling-deployments/) | ○ Planned | Incremental instance replacement behind health gates. |
+| [Blue/Green Deployments](./blue-green-deployments/) | ○ Planned | Parallel environment cutover with instant switchback. |
+| [Canary Deployments](./canary-deployments/) | ○ Planned | Small-slice exposure with automated metric analysis. |
+| [Rollback Manager](./rollback-manager/) | ○ Planned | One-command return to the last known-good version. |
+| [Failover Manager](./failover-manager/) | ○ Planned | Promotes standbys and reroutes traffic when a component fails. |
+| [Update Service](./update-service/) | ○ Planned | Delivers signed updates to agents, edge nodes, and clients. |
+| [Infrastructure as Code](./infrastructure-as-code/) | ○ Planned | Declarative infrastructure with reviewed plan and apply. |
+| [Configuration Management](./configuration-management/) | ○ Planned | Layered, environment-aware configuration with safe reload. |
+| [Secret Distribution](./secret-distribution/) | ○ Planned | Delivers vault-issued secrets to workloads without persisting them. |
+| [Fleet Manager](./fleet-manager/) | ○ Planned | Inventory and rollout targeting across the whole fleet. |
+| [Resource Optimizer](./resource-optimizer/) | ○ Planned | Rightsizes requests and limits from observed usage. |
 
 ---
 

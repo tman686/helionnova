@@ -6,10 +6,13 @@
 
 Cross-zone and cross-region replication with lag monitoring.
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `data-platform` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

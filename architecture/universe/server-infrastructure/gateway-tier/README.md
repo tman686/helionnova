@@ -6,25 +6,30 @@
 
 North–south entry point. Terminates transport, authenticates, shapes, and routes traffic before it reaches any service.
 
-## Components (15)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [API Gateway](./api-gateway/) | Single front door for external traffic — auth, routing, quotas, and transforms. |
-| [Reverse Proxy](./reverse-proxy/) | Layer-7 proxy handling connection termination, buffering, and upstream selection. |
-| [GraphQL Gateway](./graphql-gateway/) | Federated GraphQL schema stitched across backing services. |
-| [REST Gateway](./rest-gateway/) | REST surface with versioned resources and OpenAPI contracts. |
-| [gRPC Gateway](./grpc-gateway/) | gRPC ingress with protobuf contracts and HTTP/JSON transcoding. |
-| [WebSocket Gateway](./websocket-gateway/) | Long-lived bidirectional connections with backpressure and fan-out. |
-| [HTTP/3 Gateway](./http-3-gateway/) | HTTP/3 termination for multiplexed transport without head-of-line blocking. |
-| [QUIC Gateway](./quic-gateway/) | QUIC transport endpoint with 0-RTT resumption and connection migration. |
-| [TLS Terminator](./tls-terminator/) | Certificate presentation, cipher policy, and mutual-TLS enforcement at the edge. |
-| [API Firewall](./api-firewall/) | Schema-aware filtering that blocks malformed, abusive, and injection traffic. |
-| [Request Router](./request-router/) | Path, host, and header routing plus traffic splitting for progressive delivery. |
-| [Rate Limiter](./rate-limiter/) | Per-tenant, per-key, and per-route quota enforcement with burst budgets. |
-| [DDoS Protection](./ddos-protection/) | Volumetric and application-layer attack absorption and scrubbing. |
-| [API Version Manager](./api-version-manager/) | Version negotiation, deprecation windows, and sunset signalling. |
-| [Edge Gateway](./edge-gateway/) | Regional and edge ingress that serves cacheable traffic and shields the origin. |
+| **Owner** | `platform-edge` |
+| **Components** | 15 (15 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [API Gateway](./api-gateway/) | ○ Planned | Single front door for external traffic — auth, routing, quotas, and transforms. |
+| [Reverse Proxy](./reverse-proxy/) | ○ Planned | Layer-7 proxy handling connection termination, buffering, and upstream selection. |
+| [GraphQL Gateway](./graphql-gateway/) | ○ Planned | Federated GraphQL schema stitched across backing services. |
+| [REST Gateway](./rest-gateway/) | ○ Planned | REST surface with versioned resources and OpenAPI contracts. |
+| [gRPC Gateway](./grpc-gateway/) | ○ Planned | gRPC ingress with protobuf contracts and HTTP/JSON transcoding. |
+| [WebSocket Gateway](./websocket-gateway/) | ○ Planned | Long-lived bidirectional connections with backpressure and fan-out. |
+| [HTTP/3 Gateway](./http-3-gateway/) | ○ Planned | HTTP/3 termination for multiplexed transport without head-of-line blocking. |
+| [QUIC Gateway](./quic-gateway/) | ○ Planned | QUIC transport endpoint with 0-RTT resumption and connection migration. |
+| [TLS Terminator](./tls-terminator/) | ○ Planned | Certificate presentation, cipher policy, and mutual-TLS enforcement at the edge. |
+| [API Firewall](./api-firewall/) | ○ Planned | Schema-aware filtering that blocks malformed, abusive, and injection traffic. |
+| [Request Router](./request-router/) | ○ Planned | Path, host, and header routing plus traffic splitting for progressive delivery. |
+| [Rate Limiter](./rate-limiter/) | ○ Planned | Per-tenant, per-key, and per-route quota enforcement with burst budgets. |
+| [DDoS Protection](./ddos-protection/) | ○ Planned | Volumetric and application-layer attack absorption and scrubbing. |
+| [API Version Manager](./api-version-manager/) | ○ Planned | Version negotiation, deprecation windows, and sunset signalling. |
+| [Edge Gateway](./edge-gateway/) | ○ Planned | Regional and edge ingress that serves cacheable traffic and shields the origin. |
 
 ---
 

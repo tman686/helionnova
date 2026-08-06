@@ -6,10 +6,13 @@
 
 Continuous rightsizing, commitment coverage, and waste elimination.
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `infra-global` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

@@ -6,28 +6,33 @@
 
 The model lifecycle end to end — data and training on one side, serving, retrieval, and monitoring on the other.
 
-## Components (18)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Inference](./inference/) | Low-latency online model serving with request batching and autoscaling. |
-| [Model Registry](./model-registry/) | System of record for models, lineage, and promotion state. |
-| [Model Versioning](./model-versioning/) | Immutable versions with reproducible build and data provenance. |
-| [Model Deployment](./model-deployment/) | Rollout of model versions behind traffic splits and quality guardrails. |
-| [Embeddings](./embeddings/) | Text, image, and audio embedding generation for retrieval and clustering. |
-| [RAG](./rag/) | Retrieval-augmented generation pipeline joining retrieved context to prompts. |
-| [Knowledge Service](./knowledge-service/) | Curated, permission-aware corpus that retrieval draws from. |
-| [Vector Search](./vector-search/) | Approximate nearest-neighbour index serving similarity queries at scale. |
-| [Agent Runtime](./agent-runtime/) | Executes tool-using agents with budgets, tracing, and sandboxing. |
-| [Vision](./vision/) | Image and video understanding — detection, classification, segmentation. |
-| [Speech](./speech/) | Speech-to-text, text-to-speech, and speaker diarization. |
-| [OCR](./ocr/) | Document text extraction with layout and table recovery. |
-| [Model Cache](./model-cache/) | Warm weights and prefix/KV cache tiers that cut cold-start and repeat cost. |
-| [Dataset Manager](./dataset-manager/) | Versioned datasets, splits, labels, and access control. |
-| [Experiment Tracking](./experiment-tracking/) | Runs, hyperparameters, metrics, and artifacts, comparable over time. |
-| [Training Pipeline](./training-pipeline/) | Distributed training orchestration with checkpointing and resumption. |
-| [Evaluation](./evaluation/) | Offline and online evaluation suites that gate model promotion. |
-| [Model Monitoring](./model-monitoring/) | Drift, quality, latency, and cost monitoring for deployed models. |
+| **Owner** | `ai-platform` |
+| **Components** | 18 (18 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Inference](./inference/) | ○ Planned | Low-latency online model serving with request batching and autoscaling. |
+| [Model Registry](./model-registry/) | ○ Planned | System of record for models, lineage, and promotion state. |
+| [Model Versioning](./model-versioning/) | ○ Planned | Immutable versions with reproducible build and data provenance. |
+| [Model Deployment](./model-deployment/) | ○ Planned | Rollout of model versions behind traffic splits and quality guardrails. |
+| [Embeddings](./embeddings/) | ○ Planned | Text, image, and audio embedding generation for retrieval and clustering. |
+| [RAG](./rag/) | ○ Planned | Retrieval-augmented generation pipeline joining retrieved context to prompts. |
+| [Knowledge Service](./knowledge-service/) | ○ Planned | Curated, permission-aware corpus that retrieval draws from. |
+| [Vector Search](./vector-search/) | ○ Planned | Approximate nearest-neighbour index serving similarity queries at scale. |
+| [Agent Runtime](./agent-runtime/) | ○ Planned | Executes tool-using agents with budgets, tracing, and sandboxing. |
+| [Vision](./vision/) | ○ Planned | Image and video understanding — detection, classification, segmentation. |
+| [Speech](./speech/) | ○ Planned | Speech-to-text, text-to-speech, and speaker diarization. |
+| [OCR](./ocr/) | ○ Planned | Document text extraction with layout and table recovery. |
+| [Model Cache](./model-cache/) | ○ Planned | Warm weights and prefix/KV cache tiers that cut cold-start and repeat cost. |
+| [Dataset Manager](./dataset-manager/) | ○ Planned | Versioned datasets, splits, labels, and access control. |
+| [Experiment Tracking](./experiment-tracking/) | ○ Planned | Runs, hyperparameters, metrics, and artifacts, comparable over time. |
+| [Training Pipeline](./training-pipeline/) | ○ Planned | Distributed training orchestration with checkpointing and resumption. |
+| [Evaluation](./evaluation/) | ○ Planned | Offline and online evaluation suites that gate model promotion. |
+| [Model Monitoring](./model-monitoring/) | ○ Planned | Drift, quality, latency, and cost monitoring for deployed models. |
 
 ---
 

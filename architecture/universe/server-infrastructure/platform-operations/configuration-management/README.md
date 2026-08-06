@@ -8,10 +8,13 @@ Layered, environment-aware configuration with safe reload.
 
 **Also known as:** Configuration Server
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `platform-ops` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

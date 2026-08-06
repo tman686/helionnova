@@ -6,25 +6,30 @@
 
 Cross-region, cross-cloud, cross-tenant control. Decides where capacity lives and where traffic goes; the tiers below execute within that frame.
 
-## Components (15)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Global Control Plane](./global-control-plane/) | Single authoritative control surface for every region, cloud, and tenant in the fleet. |
-| [Multi-Cloud Manager](./multi-cloud-manager/) | Normalizes provisioning and policy across cloud providers and bare metal. |
-| [Multi-Region Manager](./multi-region-manager/) | Owns region topology, placement rules, and cross-region promotion. |
-| [Multi-Tenant Manager](./multi-tenant-manager/) | Tenant isolation boundaries, quotas, and per-tenant configuration. |
-| [Global DNS](./global-dns/) | Authoritative DNS with health-aware records and geographic routing. |
-| [CDN](./cdn/) | Edge distribution of static and cacheable-dynamic responses, with purge control. |
-| [Traffic Director](./traffic-director/) | Policy-driven steering of traffic across regions and service versions. |
-| [Global Load Balancer](./global-load-balancer/) | Anycast entry point distributing requests to the healthiest nearby region. |
-| [Disaster Recovery Controller](./disaster-recovery-controller/) | Drives failover drills, RPO/RTO tracking, and real region evacuations. |
-| [Edge Fabric](./edge-fabric/) | Network of edge points of presence running latency-sensitive compute near users. |
-| [Region Manager](./region-manager/) | Lifecycle of an individual region — build out, drain, decommission. |
-| [Zone Manager](./zone-manager/) | Availability-zone placement, spread, and zone-level fault isolation. |
-| [Capacity Planner](./capacity-planner/) | Forecasts demand and reserves compute, storage, and accelerator capacity ahead of it. |
-| [Cost Optimizer](./cost-optimizer/) | Continuous rightsizing, commitment coverage, and waste elimination. |
-| [Infrastructure Telemetry](./infrastructure-telemetry/) | Fleet-wide inventory and signal feed the global control plane reasons over. |
+| **Owner** | `infra-global` |
+| **Components** | 15 (15 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Global Control Plane](./global-control-plane/) | ○ Planned | Single authoritative control surface for every region, cloud, and tenant in the fleet. |
+| [Multi-Cloud Manager](./multi-cloud-manager/) | ○ Planned | Normalizes provisioning and policy across cloud providers and bare metal. |
+| [Multi-Region Manager](./multi-region-manager/) | ○ Planned | Owns region topology, placement rules, and cross-region promotion. |
+| [Multi-Tenant Manager](./multi-tenant-manager/) | ○ Planned | Tenant isolation boundaries, quotas, and per-tenant configuration. |
+| [Global DNS](./global-dns/) | ○ Planned | Authoritative DNS with health-aware records and geographic routing. |
+| [CDN](./cdn/) | ○ Planned | Edge distribution of static and cacheable-dynamic responses, with purge control. |
+| [Traffic Director](./traffic-director/) | ○ Planned | Policy-driven steering of traffic across regions and service versions. |
+| [Global Load Balancer](./global-load-balancer/) | ○ Planned | Anycast entry point distributing requests to the healthiest nearby region. |
+| [Disaster Recovery Controller](./disaster-recovery-controller/) | ○ Planned | Drives failover drills, RPO/RTO tracking, and real region evacuations. |
+| [Edge Fabric](./edge-fabric/) | ○ Planned | Network of edge points of presence running latency-sensitive compute near users. |
+| [Region Manager](./region-manager/) | ○ Planned | Lifecycle of an individual region — build out, drain, decommission. |
+| [Zone Manager](./zone-manager/) | ○ Planned | Availability-zone placement, spread, and zone-level fault isolation. |
+| [Capacity Planner](./capacity-planner/) | ○ Planned | Forecasts demand and reserves compute, storage, and accelerator capacity ahead of it. |
+| [Cost Optimizer](./cost-optimizer/) | ○ Planned | Continuous rightsizing, commitment coverage, and waste elimination. |
+| [Infrastructure Telemetry](./infrastructure-telemetry/) | ○ Planned | Fleet-wide inventory and signal feed the global control plane reasons over. |
 
 ---
 

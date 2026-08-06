@@ -8,10 +8,13 @@ Cluster control planes and workload APIs.
 
 **Also known as:** Kubernetes Control Plane, Orchestrator
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `platform-ops` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

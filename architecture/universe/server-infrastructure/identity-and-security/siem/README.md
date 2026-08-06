@@ -8,10 +8,13 @@ Correlates security events fleet-wide into investigable incidents.
 
 **Also known as:** Security Information & Event Management (SIEM)
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `security` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

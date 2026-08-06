@@ -6,22 +6,27 @@
 
 What the platform knows about itself: signals, the views built on them, and the workflow that turns a bad signal into a fix.
 
-## Components (12)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Metrics](./metrics/) | Time-series collection, aggregation, and recording rules. |
-| [Logging](./logging/) | Structured log ingestion, indexing, and retention tiers. |
-| [Distributed Tracing](./distributed-tracing/) | End-to-end spans across services with configurable sampling. |
-| [Dashboards](./dashboards/) | Curated views by service, tenant, and user journey. |
-| [Alerting](./alerting/) | Symptom-based alerts routed to the owning on-call. |
-| [Incident Manager](./incident-manager/) | Declares, tracks, and reviews incidents end to end. |
-| [Error Tracking](./error-tracking/) | Deduplicated exception grouping with release attribution. |
-| [Performance Analytics](./performance-analytics/) | Latency and throughput profiling down to the individual endpoint. |
-| [Capacity Analytics](./capacity-analytics/) | Headroom and saturation analysis feeding capacity planning. |
-| [Cost Analytics](./cost-analytics/) | Spend attribution by service, tenant, and request. |
-| [Health Monitoring](./health-monitoring/) | Liveness and readiness aggregated into service-level health state. |
-| [Uptime Monitoring](./uptime-monitoring/) | External synthetic probes measuring user-visible availability. |
+| **Owner** | `observability` |
+| **Components** | 12 (12 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Metrics](./metrics/) | ○ Planned | Time-series collection, aggregation, and recording rules. |
+| [Logging](./logging/) | ○ Planned | Structured log ingestion, indexing, and retention tiers. |
+| [Distributed Tracing](./distributed-tracing/) | ○ Planned | End-to-end spans across services with configurable sampling. |
+| [Dashboards](./dashboards/) | ○ Planned | Curated views by service, tenant, and user journey. |
+| [Alerting](./alerting/) | ○ Planned | Symptom-based alerts routed to the owning on-call. |
+| [Incident Manager](./incident-manager/) | ○ Planned | Declares, tracks, and reviews incidents end to end. |
+| [Error Tracking](./error-tracking/) | ○ Planned | Deduplicated exception grouping with release attribution. |
+| [Performance Analytics](./performance-analytics/) | ○ Planned | Latency and throughput profiling down to the individual endpoint. |
+| [Capacity Analytics](./capacity-analytics/) | ○ Planned | Headroom and saturation analysis feeding capacity planning. |
+| [Cost Analytics](./cost-analytics/) | ○ Planned | Spend attribution by service, tenant, and request. |
+| [Health Monitoring](./health-monitoring/) | ○ Planned | Liveness and readiness aggregated into service-level health state. |
+| [Uptime Monitoring](./uptime-monitoring/) | ○ Planned | External synthetic probes measuring user-visible availability. |
 
 ---
 

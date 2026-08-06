@@ -8,10 +8,13 @@ Long-lived bidirectional connections with backpressure and fan-out.
 
 **Also known as:** WebSocket Server
 
-## Status
+| | |
+| --- | --- |
+| **Status** | ○ Planned |
+| **Owner** | `platform-edge` |
 
-Not implemented. This directory reserves the component's place in the
-tree and is where its implementation, config, and runbook belong.
+This directory holds the component's implementation, config, and runbook.
+Change its status in `architecture/universe.yaml` and regenerate.
 
 ---
 

@@ -6,9 +6,14 @@
 
 Top of the platform hierarchy. Everything Helion Nova runs — globally distributed infrastructure and the server tiers inside each region.
 
-## Components (2)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Global Infrastructure](./global-infrastructure/) | Cross-region, cross-cloud, cross-tenant control. Decides where capacity lives and where traffic goes; the tiers below execute within that frame. |
-| [Server Infrastructure](./server-infrastructure/) | The tiers that run inside a region. Requests enter at the gateway, are served by compute, and are backed by data, identity, and messaging — with observability, platform operations, and the developer platform supporting all of it. |
+| **Owner** | `unassigned` |
+| **Components** | 2 (157 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Global Infrastructure](./global-infrastructure/) | ○ Planned | Cross-region, cross-cloud, cross-tenant control. Decides where capacity lives and where traffic goes; the tiers below execute within that frame. |
+| [Server Infrastructure](./server-infrastructure/) | ○ Planned | The tiers that run inside a region. Requests enter at the gateway, are served by compute, and are backed by data, identity, and messaging — with observability, platform operations, and the developer platform supporting all of it. |

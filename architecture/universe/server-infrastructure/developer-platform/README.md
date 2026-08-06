@@ -6,27 +6,32 @@
 
 The path from a commit to a running release, plus the surfaces engineers use to discover, extend, and test the platform.
 
-## Components (17)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [CI](./ci/) | Builds and tests every change on push and pull request. |
-| [CD](./cd/) | Promotes verified artifacts through environments. |
-| [Build Farm](./build-farm/) | Distributed cached builds for large compilation workloads. |
-| [Artifact Repository](./artifact-repository/) | Immutable build outputs with provenance attestations. |
-| [Package Registry](./package-registry/) | Language and container package hosting. |
-| [SDK Registry](./sdk-registry/) | Versioned client SDKs generated from API contracts. |
-| [Plugin Marketplace](./plugin-marketplace/) | Third-party extensions with review and signing. |
-| [Documentation Portal](./documentation-portal/) | Product, API, and runbook documentation. |
-| [Symbol Server](./symbol-server/) | Debug symbols and source indexes for crash symbolication. |
-| [Benchmark Platform](./benchmark-platform/) | Repeatable performance benchmarks with regression alerting. |
-| [Test Infrastructure](./test-infrastructure/) | Ephemeral environments and fixtures for integration testing. |
-| [Release Manager](./release-manager/) | Release trains, changelogs, and approval gates. |
-| [API Explorer](./api-explorer/) | Interactive request builder against live and mock endpoints. |
-| [Developer Portal](./developer-portal/) | Single entry point to services, ownership, and self-service actions. |
-| [Template Generator](./template-generator/) | Scaffolds new services from golden-path templates. |
-| [Internal Package Manager](./internal-package-manager/) | Private dependency resolution and mirroring. |
-| [License Service](./license-service/) | Entitlement and license validation for distributed builds. |
+| **Owner** | `developer-experience` |
+| **Components** | 17 (17 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [CI](./ci/) | ○ Planned | Builds and tests every change on push and pull request. |
+| [CD](./cd/) | ○ Planned | Promotes verified artifacts through environments. |
+| [Build Farm](./build-farm/) | ○ Planned | Distributed cached builds for large compilation workloads. |
+| [Artifact Repository](./artifact-repository/) | ○ Planned | Immutable build outputs with provenance attestations. |
+| [Package Registry](./package-registry/) | ○ Planned | Language and container package hosting. |
+| [SDK Registry](./sdk-registry/) | ○ Planned | Versioned client SDKs generated from API contracts. |
+| [Plugin Marketplace](./plugin-marketplace/) | ○ Planned | Third-party extensions with review and signing. |
+| [Documentation Portal](./documentation-portal/) | ○ Planned | Product, API, and runbook documentation. |
+| [Symbol Server](./symbol-server/) | ○ Planned | Debug symbols and source indexes for crash symbolication. |
+| [Benchmark Platform](./benchmark-platform/) | ○ Planned | Repeatable performance benchmarks with regression alerting. |
+| [Test Infrastructure](./test-infrastructure/) | ○ Planned | Ephemeral environments and fixtures for integration testing. |
+| [Release Manager](./release-manager/) | ○ Planned | Release trains, changelogs, and approval gates. |
+| [API Explorer](./api-explorer/) | ○ Planned | Interactive request builder against live and mock endpoints. |
+| [Developer Portal](./developer-portal/) | ○ Planned | Single entry point to services, ownership, and self-service actions. |
+| [Template Generator](./template-generator/) | ○ Planned | Scaffolds new services from golden-path templates. |
+| [Internal Package Manager](./internal-package-manager/) | ○ Planned | Private dependency resolution and mirroring. |
+| [License Service](./license-service/) | ○ Planned | Entitlement and license validation for distributed builds. |
 
 ---
 

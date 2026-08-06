@@ -30,9 +30,23 @@ stale commit fails loudly instead of drifting.
 ```yaml
 - name: Rate Limiter
   description: Per-tenant, per-key, and per-route quota enforcement with burst budgets.
+  status: building               # optional; planned | building | running
+  owner: platform-edge           # optional; lowercase team slug
   aliases: [Throttle Server]     # optional
   children: []                   # optional; omit for a leaf component
 ```
+
+`status` and `owner` are **inherited** — set them once on a tier and every
+component beneath it picks them up, unless that component overrides it. `status`
+defaults to `planned` and `owner` to `unassigned`, so a new component is honestly
+marked as not-yet-built until someone says otherwise.
+
+The generated docs roll these up: a status table and an ownership table in
+`ARCHITECTURE.md`, a per-tier breakdown on each tier page, and a status badge on
+every component row.
+
+> The current tier owners (`platform-edge`, `data-platform`, `security`, …) are
+> placeholders standing in for real teams. Replace them — it is one line per tier.
 
 Directory names are slugs derived from `name` — `HTTP/3 Gateway` becomes
 `http-3-gateway`, `Identity & Security` becomes `identity-and-security`. Renaming
@@ -45,6 +59,8 @@ or doc still resolves to the node that superseded it.
 The generator validates the spec before writing anything and refuses to run on:
 
 - a node missing a name or description
+- a `status` outside `planned | building | running`
+- an `owner` that is not a lowercase team slug
 - sibling names that slugify to the same directory
 - duplicate component names anywhere in the tree
 - an alias claimed by two components, or shadowing a real component name
@@ -52,10 +68,10 @@ The generator validates the spec before writing anything and refuses to run on:
 ## Scope
 
 This tree is a **map, not an inventory** — a component having a directory does
-not mean it is running. Each leaf `README.md` carries a status line; the default
-is "not implemented". As components get built, the implementation, config, and
-runbook belong in that directory, and the status line is the thing to update
-first.
+not mean it is running. Every component carries a status, and all 157 are
+currently `planned`. As components get built, the implementation, config, and
+runbook belong in that component's directory, and its `status` in the spec is the
+thing to update first.
 
 Two tiers sit at the top:
 

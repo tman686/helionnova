@@ -6,22 +6,27 @@
 
 Asynchronous movement of events, jobs, and notifications — the decoupling layer between services and the path out to users.
 
-## Components (12)
-
-| Component | Purpose |
+| | |
 | --- | --- |
-| [Event Bus](./event-bus/) | Backbone carrying domain events between services. |
-| [Message Queue](./message-queue/) | Durable point-to-point queues with retries and dead-letter handling. |
-| [Job Queue](./job-queue/) | Prioritized background work with leases and idempotent execution. |
-| [Kafka Cluster](./kafka-cluster/) | Partitioned, replayable log for high-throughput streams. |
-| [MQTT Broker](./mqtt-broker/) | Lightweight publish/subscribe for constrained and IoT clients. |
-| [Redis Streams](./redis-streams/) | Low-latency stream primitives with consumer groups. |
-| [Pub/Sub](./pub-sub/) | Topic fan-out to many independent subscribers. |
-| [Notification Hub](./notification-hub/) | Routes notifications across channels according to user preferences. |
-| [Email Service](./email-service/) | Transactional email delivery, templating, and bounce handling. |
-| [SMS Service](./sms-service/) | SMS delivery with carrier failover and opt-out handling. |
-| [Push Notifications](./push-notifications/) | Mobile and web push with device-token lifecycle management. |
-| [Webhook Dispatcher](./webhook-dispatcher/) | Outbound webhooks with payload signing, retries, and delivery receipts. |
+| **Owner** | `platform-messaging` |
+| **Components** | 12 (12 planned) |
+
+## Components
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Event Bus](./event-bus/) | ○ Planned | Backbone carrying domain events between services. |
+| [Message Queue](./message-queue/) | ○ Planned | Durable point-to-point queues with retries and dead-letter handling. |
+| [Job Queue](./job-queue/) | ○ Planned | Prioritized background work with leases and idempotent execution. |
+| [Kafka Cluster](./kafka-cluster/) | ○ Planned | Partitioned, replayable log for high-throughput streams. |
+| [MQTT Broker](./mqtt-broker/) | ○ Planned | Lightweight publish/subscribe for constrained and IoT clients. |
+| [Redis Streams](./redis-streams/) | ○ Planned | Low-latency stream primitives with consumer groups. |
+| [Pub/Sub](./pub-sub/) | ○ Planned | Topic fan-out to many independent subscribers. |
+| [Notification Hub](./notification-hub/) | ○ Planned | Routes notifications across channels according to user preferences. |
+| [Email Service](./email-service/) | ○ Planned | Transactional email delivery, templating, and bounce handling. |
+| [SMS Service](./sms-service/) | ○ Planned | SMS delivery with carrier failover and opt-out handling. |
+| [Push Notifications](./push-notifications/) | ○ Planned | Mobile and web push with device-token lifecycle management. |
+| [Webhook Dispatcher](./webhook-dispatcher/) | ○ Planned | Outbound webhooks with payload signing, retries, and delivery receipts. |
 
 ---
 
