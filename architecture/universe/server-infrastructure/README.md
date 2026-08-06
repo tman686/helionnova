@@ -9,7 +9,7 @@ The tiers that run inside a region. Requests enter at the gateway, are served by
 | | |
 | --- | --- |
 | **Owner** | `unassigned` |
-| **Components** | 9 (142 planned) |
+| **Components** | 10 (165 planned) |
 
 ## Components
 
@@ -19,6 +19,7 @@ The tiers that run inside a region. Requests enter at the gateway, are served by
 | [Compute Tier](./compute-tier/) | ○ Planned | Where work actually executes. Pools are shaped by workload profile — synchronous, batch, streaming, accelerated — and packed by a scheduler. |
 | [AI Services](./ai-services/) | ○ Planned | The model lifecycle end to end — data and training on one side, serving, retrieval, and monitoring on the other. |
 | [Data Tier](./data-tier/) | ○ Planned | Durable state. Each store is chosen for an access pattern, with replication, backup, and lifecycle managed alongside. |
+| [External Data](./external-data/) | ○ Planned | Everything the platform pulls in from outside itself — search, news, feeds, and third-party APIs — fetched politely, cached, deduplicated, and attributed to a source. |
 | [Identity & Security](./identity-and-security/) | ○ Planned | Who a caller is, what they may do, and proof of what they did. Also the cryptographic material everything else depends on. |
 | [Messaging](./messaging/) | ○ Planned | Asynchronous movement of events, jobs, and notifications — the decoupling layer between services and the path out to users. |
 | [Observability](./observability/) | ○ Planned | What the platform knows about itself: signals, the views built on them, and the workflow that turns a bad signal into a fix. |

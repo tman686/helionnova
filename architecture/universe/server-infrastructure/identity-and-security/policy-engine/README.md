@@ -17,7 +17,7 @@ Declarative policy evaluation at admission time and request time.
 
 **Depends on:** [Configuration Management](../../../../universe/server-infrastructure/platform-operations/configuration-management/)
 
-**Depended on by:** [API Firewall](../../../../universe/server-infrastructure/gateway-tier/api-firewall/), [Agent Runtime](../../../../universe/server-infrastructure/ai-services/agent-runtime/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [Compliance](../../../../universe/server-infrastructure/identity-and-security/compliance/)
+**Depended on by:** [API Firewall](../../../../universe/server-infrastructure/gateway-tier/api-firewall/), [Agent Runtime](../../../../universe/server-infrastructure/ai-services/agent-runtime/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [Compliance](../../../../universe/server-infrastructure/identity-and-security/compliance/), [Source Registry](../../../../universe/server-infrastructure/external-data/source-registry/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

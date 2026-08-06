@@ -17,7 +17,7 @@ Inverted-index search with ranking, facets, and highlighting.
 
 **Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
 
-**Depended on by:** [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Logging](../../../../universe/server-infrastructure/observability/logging/)
+**Depended on by:** [Data Catalog](../../../../universe/server-infrastructure/data-tier/data-catalog/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Logging](../../../../universe/server-infrastructure/observability/logging/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

@@ -15,7 +15,7 @@ Executes tool-using agents with budgets, tracing, and sandboxing.
 
 ## Dependencies
 
-**Depends on:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/)
+**Depends on:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/), [Web Search](../../../../universe/server-infrastructure/external-data/web-search/)
 
 **Depended on by:** _nothing yet._
 

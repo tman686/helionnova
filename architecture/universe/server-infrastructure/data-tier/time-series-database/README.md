@@ -15,7 +15,7 @@ High-cardinality metric and event series with retention tiers.
 
 **Depends on:** [Archive Manager](../../../../universe/server-infrastructure/data-tier/archive-manager/)
 
-**Depended on by:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/)
+**Depended on by:** [Market Data Feed](../../../../universe/server-infrastructure/external-data/market-data-feed/), [Metrics](../../../../universe/server-infrastructure/observability/metrics/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

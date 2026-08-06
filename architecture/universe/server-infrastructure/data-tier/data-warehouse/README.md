@@ -13,7 +13,7 @@ Modeled analytical store for business intelligence and reporting.
 
 ## Dependencies
 
-**Depends on:** [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/)
+**Depends on:** [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/), [Metadata Store](../../../../universe/server-infrastructure/data-tier/metadata-store/)
 
 **Depended on by:** _nothing yet._
 

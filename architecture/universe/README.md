@@ -9,7 +9,7 @@ Top of the platform hierarchy. Everything Helion Nova runs — globally distribu
 | | |
 | --- | --- |
 | **Owner** | `unassigned` |
-| **Components** | 2 (157 planned) |
+| **Components** | 2 (180 planned) |
 
 ## Components
 

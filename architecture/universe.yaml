@@ -25,7 +25,7 @@ children:
     owner: infra-global
     children:
       - name: Global Control Plane
-        description: Single authoritative control surface for every region, 
+        description: Single authoritative control surface for every region,
           cloud, and tenant in the fleet.
         depends_on:
           - Infrastructure Telemetry
@@ -37,31 +37,31 @@ children:
         depends_on:
           - Infrastructure as Code
       - name: Multi-Region Manager
-        description: Owns region topology, placement rules, and cross-region 
+        description: Owns region topology, placement rules, and cross-region
           promotion.
         aliases: [Multi-Region Deployment]
         depends_on:
           - Region Manager
           - Zone Manager
       - name: Multi-Tenant Manager
-        description: Tenant isolation boundaries, quotas, and per-tenant 
+        description: Tenant isolation boundaries, quotas, and per-tenant
           configuration.
         depends_on:
           - Authorization
           - Identity Provider
       - name: Global DNS
-        description: Authoritative DNS with health-aware records and 
+        description: Authoritative DNS with health-aware records and
           geographic routing.
         depends_on:
           - Health Monitoring
       - name: CDN
-        description: Edge distribution of static and cacheable-dynamic 
+        description: Edge distribution of static and cacheable-dynamic
           responses, with purge control.
         depends_on:
           - Object Storage
           - Edge Fabric
       - name: Traffic Director
-        description: Policy-driven steering of traffic across regions and 
+        description: Policy-driven steering of traffic across regions and
           service versions.
         aliases: [Traffic Manager]
         depends_on:
@@ -69,7 +69,7 @@ children:
           - Health Monitoring
           - Infrastructure Telemetry
       - name: Global Load Balancer
-        description: Anycast entry point distributing requests to the 
+        description: Anycast entry point distributing requests to the
           healthiest nearby region.
         depends_on:
           - Global DNS
@@ -83,14 +83,14 @@ children:
           - Backup Manager
           - Multi-Region Manager
       - name: Edge Fabric
-        description: Network of edge points of presence running 
+        description: Network of edge points of presence running
           latency-sensitive compute near users.
         aliases: [Edge Deployment]
         depends_on:
           - Edge Runtime
           - Edge Gateway
       - name: Region Manager
-        description: Lifecycle of an individual region — build out, drain, 
+        description: Lifecycle of an individual region — build out, drain,
           decommission.
         depends_on:
           - Zone Manager
@@ -99,21 +99,20 @@ children:
         description: Availability-zone placement, spread, and zone-level fault
           isolation.
       - name: Capacity Planner
-        description: Forecasts demand and reserves compute, storage, and 
+        description: Forecasts demand and reserves compute, storage, and
           accelerator capacity ahead of it.
         depends_on:
           - Capacity Analytics
           - Infrastructure Telemetry
       - name: Cost Optimizer
-        description: Continuous rightsizing, commitment coverage, and waste 
+        description: Continuous rightsizing, commitment coverage, and waste
           elimination.
         depends_on:
           - Cost Analytics
           - Resource Optimizer
       - name: Infrastructure Telemetry
-        description: Fleet-wide inventory and signal feed the global control 
+        description: Fleet-wide inventory and signal feed the global control
           plane reasons over.
-
         depends_on:
           - Metrics
   - name: Server Infrastructure
@@ -130,7 +129,7 @@ children:
         owner: platform-edge
         children:
           - name: API Gateway
-            description: Single front door for external traffic — auth, 
+            description: Single front door for external traffic — auth,
               routing, quotas, and transforms.
             aliases: [Gateway Server]
             depends_on:
@@ -140,60 +139,60 @@ children:
               - Authorization
               - Token Service
           - name: Reverse Proxy
-            description: Layer-7 proxy handling connection termination, 
+            description: Layer-7 proxy handling connection termination,
               buffering, and upstream selection.
             depends_on:
               - TLS Terminator
               - Service Discovery
           - name: GraphQL Gateway
-            description: Federated GraphQL schema stitched across backing 
+            description: Federated GraphQL schema stitched across backing
               services.
             aliases: [GraphQL Server]
             depends_on:
               - Request Router
               - Service Discovery
           - name: REST Gateway
-            description: REST surface with versioned resources and OpenAPI 
+            description: REST surface with versioned resources and OpenAPI
               contracts.
             aliases: [REST Server]
             depends_on:
               - Request Router
               - API Version Manager
           - name: gRPC Gateway
-            description: gRPC ingress with protobuf contracts and HTTP/JSON 
+            description: gRPC ingress with protobuf contracts and HTTP/JSON
               transcoding.
             aliases: [gRPC Server]
             depends_on:
               - Request Router
               - Service Discovery
           - name: WebSocket Gateway
-            description: Long-lived bidirectional connections with 
+            description: Long-lived bidirectional connections with
               backpressure and fan-out.
             aliases: [WebSocket Server]
             depends_on:
               - TLS Terminator
               - Session Store
           - name: HTTP/3 Gateway
-            description: HTTP/3 termination for multiplexed transport without 
+            description: HTTP/3 termination for multiplexed transport without
               head-of-line blocking.
             aliases: [HTTP/3 Server]
             depends_on:
               - QUIC Gateway
               - TLS Terminator
           - name: QUIC Gateway
-            description: QUIC transport endpoint with 0-RTT resumption and 
+            description: QUIC transport endpoint with 0-RTT resumption and
               connection migration.
             aliases: [QUIC Server]
             depends_on:
               - TLS Terminator
           - name: TLS Terminator
-            description: Certificate presentation, cipher policy, and 
+            description: Certificate presentation, cipher policy, and
               mutual-TLS enforcement at the edge.
             depends_on:
               - Certificate Authority
               - Key Management
           - name: API Firewall
-            description: Schema-aware filtering that blocks malformed, 
+            description: Schema-aware filtering that blocks malformed,
               abusive, and injection traffic.
             depends_on:
               - Policy Engine
@@ -203,26 +202,25 @@ children:
             depends_on:
               - Service Discovery
           - name: Rate Limiter
-            description: Per-tenant, per-key, and per-route quota enforcement 
+            description: Per-tenant, per-key, and per-route quota enforcement
               with burst budgets.
             depends_on:
               - Cache Cluster
           - name: DDoS Protection
-            description: Volumetric and application-layer attack absorption 
+            description: Volumetric and application-layer attack absorption
               and scrubbing.
             depends_on:
               - Threat Detection
           - name: API Version Manager
-            description: Version negotiation, deprecation windows, and sunset 
+            description: Version negotiation, deprecation windows, and sunset
               signalling.
           - name: Edge Gateway
-            description: Regional and edge ingress that serves cacheable 
+            description: Regional and edge ingress that serves cacheable
               traffic and shields the origin.
             aliases: [Edge Server]
             depends_on:
               - Edge Runtime
               - TLS Terminator
-
       - name: Compute Tier
         description: >-
           Where work actually executes. Pools are shaped by workload profile —
@@ -230,56 +228,56 @@ children:
         owner: platform-compute
         children:
           - name: API Cluster
-            description: Stateless request-serving nodes for synchronous API 
+            description: Stateless request-serving nodes for synchronous API
               workloads.
             depends_on:
               - Microservice Runtime
               - Service Discovery
               - Compute Scheduler
           - name: AI Cluster
-            description: Accelerator-backed nodes dedicated to inference and 
+            description: Accelerator-backed nodes dedicated to inference and
               training.
             depends_on:
               - GPU Cluster
               - Compute Scheduler
           - name: Batch Cluster
-            description: Scheduled, throughput-oriented jobs tolerant of 
+            description: Scheduled, throughput-oriented jobs tolerant of
               preemption.
             depends_on:
               - Compute Scheduler
               - Job Queue
           - name: Streaming Cluster
-            description: Continuous stream processors with checkpointing and 
+            description: Continuous stream processors with checkpointing and
               exactly-once semantics.
             depends_on:
               - Kafka Cluster
               - Compute Scheduler
           - name: GPU Cluster
-            description: GPU pools with topology-aware scheduling and device 
+            description: GPU pools with topology-aware scheduling and device
               partitioning.
             depends_on:
               - Node Manager
               - Container Runtime
           - name: CPU Cluster
-            description: General-purpose compute for services with no 
+            description: General-purpose compute for services with no
               accelerator requirement.
             depends_on:
               - Node Manager
               - Container Runtime
           - name: Worker Cluster
-            description: Queue-driven workers that drain asynchronous job 
+            description: Queue-driven workers that drain asynchronous job
               backlogs.
             depends_on:
               - Job Queue
               - Message Queue
           - name: Background Services
-            description: Long-running daemons — reconcilers, sweepers, and 
+            description: Long-running daemons — reconcilers, sweepers, and
               periodic tasks.
             depends_on:
               - Job Queue
               - Configuration Management
           - name: Microservice Runtime
-            description: The standard runtime contract every service ships 
+            description: The standard runtime contract every service ships
               against.
             depends_on:
               - Container Runtime
@@ -291,20 +289,19 @@ children:
               - Container Runtime
               - Event Bus
           - name: Edge Runtime
-            description: Constrained runtime executing at points of presence 
+            description: Constrained runtime executing at points of presence
               near the user.
             depends_on:
               - Container Runtime
           - name: HPC Cluster
-            description: Tightly coupled low-latency-interconnect nodes for 
+            description: Tightly coupled low-latency-interconnect nodes for
               simulation workloads.
             depends_on:
               - Node Manager
               - File Storage
           - name: Compute Scheduler
-            description: Bin-packs workloads across the tier by cost, 
+            description: Bin-packs workloads across the tier by cost,
               locality, and priority.
-
             depends_on:
               - Cluster Scheduler
               - Resource Optimizer
@@ -315,7 +312,7 @@ children:
         owner: ai-platform
         children:
           - name: Inference
-            description: Low-latency online model serving with request 
+            description: Low-latency online model serving with request
               batching and autoscaling.
             aliases: [Inference Server]
             depends_on:
@@ -324,34 +321,34 @@ children:
               - AI Cluster
               - Model Deployment
           - name: Model Registry
-            description: System of record for models, lineage, and promotion 
+            description: System of record for models, lineage, and promotion
               state.
             aliases: [Model Registry Server]
             depends_on:
               - Object Storage
               - Model Versioning
           - name: Model Versioning
-            description: Immutable versions with reproducible build and data 
+            description: Immutable versions with reproducible build and data
               provenance.
             depends_on:
               - Object Storage
               - Dataset Manager
           - name: Model Deployment
-            description: Rollout of model versions behind traffic splits and 
+            description: Rollout of model versions behind traffic splits and
               quality guardrails.
             depends_on:
               - Model Registry
               - Canary Deployments
               - Evaluation
           - name: Embeddings
-            description: Text, image, and audio embedding generation for 
+            description: Text, image, and audio embedding generation for
               retrieval and clustering.
             aliases: [Embedding Server]
             depends_on:
               - Inference
               - AI Cluster
           - name: RAG
-            description: Retrieval-augmented generation pipeline joining 
+            description: Retrieval-augmented generation pipeline joining
               retrieved context to prompts.
             aliases: [RAG Server]
             depends_on:
@@ -359,6 +356,7 @@ children:
               - Knowledge Service
               - Inference
               - Embeddings
+              - Web Search
           - name: Knowledge Service
             description: Curated, permission-aware corpus that retrieval draws
               from.
@@ -366,8 +364,10 @@ children:
               - Object Storage
               - Authorization
               - Search Engine
+              - Web Search
+              - News Aggregator
           - name: Vector Search
-            description: Approximate nearest-neighbour index serving 
+            description: Approximate nearest-neighbour index serving
               similarity queries at scale.
             aliases: [Vector Search Server]
             depends_on:
@@ -381,43 +381,44 @@ children:
               - Inference
               - Policy Engine
               - Distributed Tracing
+              - Web Search
           - name: Vision
-            description: Image and video understanding — detection, 
+            description: Image and video understanding — detection,
               classification, segmentation.
             aliases: [Vision Server]
             depends_on:
               - Inference
               - AI Cluster
           - name: Speech
-            description: Speech-to-text, text-to-speech, and speaker 
+            description: Speech-to-text, text-to-speech, and speaker
               diarization.
             aliases: [Speech Server]
             depends_on:
               - Inference
               - AI Cluster
           - name: OCR
-            description: Document text extraction with layout and table 
+            description: Document text extraction with layout and table
               recovery.
             aliases: [OCR Server]
             depends_on:
               - Inference
               - Object Storage
           - name: Model Cache
-            description: Warm weights and prefix/KV cache tiers that cut 
+            description: Warm weights and prefix/KV cache tiers that cut
               cold-start and repeat cost.
             aliases: [Model Cache Server]
             depends_on:
               - Cache Cluster
               - Object Storage
           - name: Dataset Manager
-            description: Versioned datasets, splits, labels, and access 
+            description: Versioned datasets, splits, labels, and access
               control.
             depends_on:
               - Object Storage
               - Data Lake
               - Authorization
           - name: Experiment Tracking
-            description: Runs, hyperparameters, metrics, and artifacts, 
+            description: Runs, hyperparameters, metrics, and artifacts,
               comparable over time.
             depends_on:
               - Metrics
@@ -432,15 +433,14 @@ children:
               - Experiment Tracking
               - Model Registry
           - name: Evaluation
-            description: Offline and online evaluation suites that gate model 
+            description: Offline and online evaluation suites that gate model
               promotion.
             depends_on:
               - Dataset Manager
               - Experiment Tracking
           - name: Model Monitoring
-            description: Drift, quality, latency, and cost monitoring for 
+            description: Drift, quality, latency, and cost monitoring for
               deployed models.
-
             depends_on:
               - Metrics
               - Alerting
@@ -451,27 +451,27 @@ children:
         owner: data-platform
         children:
           - name: SQL Cluster
-            description: Transactional relational storage with replicas and 
+            description: Transactional relational storage with replicas and
               automatic failover.
             aliases: [SQL Server]
             depends_on:
               - Replication Manager
               - Backup Manager
           - name: NoSQL Cluster
-            description: Horizontally partitioned document and wide-column 
+            description: Horizontally partitioned document and wide-column
               storage.
             aliases: [NoSQL Server]
             depends_on:
               - Replication Manager
               - Backup Manager
           - name: Graph Database
-            description: Relationship-first storage for traversal-heavy 
+            description: Relationship-first storage for traversal-heavy
               queries.
             aliases: [Graph Database Server]
             depends_on:
               - Backup Manager
           - name: Time-Series Database
-            description: High-cardinality metric and event series with 
+            description: High-cardinality metric and event series with
               retention tiers.
             depends_on:
               - Archive Manager
@@ -482,13 +482,13 @@ children:
               - Object Storage
               - Backup Manager
           - name: Search Engine
-            description: Inverted-index search with ranking, facets, and 
+            description: Inverted-index search with ranking, facets, and
               highlighting.
             aliases: [Search Server]
             depends_on:
               - Object Storage
           - name: Object Storage
-            description: Durable versioned object store for large immutable 
+            description: Durable versioned object store for large immutable
               payloads.
             aliases: [Object Storage Server]
             depends_on:
@@ -499,13 +499,13 @@ children:
             depends_on:
               - Object Storage
           - name: File Storage
-            description: Shared POSIX-style filesystems for workloads that 
+            description: Shared POSIX-style filesystems for workloads that
               require them.
             aliases: [File Server]
             depends_on:
               - Backup Manager
           - name: Cache Cluster
-            description: Distributed in-memory cache sitting in front of hot 
+            description: Distributed in-memory cache sitting in front of hot
               data paths.
             aliases: [Cache Server]
           - name: Data Lake
@@ -513,36 +513,190 @@ children:
             depends_on:
               - Object Storage
               - ETL Platform
+              - Metadata Store
           - name: Data Warehouse
-            description: Modeled analytical store for business intelligence 
+            description: Modeled analytical store for business intelligence
               and reporting.
             depends_on:
               - ETL Platform
               - SQL Cluster
+              - Metadata Store
           - name: ETL Platform
-            description: Batch and streaming ingestion, transformation, and 
+            description: Batch and streaming ingestion, transformation, and
               data-quality checks.
             aliases: [ETL Server]
             depends_on:
               - Kafka Cluster
               - Object Storage
               - Job Queue
+              - Schema Registry
+              - Data Quality
           - name: Backup Manager
-            description: Scheduled backups, rehearsed restores, and retention 
+            description: Scheduled backups, rehearsed restores, and retention
               policy.
             aliases: [Backup Server]
             depends_on:
               - Object Storage
               - Archive Manager
           - name: Replication Manager
-            description: Cross-zone and cross-region replication with lag 
+            description: Cross-zone and cross-region replication with lag
               monitoring.
           - name: Archive Manager
-            description: Cold-tier lifecycle transitions and legal-hold 
+            description: Cold-tier lifecycle transitions and legal-hold
               enforcement.
-
             depends_on:
               - Object Storage
+          - name: Metadata Store
+            description: Table, partition, and schema metadata backing the
+              lake and the warehouse.
+            aliases:
+              - Metastore
+              - Metadata Server
+            depends_on:
+              - SQL Cluster
+          - name: Schema Registry
+            description: Message and table schemas with enforced forward and
+              backward compatibility.
+            depends_on:
+              - SQL Cluster
+          - name: Data Catalog
+            description: Discovery surface for datasets — ownership,
+              classification, and freshness.
+            depends_on:
+              - Metadata Store
+              - Search Engine
+              - Authorization
+          - name: Data Lineage
+            description: Provenance of every dataset across pipelines,
+              upstream to downstream.
+            depends_on:
+              - Metadata Store
+              - Graph Database
+          - name: Data Quality
+            description: Expectations and validation checks that gate data on
+              the way in.
+            depends_on:
+              - Alerting
+              - Metadata Store
+      - name: External Data
+        description: Everything the platform pulls in from outside itself —
+          search, news, feeds, and third-party APIs — fetched politely,
+          cached, deduplicated, and attributed to a source.
+        owner: data-acquisition
+        children:
+          - name: Web Search
+            description: Federated query across external search providers,
+              with result normalization.
+            aliases:
+              - Search Lookup
+            depends_on:
+              - Fetch Cache
+              - Source Registry
+              - Rate Governor
+          - name: Web Crawler
+            description: Politeness-aware fetching at scale, honouring robots
+              rules and crawl budgets.
+            depends_on:
+              - Fetch Cache
+              - Rate Governor
+              - Object Storage
+              - Job Queue
+          - name: Content Extractor
+            description: Pulls main content out of fetched pages, stripping
+              boilerplate and markup.
+            depends_on:
+              - Object Storage
+          - name: News Aggregator
+            description: Collects and clusters news across publishers into
+              deduplicated stories.
+            aliases:
+              - News Feed
+            depends_on:
+              - Feed Ingestion
+              - Source Registry
+              - Content Extractor
+              - Content Deduplication
+          - name: Feed Ingestion
+            description: RSS, Atom, and webhook feed subscription with change
+              detection.
+            depends_on:
+              - Job Queue
+              - Fetch Cache
+              - Source Registry
+          - name: Social Feed
+            description: Streams from social platforms, subject to
+              per-platform quota and terms.
+            depends_on:
+              - Connector Hub
+              - Rate Governor
+          - name: Connector Hub
+            description: Managed integrations to third-party APIs, with
+              credential and quota handling.
+            depends_on:
+              - Secret Vault
+              - Rate Governor
+              - Job Queue
+          - name: Fetch Cache
+            description: Caches external responses so the platform does not
+              refetch what it already has.
+            depends_on:
+              - Cache Cluster
+              - Object Storage
+          - name: Rate Governor
+            description: Respects external rate limits and crawl budgets
+              across every caller.
+            depends_on:
+              - Cache Cluster
+          - name: Source Registry
+            description: Every external source with its trust level, terms,
+              and attribution requirements.
+            depends_on:
+              - SQL Cluster
+              - Policy Engine
+          - name: Content Deduplication
+            description: Collapses near-identical documents by hash and by
+              embedding similarity.
+            depends_on:
+              - Cache Cluster
+              - Embeddings
+          - name: Language Detection
+            description: Identifies document language before routing to
+              downstream processing.
+            depends_on:
+              - Inference
+          - name: Translation
+            description: Machine translation of retrieved content into a
+              working language.
+            depends_on:
+              - Inference
+          - name: Entity Extraction
+            description: Pulls people, organizations, and places out of
+              retrieved text.
+            depends_on:
+              - Inference
+          - name: Freshness Tracker
+            description: Tracks how stale each external source is and
+              schedules refetches.
+            depends_on:
+              - Metrics
+              - Metadata Store
+              - Job Queue
+          - name: Geospatial Lookup
+            description: Geocoding, reverse geocoding, and place resolution.
+            depends_on:
+              - Cache Cluster
+          - name: Market Data Feed
+            description: Energy and commodity market prices on a streaming
+              feed.
+            depends_on:
+              - Connector Hub
+              - Time-Series Database
+          - name: Weather Data
+            description: Forecast and observation data, keyed to site and grid
+              region.
+            depends_on:
+              - Connector Hub
+              - Cache Cluster
       - name: Identity & Security
         description: >-
           Who a caller is, what they may do, and proof of what they did.
@@ -550,13 +704,13 @@ children:
         owner: security
         children:
           - name: Identity Provider
-            description: Authoritative directory of accounts, groups, and 
+            description: Authoritative directory of accounts, groups, and
               service identities.
             aliases: [Identity Server]
             depends_on:
               - SQL Cluster
           - name: OAuth
-            description: Delegated authorization flows and token issuance for 
+            description: Delegated authorization flows and token issuance for
               clients.
             aliases: [OAuth Server]
             depends_on:
@@ -569,21 +723,21 @@ children:
               - Identity Provider
               - Token Service
           - name: MFA
-            description: Second-factor enrollment and verification, including 
+            description: Second-factor enrollment and verification, including
               WebAuthn.
             aliases: [MFA Server]
             depends_on:
               - Identity Provider
               - Notification Hub
           - name: Session Store
-            description: Server-side session state with revocation and device 
+            description: Server-side session state with revocation and device
               binding.
             aliases: [Session Server]
             depends_on:
               - Cache Cluster
               - Token Service
           - name: Token Service
-            description: Mints, rotates, and introspects access, refresh, and 
+            description: Mints, rotates, and introspects access, refresh, and
               service tokens.
             aliases: [Token Server]
             depends_on:
@@ -597,7 +751,7 @@ children:
               - Policy Engine
               - Identity Provider
           - name: Policy Engine
-            description: Declarative policy evaluation at admission time and 
+            description: Declarative policy evaluation at admission time and
               request time.
             aliases: [Policy Server]
             depends_on:
@@ -608,55 +762,55 @@ children:
             depends_on:
               - Key Management
           - name: Certificate Authority
-            description: Signs and revokes certificates for services and edge 
+            description: Signs and revokes certificates for services and edge
               endpoints.
             depends_on:
               - PKI
           - name: Key Management
-            description: Envelope-encryption keys with scheduled rotation and 
+            description: Envelope-encryption keys with scheduled rotation and
               hardware backing.
             aliases: [Key Management Server]
           - name: Secret Vault
-            description: Dynamic secrets and short-lived credential leasing 
+            description: Dynamic secrets and short-lived credential leasing
               for workloads.
             depends_on:
               - Key Management
               - Audit Pipeline
           - name: Security Monitoring
-            description: Continuous signal collection across the fleet's 
+            description: Continuous signal collection across the fleet's
               security surface.
             depends_on:
               - Logging
               - Metrics
           - name: Threat Detection
-            description: Behavioural and signature-based detection of active 
+            description: Behavioural and signature-based detection of active
               threats.
             aliases: [Threat Analytics Server]
             depends_on:
               - Security Monitoring
               - SIEM
           - name: SIEM
-            description: Correlates security events fleet-wide into 
+            description: Correlates security events fleet-wide into
               investigable incidents.
             aliases: [Security Information & Event Management (SIEM)]
             depends_on:
               - Logging
               - Security Monitoring
           - name: Vulnerability Scanner
-            description: Scans images, dependencies, and hosts against 
+            description: Scans images, dependencies, and hosts against
               advisory feeds.
             depends_on:
               - Artifact Repository
               - Package Registry
           - name: Compliance
-            description: Control mapping, evidence collection, and audit 
+            description: Control mapping, evidence collection, and audit
               readiness.
             aliases: [Compliance Server]
             depends_on:
               - Audit Pipeline
               - Policy Engine
           - name: Audit Pipeline
-            description: Tamper-evident log of privileged and tenant-visible 
+            description: Tamper-evident log of privileged and tenant-visible
               actions.
             aliases: [Audit Server]
             depends_on:
@@ -670,7 +824,6 @@ children:
               - SIEM
               - Incident Manager
               - Threat Detection
-
       - name: Messaging
         description: >-
           Asynchronous movement of events, jobs, and notifications — the
@@ -683,17 +836,17 @@ children:
             depends_on:
               - Kafka Cluster
           - name: Message Queue
-            description: Durable point-to-point queues with retries and 
+            description: Durable point-to-point queues with retries and
               dead-letter handling.
           - name: Job Queue
-            description: Prioritized background work with leases and 
+            description: Prioritized background work with leases and
               idempotent execution.
             aliases: [Job Queue Server]
             depends_on:
               - Message Queue
               - Cache Cluster
           - name: Kafka Cluster
-            description: Partitioned, replayable log for high-throughput 
+            description: Partitioned, replayable log for high-throughput
               streams.
           - name: MQTT Broker
             description: Lightweight publish/subscribe for constrained and IoT
@@ -707,7 +860,7 @@ children:
             depends_on:
               - Event Bus
           - name: Notification Hub
-            description: Routes notifications across channels according to 
+            description: Routes notifications across channels according to
               user preferences.
             aliases: [Notification Server]
             depends_on:
@@ -716,24 +869,23 @@ children:
               - Push Notifications
               - Message Queue
           - name: Email Service
-            description: Transactional email delivery, templating, and bounce 
+            description: Transactional email delivery, templating, and bounce
               handling.
             depends_on:
               - Message Queue
           - name: SMS Service
-            description: SMS delivery with carrier failover and opt-out 
+            description: SMS delivery with carrier failover and opt-out
               handling.
             depends_on:
               - Message Queue
           - name: Push Notifications
-            description: Mobile and web push with device-token lifecycle 
+            description: Mobile and web push with device-token lifecycle
               management.
             depends_on:
               - Message Queue
           - name: Webhook Dispatcher
-            description: Outbound webhooks with payload signing, retries, and 
+            description: Outbound webhooks with payload signing, retries, and
               delivery receipts.
-
             depends_on:
               - Job Queue
               - Key Management
@@ -744,20 +896,20 @@ children:
         owner: observability
         children:
           - name: Metrics
-            description: Time-series collection, aggregation, and recording 
+            description: Time-series collection, aggregation, and recording
               rules.
             aliases: [Metrics Server]
             depends_on:
               - Time-Series Database
           - name: Logging
-            description: Structured log ingestion, indexing, and retention 
+            description: Structured log ingestion, indexing, and retention
               tiers.
             aliases: [Logging Server]
             depends_on:
               - Object Storage
               - Search Engine
           - name: Distributed Tracing
-            description: End-to-end spans across services with configurable 
+            description: End-to-end spans across services with configurable
               sampling.
             aliases: [Trace Collector]
             depends_on:
@@ -781,19 +933,19 @@ children:
               - Alerting
               - Notification Hub
           - name: Error Tracking
-            description: Deduplicated exception grouping with release 
+            description: Deduplicated exception grouping with release
               attribution.
             depends_on:
               - Logging
           - name: Performance Analytics
-            description: Latency and throughput profiling down to the 
+            description: Latency and throughput profiling down to the
               individual endpoint.
             aliases: [Performance Server]
             depends_on:
               - Metrics
               - Distributed Tracing
           - name: Capacity Analytics
-            description: Headroom and saturation analysis feeding capacity 
+            description: Headroom and saturation analysis feeding capacity
               planning.
             depends_on:
               - Metrics
@@ -803,15 +955,14 @@ children:
               - Metrics
               - Infrastructure Telemetry
           - name: Health Monitoring
-            description: Liveness and readiness aggregated into service-level 
+            description: Liveness and readiness aggregated into service-level
               health state.
             aliases: [Health Server, Monitoring Server, Cluster Monitor]
             depends_on:
               - Metrics
           - name: Uptime Monitoring
-            description: External synthetic probes measuring user-visible 
+            description: External synthetic probes measuring user-visible
               availability.
-
             depends_on:
               - Alerting
       - name: Platform Operations
@@ -833,31 +984,31 @@ children:
             depends_on:
               - Artifact Repository
           - name: Service Mesh
-            description: Mutual TLS, retries, and traffic policy between 
+            description: Mutual TLS, retries, and traffic policy between
               services.
             depends_on:
               - Certificate Authority
               - Service Discovery
           - name: Load Balancer
-            description: In-cluster layer-4 and layer-7 balancing across 
+            description: In-cluster layer-4 and layer-7 balancing across
               service endpoints.
             depends_on:
               - Service Discovery
               - Health Monitoring
           - name: Autoscaler
-            description: Horizontal, vertical, and cluster autoscaling driven 
+            description: Horizontal, vertical, and cluster autoscaling driven
               by live signals.
             depends_on:
               - Metrics
               - Cluster Scheduler
           - name: Node Manager
-            description: Node lifecycle — provisioning, draining, patching, 
+            description: Node lifecycle — provisioning, draining, patching,
               and repair.
             depends_on:
               - Kubernetes
               - Update Service
           - name: Cluster Scheduler
-            description: Placement by affinity, taints, priority, and 
+            description: Placement by affinity, taints, priority, and
               preemption.
             aliases: [Scheduler Server, Resource Scheduler]
           - name: Service Discovery
@@ -866,7 +1017,7 @@ children:
             depends_on:
               - Service Registry
           - name: Service Registry
-            description: Authoritative catalog of services, owners, and 
+            description: Authoritative catalog of services, owners, and
               dependencies.
             aliases: [Registry Server]
           - name: Rolling Deployments
@@ -894,42 +1045,41 @@ children:
               - Artifact Repository
               - Kubernetes
           - name: Failover Manager
-            description: Promotes standbys and reroutes traffic when a 
+            description: Promotes standbys and reroutes traffic when a
               component fails.
             depends_on:
               - Health Monitoring
               - Replication Manager
           - name: Update Service
-            description: Delivers signed updates to agents, edge nodes, and 
+            description: Delivers signed updates to agents, edge nodes, and
               clients.
             aliases: [Update Server]
             depends_on:
               - Artifact Repository
               - Key Management
           - name: Infrastructure as Code
-            description: Declarative infrastructure with reviewed plan and 
+            description: Declarative infrastructure with reviewed plan and
               apply.
             depends_on:
               - Configuration Management
               - Secret Distribution
           - name: Configuration Management
-            description: Layered, environment-aware configuration with safe 
+            description: Layered, environment-aware configuration with safe
               reload.
             aliases: [Configuration Server]
           - name: Secret Distribution
-            description: Delivers vault-issued secrets to workloads without 
+            description: Delivers vault-issued secrets to workloads without
               persisting them.
             depends_on:
               - Secret Vault
           - name: Fleet Manager
-            description: Inventory and rollout targeting across the whole 
+            description: Inventory and rollout targeting across the whole
               fleet.
             depends_on:
               - Service Registry
               - Update Service
           - name: Resource Optimizer
             description: Rightsizes requests and limits from observed usage.
-
             depends_on:
               - Metrics
               - Capacity Analytics
@@ -940,7 +1090,7 @@ children:
         owner: developer-experience
         children:
           - name: CI
-            description: Builds and tests every change on push and pull 
+            description: Builds and tests every change on push and pull
               request.
             aliases: [CI Server]
             depends_on:
@@ -954,7 +1104,7 @@ children:
               - Release Manager
               - Rolling Deployments
           - name: Build Farm
-            description: Distributed cached builds for large compilation 
+            description: Distributed cached builds for large compilation
               workloads.
             aliases: [Build Server]
             depends_on:
@@ -985,20 +1135,20 @@ children:
             depends_on:
               - Object Storage
           - name: Symbol Server
-            description: Debug symbols and source indexes for crash 
+            description: Debug symbols and source indexes for crash
               symbolication.
             depends_on:
               - Object Storage
               - Artifact Repository
           - name: Benchmark Platform
-            description: Repeatable performance benchmarks with regression 
+            description: Repeatable performance benchmarks with regression
               alerting.
             aliases: [Benchmark Server]
             depends_on:
               - Metrics
               - Test Infrastructure
           - name: Test Infrastructure
-            description: Ephemeral environments and fixtures for integration 
+            description: Ephemeral environments and fixtures for integration
               testing.
             aliases: [Test Server]
             depends_on:
@@ -1010,13 +1160,13 @@ children:
               - Artifact Repository
               - CI
           - name: API Explorer
-            description: Interactive request builder against live and mock 
+            description: Interactive request builder against live and mock
               endpoints.
             depends_on:
               - API Gateway
               - Documentation Portal
           - name: Developer Portal
-            description: Single entry point to services, ownership, and 
+            description: Single entry point to services, ownership, and
               self-service actions.
             depends_on:
               - Service Registry
@@ -1030,7 +1180,7 @@ children:
             depends_on:
               - Package Registry
           - name: License Service
-            description: Entitlement and license validation for distributed 
+            description: Entitlement and license validation for distributed
               builds.
             aliases: [License Server]
             depends_on:

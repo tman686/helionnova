@@ -9,7 +9,7 @@ Durable state. Each store is chosen for an access pattern, with replication, bac
 | | |
 | --- | --- |
 | **Owner** | `data-platform` |
-| **Components** | 16 (16 planned) |
+| **Components** | 21 (21 planned) |
 
 ## Components
 
@@ -31,6 +31,11 @@ Durable state. Each store is chosen for an access pattern, with replication, bac
 | [Backup Manager](./backup-manager/) | ○ Planned | Scheduled backups, rehearsed restores, and retention policy. |
 | [Replication Manager](./replication-manager/) | ○ Planned | Cross-zone and cross-region replication with lag monitoring. |
 | [Archive Manager](./archive-manager/) | ○ Planned | Cold-tier lifecycle transitions and legal-hold enforcement. |
+| [Metadata Store](./metadata-store/) | ○ Planned | Table, partition, and schema metadata backing the lake and the warehouse. |
+| [Schema Registry](./schema-registry/) | ○ Planned | Message and table schemas with enforced forward and backward compatibility. |
+| [Data Catalog](./data-catalog/) | ○ Planned | Discovery surface for datasets — ownership, classification, and freshness. |
+| [Data Lineage](./data-lineage/) | ○ Planned | Provenance of every dataset across pipelines, upstream to downstream. |
+| [Data Quality](./data-quality/) | ○ Planned | Expectations and validation checks that gate data on the way in. |
 
 ---
 

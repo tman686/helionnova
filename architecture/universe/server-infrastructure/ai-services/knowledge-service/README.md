@@ -13,7 +13,7 @@ Curated, permission-aware corpus that retrieval draws from.
 
 ## Dependencies
 
-**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [Search Engine](../../../../universe/server-infrastructure/data-tier/search-engine/)
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [Search Engine](../../../../universe/server-infrastructure/data-tier/search-engine/), [Web Search](../../../../universe/server-infrastructure/external-data/web-search/), [News Aggregator](../../../../universe/server-infrastructure/external-data/news-aggregator/)
 
 **Depended on by:** [RAG](../../../../universe/server-infrastructure/ai-services/rag/)
 

@@ -15,7 +15,7 @@ Retrieval-augmented generation pipeline joining retrieved context to prompts.
 
 ## Dependencies
 
-**Depends on:** [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/)
+**Depends on:** [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/), [Web Search](../../../../universe/server-infrastructure/external-data/web-search/)
 
 **Depended on by:** _nothing yet._
 

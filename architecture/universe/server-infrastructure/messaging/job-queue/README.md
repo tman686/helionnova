@@ -17,7 +17,7 @@ Prioritized background work with leases and idempotent execution.
 
 **Depends on:** [Message Queue](../../../../universe/server-infrastructure/messaging/message-queue/), [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/)
 
-**Depended on by:** [Background Services](../../../../universe/server-infrastructure/compute-tier/background-services/), [Batch Cluster](../../../../universe/server-infrastructure/compute-tier/batch-cluster/), [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Webhook Dispatcher](../../../../universe/server-infrastructure/messaging/webhook-dispatcher/), [Worker Cluster](../../../../universe/server-infrastructure/compute-tier/worker-cluster/)
+**Depended on by:** [Background Services](../../../../universe/server-infrastructure/compute-tier/background-services/), [Batch Cluster](../../../../universe/server-infrastructure/compute-tier/batch-cluster/), [Connector Hub](../../../../universe/server-infrastructure/external-data/connector-hub/), [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Feed Ingestion](../../../../universe/server-infrastructure/external-data/feed-ingestion/), [Freshness Tracker](../../../../universe/server-infrastructure/external-data/freshness-tracker/), [Web Crawler](../../../../universe/server-infrastructure/external-data/web-crawler/), [Webhook Dispatcher](../../../../universe/server-infrastructure/messaging/webhook-dispatcher/), [Worker Cluster](../../../../universe/server-infrastructure/compute-tier/worker-cluster/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

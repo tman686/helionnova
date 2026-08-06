@@ -15,7 +15,7 @@ Batch and streaming ingestion, transformation, and data-quality checks.
 
 ## Dependencies
 
-**Depends on:** [Kafka Cluster](../../../../universe/server-infrastructure/messaging/kafka-cluster/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/)
+**Depends on:** [Kafka Cluster](../../../../universe/server-infrastructure/messaging/kafka-cluster/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Schema Registry](../../../../universe/server-infrastructure/data-tier/schema-registry/), [Data Quality](../../../../universe/server-infrastructure/data-tier/data-quality/)
 
 **Depended on by:** [Data Lake](../../../../universe/server-infrastructure/data-tier/data-lake/), [Data Warehouse](../../../../universe/server-infrastructure/data-tier/data-warehouse/)
 

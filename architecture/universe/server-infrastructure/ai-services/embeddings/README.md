@@ -17,7 +17,7 @@ Text, image, and audio embedding generation for retrieval and clustering.
 
 **Depends on:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/)
 
-**Depended on by:** [RAG](../../../../universe/server-infrastructure/ai-services/rag/), [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/)
+**Depended on by:** [Content Deduplication](../../../../universe/server-infrastructure/external-data/content-deduplication/), [RAG](../../../../universe/server-infrastructure/ai-services/rag/), [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

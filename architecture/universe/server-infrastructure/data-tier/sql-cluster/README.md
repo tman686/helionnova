@@ -17,7 +17,7 @@ Transactional relational storage with replicas and automatic failover.
 
 **Depends on:** [Replication Manager](../../../../universe/server-infrastructure/data-tier/replication-manager/), [Backup Manager](../../../../universe/server-infrastructure/data-tier/backup-manager/)
 
-**Depended on by:** [Data Warehouse](../../../../universe/server-infrastructure/data-tier/data-warehouse/), [Identity Provider](../../../../universe/server-infrastructure/identity-and-security/identity-provider/), [License Service](../../../../universe/server-infrastructure/developer-platform/license-service/)
+**Depended on by:** [Data Warehouse](../../../../universe/server-infrastructure/data-tier/data-warehouse/), [Identity Provider](../../../../universe/server-infrastructure/identity-and-security/identity-provider/), [License Service](../../../../universe/server-infrastructure/developer-platform/license-service/), [Metadata Store](../../../../universe/server-infrastructure/data-tier/metadata-store/), [Schema Registry](../../../../universe/server-infrastructure/data-tier/schema-registry/), [Source Registry](../../../../universe/server-infrastructure/external-data/source-registry/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

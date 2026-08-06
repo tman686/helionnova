@@ -17,7 +17,7 @@ Symptom-based alerts routed to the owning on-call.
 
 **Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Notification Hub](../../../../universe/server-infrastructure/messaging/notification-hub/)
 
-**Depended on by:** [Incident Manager](../../../../universe/server-infrastructure/observability/incident-manager/), [Model Monitoring](../../../../universe/server-infrastructure/ai-services/model-monitoring/), [Uptime Monitoring](../../../../universe/server-infrastructure/observability/uptime-monitoring/)
+**Depended on by:** [Data Quality](../../../../universe/server-infrastructure/data-tier/data-quality/), [Incident Manager](../../../../universe/server-infrastructure/observability/incident-manager/), [Model Monitoring](../../../../universe/server-infrastructure/ai-services/model-monitoring/), [Uptime Monitoring](../../../../universe/server-infrastructure/observability/uptime-monitoring/)
 
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.

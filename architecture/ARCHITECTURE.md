@@ -4,7 +4,7 @@
 
 Top of the platform hierarchy. Everything Helion Nova runs — globally distributed infrastructure and the server tiers inside each region.
 
-**168 nodes · 157 components · 2 top-level domains.**
+**192 nodes · 180 components · 2 top-level domains.**
 
 Source of truth: [`universe.yaml`](./universe.yaml). Regenerate this file and
 the [`universe/`](./universe/) tree with `python3 architecture/scaffold.py`.
@@ -13,7 +13,7 @@ the [`universe/`](./universe/) tree with `python3 architecture/scaffold.py`.
 
 | Status | Components | Share |
 | --- | --- | --- |
-| ○ Planned | 157 | 100% |
+| ○ Planned | 180 | 100% |
 | ◐ Building | 0 | 0% |
 | ● Running | 0 | 0% |
 
@@ -28,11 +28,12 @@ Tier level only; the [tree](#tree) below goes to full depth.
 flowchart TD
     n_universe(["Universe"])
     n_universe --> n_global_infrastructure["Global Infrastructure<br/><small>15 components</small>"]
-    n_universe --> n_server_infrastructure["Server Infrastructure<br/><small>142 components</small>"]
+    n_universe --> n_server_infrastructure["Server Infrastructure<br/><small>165 components</small>"]
     n_server_infrastructure --> n_gateway_tier["Gateway Tier<br/><small>15</small>"]
     n_server_infrastructure --> n_compute_tier["Compute Tier<br/><small>13</small>"]
     n_server_infrastructure --> n_ai_services["AI Services<br/><small>18</small>"]
-    n_server_infrastructure --> n_data_tier["Data Tier<br/><small>16</small>"]
+    n_server_infrastructure --> n_data_tier["Data Tier<br/><small>21</small>"]
+    n_server_infrastructure --> n_external_data["External Data<br/><small>18</small>"]
     n_server_infrastructure --> n_identity_and_security["Identity &amp; Security<br/><small>19</small>"]
     n_server_infrastructure --> n_messaging["Messaging<br/><small>12</small>"]
     n_server_infrastructure --> n_observability["Observability<br/><small>12</small>"]
@@ -43,11 +44,12 @@ flowchart TD
 ## Contents
 
 - [Global Infrastructure](#global-infrastructure) — 15 components
-- [Server Infrastructure](#server-infrastructure) — 142 components
+- [Server Infrastructure](#server-infrastructure) — 165 components
   - [Gateway Tier](#gateway-tier) — 15 components
   - [Compute Tier](#compute-tier) — 13 components
   - [AI Services](#ai-services) — 18 components
-  - [Data Tier](#data-tier) — 16 components
+  - [Data Tier](#data-tier) — 21 components
+  - [External Data](#external-data) — 18 components
   - [Identity & Security](#identity-and-security) — 19 components
   - [Messaging](#messaging) — 12 components
   - [Observability](#observability) — 12 components
@@ -146,7 +148,32 @@ Universe/
     │   ├── ETL Platform
     │   ├── Backup Manager
     │   ├── Replication Manager
-    │   └── Archive Manager
+    │   ├── Archive Manager
+    │   ├── Metadata Store
+    │   ├── Schema Registry
+    │   ├── Data Catalog
+    │   ├── Data Lineage
+    │   └── Data Quality
+    │
+    ├── External Data/
+    │   ├── Web Search
+    │   ├── Web Crawler
+    │   ├── Content Extractor
+    │   ├── News Aggregator
+    │   ├── Feed Ingestion
+    │   ├── Social Feed
+    │   ├── Connector Hub
+    │   ├── Fetch Cache
+    │   ├── Rate Governor
+    │   ├── Source Registry
+    │   ├── Content Deduplication
+    │   ├── Language Detection
+    │   ├── Translation
+    │   ├── Entity Extraction
+    │   ├── Freshness Tracker
+    │   ├── Geospatial Lookup
+    │   ├── Market Data Feed
+    │   └── Weather Data
     │
     ├── Identity & Security/
     │   ├── Identity Provider
@@ -344,7 +371,7 @@ The model lifecycle end to end — data and training on one side, serving, retri
 
 Durable state. Each store is chosen for an access pattern, with replication, backup, and lifecycle managed alongside.
 
-**Owner:** `data-platform` · **16 components** (16 planned)
+**Owner:** `data-platform` · **21 components** (21 planned)
 
 | Component | Status | Purpose |
 | --- | --- | --- |
@@ -364,6 +391,38 @@ Durable state. Each store is chosen for an access pattern, with replication, bac
 | [Backup Manager](./universe/server-infrastructure/data-tier/backup-manager/) | ○ Planned | Scheduled backups, rehearsed restores, and retention policy. |
 | [Replication Manager](./universe/server-infrastructure/data-tier/replication-manager/) | ○ Planned | Cross-zone and cross-region replication with lag monitoring. |
 | [Archive Manager](./universe/server-infrastructure/data-tier/archive-manager/) | ○ Planned | Cold-tier lifecycle transitions and legal-hold enforcement. |
+| [Metadata Store](./universe/server-infrastructure/data-tier/metadata-store/) | ○ Planned | Table, partition, and schema metadata backing the lake and the warehouse. |
+| [Schema Registry](./universe/server-infrastructure/data-tier/schema-registry/) | ○ Planned | Message and table schemas with enforced forward and backward compatibility. |
+| [Data Catalog](./universe/server-infrastructure/data-tier/data-catalog/) | ○ Planned | Discovery surface for datasets — ownership, classification, and freshness. |
+| [Data Lineage](./universe/server-infrastructure/data-tier/data-lineage/) | ○ Planned | Provenance of every dataset across pipelines, upstream to downstream. |
+| [Data Quality](./universe/server-infrastructure/data-tier/data-quality/) | ○ Planned | Expectations and validation checks that gate data on the way in. |
+
+### External Data
+
+Everything the platform pulls in from outside itself — search, news, feeds, and third-party APIs — fetched politely, cached, deduplicated, and attributed to a source.
+
+**Owner:** `data-acquisition` · **18 components** (18 planned)
+
+| Component | Status | Purpose |
+| --- | --- | --- |
+| [Web Search](./universe/server-infrastructure/external-data/web-search/) | ○ Planned | Federated query across external search providers, with result normalization. |
+| [Web Crawler](./universe/server-infrastructure/external-data/web-crawler/) | ○ Planned | Politeness-aware fetching at scale, honouring robots rules and crawl budgets. |
+| [Content Extractor](./universe/server-infrastructure/external-data/content-extractor/) | ○ Planned | Pulls main content out of fetched pages, stripping boilerplate and markup. |
+| [News Aggregator](./universe/server-infrastructure/external-data/news-aggregator/) | ○ Planned | Collects and clusters news across publishers into deduplicated stories. |
+| [Feed Ingestion](./universe/server-infrastructure/external-data/feed-ingestion/) | ○ Planned | RSS, Atom, and webhook feed subscription with change detection. |
+| [Social Feed](./universe/server-infrastructure/external-data/social-feed/) | ○ Planned | Streams from social platforms, subject to per-platform quota and terms. |
+| [Connector Hub](./universe/server-infrastructure/external-data/connector-hub/) | ○ Planned | Managed integrations to third-party APIs, with credential and quota handling. |
+| [Fetch Cache](./universe/server-infrastructure/external-data/fetch-cache/) | ○ Planned | Caches external responses so the platform does not refetch what it already has. |
+| [Rate Governor](./universe/server-infrastructure/external-data/rate-governor/) | ○ Planned | Respects external rate limits and crawl budgets across every caller. |
+| [Source Registry](./universe/server-infrastructure/external-data/source-registry/) | ○ Planned | Every external source with its trust level, terms, and attribution requirements. |
+| [Content Deduplication](./universe/server-infrastructure/external-data/content-deduplication/) | ○ Planned | Collapses near-identical documents by hash and by embedding similarity. |
+| [Language Detection](./universe/server-infrastructure/external-data/language-detection/) | ○ Planned | Identifies document language before routing to downstream processing. |
+| [Translation](./universe/server-infrastructure/external-data/translation/) | ○ Planned | Machine translation of retrieved content into a working language. |
+| [Entity Extraction](./universe/server-infrastructure/external-data/entity-extraction/) | ○ Planned | Pulls people, organizations, and places out of retrieved text. |
+| [Freshness Tracker](./universe/server-infrastructure/external-data/freshness-tracker/) | ○ Planned | Tracks how stale each external source is and schedules refetches. |
+| [Geospatial Lookup](./universe/server-infrastructure/external-data/geospatial-lookup/) | ○ Planned | Geocoding, reverse geocoding, and place resolution. |
+| [Market Data Feed](./universe/server-infrastructure/external-data/market-data-feed/) | ○ Planned | Energy and commodity market prices on a streaming feed. |
+| [Weather Data](./universe/server-infrastructure/external-data/weather-data/) | ○ Planned | Forecast and observation data, keyed to site and grid region. |
 
 ### Identity & Security
 
@@ -492,7 +551,7 @@ The path from a commit to a running release, plus the surfaces engineers use to 
 
 ## Dependencies
 
-278 edges across 157 components. 146 declare a dependency; 11 are foundations that depend on nothing.
+333 edges across 180 components. 169 declare a dependency; 11 are foundations that depend on nothing.
 
 The generator rejects a cycle outright — a dependency loop means nothing in it
 can start.
@@ -503,18 +562,18 @@ The load-bearing components. An outage here fans out furthest.
 
 | Component | Depended on by |
 | --- | --- |
-| [Object Storage](./universe/server-infrastructure/data-tier/object-storage/) | 22 |
-| [Metrics](./universe/server-infrastructure/observability/metrics/) | 14 |
+| [Object Storage](./universe/server-infrastructure/data-tier/object-storage/) | 25 |
+| [Metrics](./universe/server-infrastructure/observability/metrics/) | 15 |
+| [Cache Cluster](./universe/server-infrastructure/data-tier/cache-cluster/) | 11 |
+| [Inference](./universe/server-infrastructure/ai-services/inference/) | 9 |
+| [Job Queue](./universe/server-infrastructure/messaging/job-queue/) | 9 |
 | [Service Discovery](./universe/server-infrastructure/platform-operations/service-discovery/) | 9 |
 | [Artifact Repository](./universe/server-infrastructure/developer-platform/artifact-repository/) | 8 |
 | [Container Runtime](./universe/server-infrastructure/platform-operations/container-runtime/) | 7 |
 | [Key Management](./universe/server-infrastructure/identity-and-security/key-management/) | 7 |
+| [Authorization](./universe/server-infrastructure/identity-and-security/authorization/) | 6 |
 | [Backup Manager](./universe/server-infrastructure/data-tier/backup-manager/) | 6 |
-| [Cache Cluster](./universe/server-infrastructure/data-tier/cache-cluster/) | 6 |
 | [Health Monitoring](./universe/server-infrastructure/observability/health-monitoring/) | 6 |
-| [Identity Provider](./universe/server-infrastructure/identity-and-security/identity-provider/) | 6 |
-| [Inference](./universe/server-infrastructure/ai-services/inference/) | 6 |
-| [Message Queue](./universe/server-infrastructure/messaging/message-queue/) | 6 |
 
 ### Coupling between tiers
 
@@ -524,18 +583,19 @@ its exact upstreams and downstreams.
 
 Rows depend on columns.
 
-| depends on → | AS | CT | DT | DP | GT | GI | IS | M | O | PO |
-| --- | ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:|
-| **AI Services** | · | 5 | 11 | · | · | · | 3 | · | 4 | 1 |
-| **Compute Tier** | · | · | 1 | · | · | · | · | 6 | · | 14 |
-| **Data Tier** | · | · | · | · | · | · | 1 | 2 | · | · |
-| **Developer Platform** | · | · | 6 | · | 1 | · | 1 | · | 1 | 4 |
-| **Gateway Tier** | · | 1 | 1 | · | · | · | 7 | · | · | 4 |
-| **Global Infrastructure** | · | 1 | 3 | · | 1 | · | 2 | · | 6 | 3 |
-| **Identity & Security** | · | · | 3 | 2 | · | · | · | 1 | 5 | 1 |
-| **Messaging** | · | · | 2 | · | · | · | 1 | · | · | · |
-| **Observability** | · | · | 4 | · | · | 1 | · | 2 | · | · |
-| **Platform Operations** | · | · | 1 | 3 | · | 2 | 3 | · | 7 | · |
+| depends on → | AS | CT | DT | DP | ED | GT | GI | IS | M | O | PO |
+| --- | ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:|
+| **AI Services** | · | 5 | 11 | · | 4 | · | · | 3 | · | 4 | 1 |
+| **Compute Tier** | · | · | 1 | · | · | · | · | · | 6 | · | 14 |
+| **Data Tier** | · | · | · | · | · | · | · | 2 | 2 | 1 | · |
+| **Developer Platform** | · | · | 6 | · | · | 1 | · | 1 | · | 1 | 4 |
+| **External Data** | 4 | · | 11 | · | · | · | · | 2 | 4 | 1 | · |
+| **Gateway Tier** | · | 1 | 1 | · | · | · | · | 7 | · | · | 4 |
+| **Global Infrastructure** | · | 1 | 3 | · | · | 1 | · | 2 | · | 6 | 3 |
+| **Identity & Security** | · | · | 3 | 2 | · | · | · | · | 1 | 5 | 1 |
+| **Messaging** | · | · | 2 | · | · | · | · | 1 | · | · | · |
+| **Observability** | · | · | 4 | · | · | · | 1 | · | 2 | · | · |
+| **Platform Operations** | · | · | 1 | 3 | · | · | 2 | 3 | · | 7 | · |
 
 Only the strong links (3+ edges), so the shape stays legible:
 
@@ -545,6 +605,7 @@ flowchart LR
     n_compute_tier["Compute Tier"]
     n_data_tier["Data Tier"]
     n_developer_platform["Developer Platform"]
+    n_external_data["External Data"]
     n_gateway_tier["Gateway Tier"]
     n_global_infrastructure["Global Infrastructure"]
     n_identity_and_security["Identity &amp; Security"]
@@ -553,6 +614,7 @@ flowchart LR
     n_platform_operations["Platform Operations"]
     n_compute_tier -->|14| n_platform_operations
     n_ai_services -->|11| n_data_tier
+    n_external_data -->|11| n_data_tier
     n_gateway_tier -->|7| n_identity_and_security
     n_platform_operations -->|7| n_observability
     n_compute_tier -->|6| n_messaging
@@ -560,8 +622,11 @@ flowchart LR
     n_global_infrastructure -->|6| n_observability
     n_ai_services -->|5| n_compute_tier
     n_identity_and_security -->|5| n_observability
+    n_ai_services -->|4| n_external_data
     n_ai_services -->|4| n_observability
     n_developer_platform -->|4| n_platform_operations
+    n_external_data -->|4| n_ai_services
+    n_external_data -->|4| n_messaging
     n_gateway_tier -->|4| n_platform_operations
     n_observability -->|4| n_data_tier
     n_ai_services -->|3| n_identity_and_security
@@ -579,11 +644,12 @@ component under it unless that component overrides it.
 
 | Owner | Components |
 | --- | --- |
+| `data-platform` | 21 |
 | `platform-ops` | 20 |
 | `security` | 19 |
 | `ai-platform` | 18 |
+| `data-acquisition` | 18 |
 | `developer-experience` | 17 |
-| `data-platform` | 16 |
 | `infra-global` | 15 |
 | `platform-edge` | 15 |
 | `platform-compute` | 13 |
@@ -633,12 +699,15 @@ Earlier names, and the component that now owns each one.
 | Kubernetes Control Plane | [Kubernetes](./universe/server-infrastructure/platform-operations/kubernetes/) |
 | License Server | [License Service](./universe/server-infrastructure/developer-platform/license-service/) |
 | Logging Server | [Logging](./universe/server-infrastructure/observability/logging/) |
+| Metadata Server | [Metadata Store](./universe/server-infrastructure/data-tier/metadata-store/) |
+| Metastore | [Metadata Store](./universe/server-infrastructure/data-tier/metadata-store/) |
 | Metrics Server | [Metrics](./universe/server-infrastructure/observability/metrics/) |
 | MFA Server | [MFA](./universe/server-infrastructure/identity-and-security/mfa/) |
 | Model Cache Server | [Model Cache](./universe/server-infrastructure/ai-services/model-cache/) |
 | Model Registry Server | [Model Registry](./universe/server-infrastructure/ai-services/model-registry/) |
 | Monitoring Server | [Health Monitoring](./universe/server-infrastructure/observability/health-monitoring/) |
 | Multi-Region Deployment | [Multi-Region Manager](./universe/global-infrastructure/multi-region-manager/) |
+| News Feed | [News Aggregator](./universe/server-infrastructure/external-data/news-aggregator/) |
 | NoSQL Server | [NoSQL Cluster](./universe/server-infrastructure/data-tier/nosql-cluster/) |
 | Notification Server | [Notification Hub](./universe/server-infrastructure/messaging/notification-hub/) |
 | OAuth Server | [OAuth](./universe/server-infrastructure/identity-and-security/oauth/) |
@@ -658,6 +727,7 @@ Earlier names, and the component that now owns each one.
 | REST Server | [REST Gateway](./universe/server-infrastructure/gateway-tier/rest-gateway/) |
 | Rolling Updates | [Rolling Deployments](./universe/server-infrastructure/platform-operations/rolling-deployments/) |
 | Scheduler Server | [Cluster Scheduler](./universe/server-infrastructure/platform-operations/cluster-scheduler/) |
+| Search Lookup | [Web Search](./universe/server-infrastructure/external-data/web-search/) |
 | Search Server | [Search Engine](./universe/server-infrastructure/data-tier/search-engine/) |
 | Security Information & Event Management (SIEM) | [SIEM](./universe/server-infrastructure/identity-and-security/siem/) |
 | Security Operations Dashboard | [Security Operations](./universe/server-infrastructure/identity-and-security/security-operations/) |
