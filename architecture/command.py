@@ -343,16 +343,44 @@ def dispatch(spec: dict, message: str) -> Reply:
 # ----------------------------------------------------------------------- main
 
 
+def tidy(text: str) -> str:
+    """Undo ruamel's cosmetic churn so a one-line edit is a one-line diff.
+
+    Re-wrapping a folded scalar leaves a trailing space before each break, and
+    the round-trip sprinkles blank lines inside mappings. Left alone, changing
+    one component rewrites 140 lines and buries the actual edit.
+
+    Only whitespace is touched. A blank line is dropped only when it sits
+    between two indented lines — the structural blank lines at the top of the
+    file are between column-0 lines and survive.
+    """
+    lines = text.split("\n")
+    out: list[str] = []
+    for i, line in enumerate(lines):
+        stripped = line.rstrip()
+        if stripped == "":
+            previous = next((l for l in reversed(out) if l.strip()), "")
+            following = next((l for l in lines[i + 1:] if l.strip()), "")
+            indented = lambda s: len(s) - len(s.lstrip()) >= 4  # noqa: E731
+            if indented(previous) and indented(following):
+                continue
+        out.append(stripped)
+    return "\n".join(out)
+
+
 def write_spec(spec: dict) -> None:
     """Write the spec back, keeping comments and formatting intact."""
+    import io
+
     from ruamel.yaml import YAML
 
     yaml_rt = YAML()
     yaml_rt.preserve_quotes = True
     yaml_rt.indent(mapping=2, sequence=4, offset=2)
     yaml_rt.width = 78
-    with open(scaffold.SPEC, "w", encoding="utf-8") as fh:
-        yaml_rt.dump(spec, fh)
+    buffer = io.StringIO()
+    yaml_rt.dump(spec, buffer)
+    scaffold.SPEC.write_text(tidy(buffer.getvalue()), encoding="utf-8")
 
 
 def load_roundtrip() -> dict:
@@ -366,17 +394,19 @@ def load_roundtrip() -> dict:
 
 
 def run(message: str, apply: bool = False) -> tuple[Reply, int]:
-    # Read-only commands use the plain loader so ruamel is not needed to ask a
-    # question; only an edit reaches for the comment-preserving one.
+    """Interpret the message; write only when `apply` and the result validates.
+
+    ruamel is a *writing* dependency — it exists to keep comments and
+    formatting intact when the spec is rewritten. Nothing on the read or
+    dry-run path may import it, so asking a question needs only pyyaml.
+    """
     spec = yaml.safe_load(scaffold.SPEC.read_text(encoding="utf-8"))
-    probe = dispatch(spec, message)
-
-    if not probe.changed:
-        return probe, (0 if probe.ok else (2 if not probe._handled else 1))
-
-    spec = load_roundtrip()
     reply = dispatch(spec, message)
 
+    if not reply.changed:
+        return reply, (0 if reply.ok else (2 if not reply._handled else 1))
+
+    # `spec` now carries the edit. Validate it before going near the file.
     errors = scaffold.validate(spec)
     if errors:
         listed = "\n".join(f"- {e}" for e in errors[:5])
@@ -389,7 +419,11 @@ def run(message: str, apply: bool = False) -> tuple[Reply, int]:
         )
 
     if apply:
-        write_spec(spec)
+        # Re-apply to a comment-preserving tree, since the plain loader
+        # discarded every comment on the way in.
+        preserved = load_roundtrip()
+        dispatch(preserved, message)
+        write_spec(preserved)
     return reply, 0
 
 

@@ -9,6 +9,7 @@ the spec untouched, and a question must never write at all.
 from __future__ import annotations
 
 import copy
+import sys
 import unittest
 
 import yaml
@@ -170,6 +171,98 @@ class RefusesToBreakTheTree(unittest.TestCase):
         reply = ask("mark Data Tier as running")
         self.assertFalse(reply.ok)
         self.assertFalse(reply.changed)
+
+
+class ReadPathNeedsOnlyPyyaml(unittest.TestCase):
+    """ruamel is a writing dependency and CI does not install it.
+
+    A dry run that imports it fails only in CI, never on a machine where it
+    happens to be present — which is exactly how it got through the first time.
+    These tests make the absence explicit instead of relying on the runner.
+    """
+
+    def setUp(self):
+        import builtins
+
+        self._real_import = builtins.__import__
+
+        def blocked(name, *args, **kwargs):
+            if name.split(".")[0] == "ruamel":
+                raise ModuleNotFoundError("No module named 'ruamel'")
+            return self._real_import(name, *args, **kwargs)
+
+        builtins.__import__ = blocked
+        for mod in [m for m in list(sys.modules) if m.split(".")[0] == "ruamel"]:
+            del sys.modules[mod]
+
+    def tearDown(self):
+        import builtins
+
+        builtins.__import__ = self._real_import
+
+    def test_questions_work_without_ruamel(self):
+        for message in ("status", "tiers", "find kafka", "what depends on metrics"):
+            self.assertEqual(command.run(message)[1], 0, message)
+
+    def test_dry_run_edits_work_without_ruamel(self):
+        reply, code = command.run("mark inference as building", apply=False)
+        self.assertEqual(code, 0)
+        self.assertTrue(reply.changed)
+
+    def test_rejected_edits_work_without_ruamel(self):
+        _, code = command.run("make key management depend on object storage", apply=False)
+        self.assertEqual(code, 1)
+
+    def test_unknown_messages_work_without_ruamel(self):
+        self.assertEqual(command.run("please make me a sandwich")[1], 2)
+
+
+def _has_ruamel() -> bool:
+    try:
+        import ruamel.yaml  # noqa: F401
+    except ModuleNotFoundError:
+        return False
+    return True
+
+
+class MinimalDiffs(unittest.TestCase):
+    """A one-line command must produce a one-line diff.
+
+    Re-wrapping a folded scalar leaves a trailing space before the break, so an
+    untidied round-trip rewrites ~140 lines and buries the real edit in
+    whitespace. Commits from the command workflow would be unreviewable.
+    """
+
+    def test_tidy_strips_trailing_whitespace(self):
+        self.assertEqual(command.tidy("a: 1   \nb: 2\t\n"), "a: 1\nb: 2\n")
+
+    def test_tidy_drops_blank_lines_inside_a_mapping(self):
+        text = "  - name: X\n    description: d\n\n    status: planned\n"
+        self.assertNotIn("\n\n", command.tidy(text))
+
+    def test_tidy_keeps_structural_blank_lines(self):
+        text = "name: Universe\ndescription: d\n\nchildren:\n  - name: X\n"
+        self.assertIn("\n\nchildren:", command.tidy(text))
+
+    def test_tidy_changes_nothing_semantically(self):
+        raw = scaffold.SPEC.read_text(encoding="utf-8")
+        self.assertEqual(yaml.safe_load(command.tidy(raw)), yaml.safe_load(raw))
+
+    @unittest.skipUnless(_has_ruamel(), "ruamel is a writing dependency")
+    def test_an_unchanged_round_trip_is_byte_identical(self):
+        """The property that makes every edit a minimal diff."""
+        import io
+
+        from ruamel.yaml import YAML
+
+        rt = YAML()
+        rt.preserve_quotes = True
+        rt.indent(mapping=2, sequence=4, offset=2)
+        rt.width = 78
+        original = scaffold.SPEC.read_text(encoding="utf-8")
+        buffer = io.StringIO()
+        rt.dump(rt.load(original), buffer)
+        self.assertEqual(command.tidy(buffer.getvalue()), original)
 
 
 class ExitCodes(unittest.TestCase):
