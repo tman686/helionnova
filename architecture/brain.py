@@ -45,6 +45,9 @@ TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "60"))
 # and a 1B model loses the thread; the shortlist is picked per message.
 VOCAB_LIMIT = int(os.environ.get("OLLAMA_VOCAB", "30"))
 
+# Concrete forms, not <placeholders>. A small model copies what it sees, and
+# given `set owner of <tier> to <team-slug>` it will happily put a tier name
+# where the slug goes.
 GRAMMAR = """\
 status
 tiers
@@ -52,20 +55,47 @@ foundations
 orphans
 build order
 check
-show <tier>
-find <text>
-about <component>
-what depends on <component>
-what does <component> need
-what breaks if <component> fails
-everything <component> needs
-why does <component> need <other component>
-mark <component> as planned|building|running
-set owner of <tier> to <team-slug>
-add <name> to <tier>: <description>
-make <component> depend on <other component>
-<component> no longer depends on <other component>
-remove <component>"""
+show Messaging
+find kafka
+about Inference
+what depends on Object Storage
+what does RAG need
+what breaks if Metrics fails
+everything RAG needs
+why does Inference need Key Management
+mark Inference as building
+set owner of Data Tier to data-platform
+add Redis Cache to Data Tier: Caches hot queries.
+make Web Search depend on Metrics
+make Web Search no longer depend on Metrics
+remove Redis Cache"""
+
+# Few-shot beats instructions for a 1B. These are the mistakes it actually
+# makes: inventing hybrids, and answering the question instead of translating.
+EXAMPLES = """\
+Request: which things lean on the object store
+Command: what depends on Object Storage
+
+Request: if the metrics box dies what goes with it
+Command: what breaks if Metrics fails
+
+Request: whats in the messaging tier
+Command: show Messaging
+
+Request: give me the lowdown on inference
+Command: about Inference
+
+Request: what has nothing underneath it
+Command: foundations
+
+Request: the data tier belongs to the storage crew now
+Command: set owner of Data Tier to storage-crew
+
+Request: start work on inference
+Command: mark Inference as building
+
+Request: what is the capital of France
+Command: UNKNOWN"""
 
 
 class BrainUnavailable(RuntimeError):
@@ -140,21 +170,28 @@ def vocabulary(spec: dict, message: str = "", limit: int = 0) -> str:
     return f"TIERS: {', '.join(tiers)}\n\nCOMPONENTS: {', '.join(components)}"
 
 
-def prompt_for(spec: dict, message: str) -> str:
+def prompt_for(spec: dict, message: str, complaint: str = "") -> str:
+    retry = ""
+    if complaint:
+        retry = (
+            f"\nYour last answer was rejected: {complaint}\n"
+            "Copy the shape of one of the commands above exactly. Do not combine "
+            "two commands.\n"
+        )
     return f"""\
-You translate a person's request into exactly one command for an architecture \
-tool. Reply with the command and nothing else — no explanation, no quotes, no \
-code fences.
+Rewrite the request as ONE command from the list. Copy a line's shape exactly \
+and swap in the names. Never join two commands together. Output the command \
+only — no explanation, no quotes, no code fences.
 
-The only valid commands are:
+COMMANDS (these are the only shapes allowed):
 {GRAMMAR}
 
-Use only these names, spelled exactly as shown:
+NAMES you may use, spelled exactly like this:
 {vocabulary(spec, message)}
 
-If the request does not correspond to any command above, reply with exactly:
-UNKNOWN
-
+EXAMPLES:
+{EXAMPLES}
+{retry}
 Request: {message}
 Command:"""
 
@@ -168,13 +205,17 @@ def clean_command(raw: str) -> str:
     return text.strip("`\"' ").rstrip(".")
 
 
-def translate(spec: dict, message: str) -> str:
-    """Free-form English -> one command the router understands."""
+def translate(spec: dict, message: str, complaint: str = "") -> str:
+    """Free-form English -> one command the router understands.
+
+    `complaint` is fed back on a retry: a small model often lands one nudge
+    away, and telling it what was wrong is cheaper than giving up.
+    """
     result = _post(
         "/api/generate",
         {
             "model": MODEL,
-            "prompt": prompt_for(spec, message),
+            "prompt": prompt_for(spec, message, complaint),
             "stream": False,
             # Deterministic: the same question should map to the same command.
             "options": {"temperature": 0, "num_predict": 60},

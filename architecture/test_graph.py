@@ -202,7 +202,7 @@ class OllamaFallback(unittest.TestCase):
 
     def test_a_translated_command_is_re_dispatched(self):
         original = brain.translate
-        brain.translate = lambda spec, message: "what depends on object storage"
+        brain.translate = lambda spec, message, complaint="": "what depends on object storage"
         try:
             reply = command.ask_brain(fresh(), "which things lean on the object store")
             self.assertIn("depend on **Object Storage**", reply.text)
@@ -211,20 +211,32 @@ class OllamaFallback(unittest.TestCase):
             brain.translate = original
 
     def test_a_suggestion_the_router_does_not_know_is_refused(self):
-        """The model cannot invent capability. This is the whole guarantee."""
-        original = brain.translate
-        brain.translate = lambda spec, message: "rm -rf / && drop all tables"
+        """The model cannot invent capability. This is the whole guarantee.
+
+        It gets a retry, and if that also fails it drops to prose — but at no
+        point does anything outside the command grammar run.
+        """
+        original_t, original_e = brain.translate, brain.explain
+        attempts = []
+
+        def junk(spec, message, complaint=""):
+            attempts.append(complaint)
+            return "rm -rf / && drop all tables"
+
+        brain.translate = junk
+        brain.explain = lambda spec, message, context: "I cannot do that."
         try:
             reply = command.ask_brain(fresh(), "destroy everything")
-            self.assertFalse(reply.ok)
-            self.assertFalse(reply.changed)
-            self.assertIn("not a command I know", reply.text)
+            self.assertFalse(reply.changed, "nothing may be executed")
+            self.assertEqual(len(attempts), 2, "one retry, with the complaint fed back")
+            self.assertIn("not one of the command shapes", attempts[1])
+            self.assertIn("Could not turn that into a command", reply.text)
         finally:
-            brain.translate = original
+            brain.translate, brain.explain = original_t, original_e
 
     def test_a_hallucinated_component_is_refused_by_the_router(self):
         original = brain.translate
-        brain.translate = lambda spec, message: "what depends on Quantum Flux Capacitor"
+        brain.translate = lambda spec, message, complaint="": "what depends on Quantum Flux Capacitor"
         try:
             reply = command.ask_brain(fresh(), "what about the flux capacitor")
             self.assertFalse(reply.ok)
@@ -234,7 +246,7 @@ class OllamaFallback(unittest.TestCase):
 
     def test_an_edit_suggested_by_the_model_still_faces_validation(self):
         original = brain.translate
-        brain.translate = lambda spec, message: "make key management depend on object storage"
+        brain.translate = lambda spec, message, complaint="": "make key management depend on object storage"
         try:
             reply, code = command.run("tangle the storage keys", brain_mode="on")
             self.assertEqual(code, 1)
@@ -246,7 +258,7 @@ class OllamaFallback(unittest.TestCase):
         """Latency and determinism: a known phrasing must never reach Ollama."""
         original = brain.translate
 
-        def explode(spec, message):
+        def explode(spec, message, complaint=""):
             raise AssertionError("the model was consulted for a known phrasing")
 
         brain.translate = explode
@@ -330,7 +342,7 @@ class StubOllama(unittest.TestCase):
     def test_the_prompt_carries_the_grammar_and_a_shortlist(self):
         command.run("tell me about the object store thing", brain_mode="on")
         prompt = self.seen[-1]["prompt"]
-        self.assertIn("what depends on <component>", prompt)
+        self.assertIn("what depends on Object Storage", prompt)
         self.assertIn("Object Storage", prompt)
         self.assertIn("Data Tier", prompt)
 

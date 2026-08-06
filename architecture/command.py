@@ -653,23 +653,51 @@ def ask_brain(spec: dict, message: str) -> Reply:
     except brain.BrainUnavailable as exc:
         return Reply(f"{exc}", ok=False, _handled=False)
 
-    if not command_text or command_text.upper().startswith("UNKNOWN"):
-        # No command fits. Let it answer in prose instead, from graph facts.
+    def prose_fallback(note: str = "") -> Reply:
+        """Nothing mapped. Answer from graph facts rather than dead-ending."""
         try:
-            prose = brain.explain(spec, message, brain.context_for(spec, message))
+            answer = brain.explain(spec, message, brain.context_for(spec, message))
         except brain.BrainUnavailable as exc:
             return Reply(f"{exc}", ok=False, _handled=False)
-        return Reply(prose or f"I have nothing for **{message}**.", ok=bool(prose))
+        if not answer:
+            return Reply(f"I have nothing for **{message}**.", ok=False)
+        return Reply(f"{note}{answer}\n\n_Answered from the graph, not a command._")
+
+    if not command_text or command_text.upper().startswith("UNKNOWN"):
+        return prose_fallback()
 
     reply = dispatch(spec, command_text)
-    if not reply._handled:
-        return Reply(
-            f"The model suggested `{command_text}`, which is not a command I know.",
-            ok=False,
-            _handled=False,
+
+    # One correction attempt. A small model routinely lands a hybrid like
+    # "set owner of Foundations to Developer Platform" — two commands welded
+    # together — and usually fixes it when told what was wrong.
+    if not reply._handled or reply.retryable:
+        complaint = (
+            f"'{command_text}' is not one of the command shapes."
+            if not reply._handled
+            else f"'{command_text}' used a name that does not exist."
         )
-    return Reply(f"_read as:_ `{command_text}`\n\n{reply.text}", changed=reply.changed,
-                 ok=reply.ok, summary=reply.summary)
+        try:
+            second = brain.translate(spec, message, complaint)
+        except brain.BrainUnavailable as exc:
+            return Reply(f"{exc}", ok=False, _handled=False)
+        if second and not second.upper().startswith("UNKNOWN"):
+            retried = dispatch(spec, second)
+            if retried._handled and not retried.retryable:
+                return Reply(
+                    f"_read as:_ `{second}`\n\n{retried.text}",
+                    changed=retried.changed,
+                    ok=retried.ok,
+                    summary=retried.summary,
+                )
+        return prose_fallback(f"_Could not turn that into a command._\n\n")
+
+    return Reply(
+        f"_read as:_ `{command_text}`\n\n{reply.text}",
+        changed=reply.changed,
+        ok=reply.ok,
+        summary=reply.summary,
+    )
 
 
 def run(message: str, apply: bool = False, brain_mode: str = "auto") -> tuple[Reply, int]:
