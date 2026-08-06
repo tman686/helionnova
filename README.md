@@ -21,6 +21,23 @@ $ hn what depends on object storage
 
 ## Talking to it
 
+Run it with no arguments and keep typing:
+
+```
+$ ./bin/hn
+helionnova — 180 components. Ask in plain words.
+
+hn> what breaks if key management fails
+149 of 180 components fail if Key Management does — 83% of the platform.
+
+hn> why does inference need key management
+Inference → Model Registry → Object Storage → Key Management
+
+hn> quit
+```
+
+Or ask one thing at a time:
+
 ```sh
 ./bin/hn help                            # what it understands
 ./bin/hn status

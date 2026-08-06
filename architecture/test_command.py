@@ -393,6 +393,36 @@ class MinimalDiffs(unittest.TestCase):
         self.assertEqual(command.tidy(buffer.getvalue()), original)
 
 
+class TerminalOutput(unittest.TestCase):
+    """A terminal wants plain text; GitHub wants the Markdown left alone."""
+
+    def test_markdown_is_stripped_for_a_terminal(self):
+        out = command.for_terminal("**Bold** and `code` and _quiet_", colour=False)
+        self.assertEqual(out, "Bold and code and quiet")
+
+    def test_colour_wraps_rather_than_removes(self):
+        out = command.for_terminal("**Bold**", colour=True)
+        self.assertIn(command.BOLD, out)
+        self.assertIn("Bold", out)
+        self.assertNotIn("**", out)
+
+    def test_headings_lose_their_hashes(self):
+        self.assertEqual(command.for_terminal("### Inference", colour=False), "Inference")
+
+    def test_replies_keep_markdown_when_not_a_terminal(self):
+        """The workflow posts these into issue threads, where ** matters."""
+        self.assertIn("**", ask("status").text)
+
+    def test_a_dry_run_says_it_did_not_save(self):
+        self.assertIn("Preview only", command.DRY_RUN_NOTE)
+        reply, _ = command.run("mark inference as building", apply=False)
+        self.assertTrue(reply.changed, "the note is only correct if a change was staged")
+
+    def test_quit_words(self):
+        for word in ("quit", "exit", "q", "QUIT", "bye"):
+            self.assertIn(word.lower(), command.QUIT)
+
+
 class ExitCodes(unittest.TestCase):
     """The workflow keys off these, so they are part of the contract."""
 

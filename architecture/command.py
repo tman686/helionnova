@@ -663,17 +663,83 @@ def run(message: str, apply: bool = False) -> tuple[Reply, int]:
     return reply, 0
 
 
+BOLD, DIM, RESET = "\033[1m", "\033[2m", "\033[0m"
+
+QUIT = {"quit", "exit", "q", ":q", "bye"}
+
+DRY_RUN_NOTE = (
+    "_Preview only — nothing was saved. Add --apply to write it here, "
+    "or --remote to commit it on GitHub._"
+)
+
+
+def for_terminal(text: str, colour: bool) -> str:
+    """Markdown is for GitHub; a terminal wants plain text.
+
+    Only applied when writing to a terminal, so the workflow still posts real
+    Markdown into issue threads.
+    """
+    text = re.sub(r"^#+\s*", "", text, flags=re.M)
+    if colour:
+        text = re.sub(r"\*\*(.+?)\*\*", f"{BOLD}\\1{RESET}", text)
+        text = re.sub(r"_(.+?)_", f"{DIM}\\1{RESET}", text)
+    else:
+        text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+        text = re.sub(r"_(.+?)_", r"\1", text)
+    return text.replace("`", "")
+
+
+def emit(reply: Reply, apply: bool, colour: bool) -> None:
+    text = reply.text
+    if reply.changed and not apply:
+        text += "\n\n" + DRY_RUN_NOTE
+    print(for_terminal(text, colour) if sys.stdout.isatty() else text)
+
+
+def interactive(apply: bool) -> int:
+    """Type messages one after another instead of re-invoking the command."""
+    colour = sys.stdout.isatty()
+    total = scaffold.count_leaves(yaml.safe_load(scaffold.SPEC.read_text(encoding="utf-8")))
+    bold = BOLD if colour else ""
+    reset = RESET if colour else ""
+    print(f"{bold}helionnova{reset} — {total} components. Ask in plain words.")
+    print(f"'help' for what I know, 'quit' to leave."
+          f"{'' if apply else '  Nothing is saved in this mode.'}")
+
+    while True:
+        try:
+            line = input(f"\n{bold}hn>{reset} ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return 0
+        if not line:
+            continue
+        if line.lower() in QUIT:
+            return 0
+        try:
+            reply, _ = run(line, apply=apply)
+            emit(reply, apply, colour)
+        except Exception as exc:  # a bad message must not end the session
+            print(f"Something went wrong: {exc}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("message", help="the message to interpret")
+    parser.add_argument("message", nargs="?", help="the message to interpret")
+    parser.add_argument(
+        "-i", "--interactive", action="store_true", help="keep asking in a loop"
+    )
     parser.add_argument(
         "--apply", action="store_true", help="write spec changes (default is a dry run)"
     )
     parser.add_argument("--summary-to", help="append a one-line summary to this file")
     args = parser.parse_args()
 
+    if args.interactive or not args.message:
+        return interactive(args.apply)
+
     reply, code = run(args.message, apply=args.apply)
-    print(reply.text)
+    emit(reply, args.apply, sys.stdout.isatty())
 
     if args.summary_to and reply.summary:
         with open(args.summary_to, "a", encoding="utf-8") as fh:

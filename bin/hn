@@ -23,10 +23,23 @@ die() { printf '%s\n' "$*" >&2; exit 1; }
 remote=false
 case "${1:-}" in
   --remote|-r) remote=true; shift ;;
-  --help|-h|'') cat <<'USAGE'
+  '')
+    # No message: drop into the prompt. Easier than retyping `hn` each time,
+    # which is the whole game on a phone keyboard.
+    command -v python3 >/dev/null || die "python3 not found. In Termux: pkg install python"
+    exec python3 "$here/architecture/command.py" --interactive
+    ;;
+  --help|-h) cat <<'USAGE'
 hn — talk to the architecture spec in plain English
 
-Type your question as ordinary words. Copy any of these as-is:
+Run it with no arguments for a prompt you can keep typing into:
+
+  hn
+  hn> status
+  hn> what breaks if metrics fails
+  hn> quit
+
+Or ask one thing at a time. Copy any of these as-is:
 
   hn status
   hn tiers
