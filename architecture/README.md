@@ -115,6 +115,84 @@ stop working, so the suite was checked by breaking the generator eight
 different ways — dropping cycle detection, breaking alias resolution, and so on
 — and confirming the tests caught all eight.
 
+## Adding to it
+
+Four places, depending on what you are adding.
+
+### A command `hn` understands
+
+Three edits in [`command.py`](./command.py), then a test. Say you want
+`riskiest`, listing components with the widest blast radius:
+
+```python
+# 1. a handler. It takes the spec and the regex match, returns a Reply.
+def cmd_riskiest(spec: dict, m: re.Match) -> Reply:
+    up = scaffold.adjacency(spec, reverse=True)
+    scored = sorted(
+        ((len(scaffold.reachable(up, n["name"])), n["name"]) for n in scaffold.leaves(spec)),
+        reverse=True,
+    )[:10]
+    return Reply(
+        "**Widest blast radius:**\n\n"
+        + "\n".join(f"- {name} — {count} components" for count, name in scored),
+        summary="riskiest",
+    )
+
+# 2. a route, in ROUTES. First match wins, so put specific patterns above
+#    general ones.
+(r"^\s*(riskiest|most dangerous|biggest risk)\s*$", cmd_riskiest),
+
+# 3. add the phrasing to cmd_help, or a test will fail: the help text is
+#    checked against what the interpreter actually knows.
+```
+
+Then a test in [`test_command.py`](./test_command.py):
+
+```python
+def test_riskiest(self):
+    self.assertIn("Object Storage", ask("riskiest").text)
+```
+
+A handler returning `Reply(..., changed=True)` mutates `spec` in place; the
+caller validates the whole tree afterwards and refuses to write if the edit
+broke anything, so a handler does not need to check for cycles itself.
+
+### A script you run
+
+Drop it in [`bin/`](../bin/) next to `hn` and `hn-up`, and `chmod +x` it.
+Nothing registers scripts — they are just executables on a path you type.
+
+### Something that reads the spec and writes files
+
+Alongside `scaffold.py` and `page.py` in this directory. Import `scaffold`
+for the tree and the graph helpers rather than parsing the YAML again:
+
+```python
+import scaffold, yaml
+spec = yaml.safe_load(scaffold.SPEC.read_text())
+scaffold.leaves(spec)            # every component
+scaffold.adjacency(spec)         # name -> what it depends on
+scaffold.reachable(graph, name)  # transitive closure
+scaffold.build_layers(spec)      # topological layers
+```
+
+### Something that runs on GitHub
+
+A workflow in [`.github/workflows/`](../.github/workflows/). Gate anything
+that can commit on the repo owner — `command.yml` shows the pattern, and an
+ungated one hands write access to anyone who can open an issue.
+
+### Tests
+
+Any `architecture/test_*.py` is picked up automatically:
+
+```sh
+python3 -m unittest discover -s architecture -t architecture
+```
+
+CI runs them before the staleness check, so a broken generator fails before
+its output is compared.
+
 ## Scope
 
 This tree is a **map, not an inventory** — a component having a directory does
