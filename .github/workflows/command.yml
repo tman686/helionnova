@@ -1,0 +1,129 @@
+name: Command
+
+# Talk to the repo in plain English.
+#
+#   - Comment on any issue and the reply lands in the thread.
+#   - Or dispatch a one-off message from a terminal (see bin/hn).
+#
+# Only the repository owner is obeyed. Anyone can comment on a public repo, and
+# this workflow can commit, so an ungated version would hand write access to
+# whoever showed up.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'What should I do?'
+        required: true
+        type: string
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  # Serialise: two commands editing the spec at once would race on the commit.
+  group: command-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    # Ignore anyone who is not the owner, and ignore the bot's own replies.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.actor == github.repository_owner &&
+       github.event.sender.type != 'Bot')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install pyyaml ruamel.yaml
+
+      - name: Read the message
+        id: msg
+        env:
+          DISPATCH: ${{ inputs.message }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          case "${{ github.event_name }}" in
+            workflow_dispatch) text="$DISPATCH" ;;
+            issue_comment)     text="$COMMENT_BODY" ;;
+            *)                 text="$ISSUE_BODY" ;;
+          esac
+          # Env vars, never inline expansion — a message is untrusted input and
+          # must not reach the shell as code.
+          {
+            echo 'text<<COMMAND_EOF'
+            printf '%s\n' "$text"
+            echo 'COMMAND_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run it
+        id: run
+        env:
+          MESSAGE: ${{ steps.msg.outputs.text }}
+        run: |
+          set +e
+          python3 architecture/command.py "$MESSAGE" --apply > reply.md 2> error.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          if [ -s error.log ]; then cat error.log >> reply.md; fi
+          cat reply.md
+
+      - name: Regenerate if the spec changed
+        run: |
+          if ! git diff --quiet -- architecture/universe.yaml; then
+            python3 architecture/scaffold.py
+            python3 -m unittest discover -s architecture -t architecture
+          fi
+
+      - name: Commit any change
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name  "tman686"
+          git config user.email "gilbertsenthomas00@gmail.com"
+          git add -A
+          git commit -m "$(head -c 72 reply.md | tr -d '*#\n')" \
+                     -m "Requested via: ${{ github.event_name }}"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Reply in the thread
+        if: github.event.issue.number
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          {
+            cat reply.md
+            echo
+            echo '---'
+            if [ "${{ steps.commit.outputs.changed }}" = "true" ]; then
+              echo "_Committed. [Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})_"
+            else
+              echo "_No change. [Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})_"
+            fi
+          } > out.md
+          gh issue comment "$NUMBER" --body-file out.md
+
+      - name: Put the reply in the run summary
+        run: cat reply.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail the run if the message was not understood
+        run: exit ${{ steps.run.outputs.code }}

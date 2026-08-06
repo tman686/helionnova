@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Talk to this repo in plain English, from a phone or anywhere else.
+#
+#   hn status                          # answer locally, instantly
+#   hn what depends on object storage
+#   hn --remote mark inference as building   # run it on GitHub and commit
+#
+# Local mode needs Python and pyyaml, and is the one to use for trying things:
+# no network, no token, answers immediately.
+#
+# Remote mode sends the message to the Command workflow, which runs it on
+# GitHub's machines and commits any change. It needs GH_TOKEN in the
+# environment and takes 20-60s, most of which is the runner booting.
+
+set -euo pipefail
+
+REPO="${HN_REPO:-tman686/helionnova}"
+BRANCH="${HN_BRANCH:-main}"
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+die() { printf '%s\n' "$*" >&2; exit 1; }
+
+remote=false
+case "${1:-}" in
+  --remote|-r) remote=true; shift ;;
+  --help|-h|'') cat <<'USAGE'
+hn — talk to the architecture spec in plain English
+
+  hn <message>              answer locally and instantly
+  hn --remote <message>     run on GitHub and commit the result
+
+Try:
+  hn help                   what it understands
+  hn status
+  hn tiers
+  hn what depends on object storage
+  hn find kafka
+  hn mark inference as building
+
+Local mode never writes. Only --remote commits, and only the repo owner's
+token is accepted by the workflow.
+
+Environment:
+  GH_TOKEN     required for --remote
+  HN_REPO      default tman686/helionnova
+  HN_BRANCH    default main
+USAGE
+    exit 0 ;;
+esac
+
+message="$*"
+[ -n "$message" ] || die "Say something. Try: hn help"
+
+if [ "$remote" = false ]; then
+  command -v python3 >/dev/null || die "python3 not found. In Termux: pkg install python"
+  exec python3 "$here/architecture/command.py" "$message"
+fi
+
+[ -n "${GH_TOKEN:-}" ] || die "GH_TOKEN is not set. Create a token at github.com/settings/tokens
+with Contents: Read and write, then:  export GH_TOKEN=ghp_..."
+command -v curl >/dev/null || die "curl not found. In Termux: pkg install curl"
+
+# Build the JSON in Python so quotes and backslashes in the message survive.
+payload=$(python3 -c '
+import json, sys
+print(json.dumps({"ref": sys.argv[1], "inputs": {"message": sys.argv[2]}}))
+' "$BRANCH" "$message")
+
+code=$(curl -sS -o /tmp/hn-resp.txt -w '%{http_code}' \
+  -X POST \
+  -H "Authorization: Bearer $GH_TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  "https://api.github.com/repos/$REPO/actions/workflows/command.yml/dispatches" \
+  -d "$payload")
+
+case "$code" in
+  204) echo "Sent: $message"
+       echo "Watch: https://github.com/$REPO/actions/workflows/command.yml" ;;
+  401|403) die "GitHub rejected the token ($code). Check GH_TOKEN has Contents: Read and write." ;;
+  404) die "Not found ($code). Either $REPO is wrong, or command.yml is not on $BRANCH yet." ;;
+  *)   printf 'Failed (%s):\n' "$code" >&2; cat /tmp/hn-resp.txt >&2; exit 1 ;;
+esac
