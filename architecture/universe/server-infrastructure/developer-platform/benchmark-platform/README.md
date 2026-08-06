@@ -13,6 +13,12 @@ Repeatable performance benchmarks with regression alerting.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Test Infrastructure](../../../../universe/server-infrastructure/developer-platform/test-infrastructure/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

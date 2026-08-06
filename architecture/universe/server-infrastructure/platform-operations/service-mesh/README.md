@@ -11,6 +11,12 @@ Mutual TLS, retries, and traffic policy between services.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Certificate Authority](../../../../universe/server-infrastructure/identity-and-security/certificate-authority/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

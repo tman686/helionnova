@@ -33,8 +33,17 @@ stale commit fails loudly instead of drifting.
   status: building               # optional; planned | building | running
   owner: platform-edge           # optional; lowercase team slug
   aliases: [Throttle Server]     # optional
+  depends_on: [Cache Cluster]    # optional; other components, by name or alias
   children: []                   # optional; omit for a leaf component
 ```
+
+`depends_on` turns the containment tree into a dependency graph. Targets are
+matched by name **or alias**, so an edge written against an old name still
+resolves. Dependencies belong on components — a tier cannot declare one.
+
+Each component's page gets a **Depends on** / **Depended on by** section, and
+`ARCHITECTURE.md` gains a dependency summary: the most depended-on components, a
+tier coupling matrix, and a diagram of the strong links.
 
 `status` and `owner` are **inherited** — set them once on a tier and every
 component beneath it picks them up, unless that component overrides it. `status`
@@ -64,6 +73,10 @@ The generator validates the spec before writing anything and refuses to run on:
 - sibling names that slugify to the same directory
 - duplicate component names anywhere in the tree
 - an alias claimed by two components, or shadowing a real component name
+- a `depends_on` naming an unknown component, a group, or the component itself
+- duplicate entries within one `depends_on`
+- **a dependency cycle** — a loop means nothing in it can start, so the
+  generator reports the full path and refuses to write
 
 ## Scope
 

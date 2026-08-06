@@ -13,6 +13,12 @@ Builds and tests every change on push and pull request.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Build Farm](../../../../universe/server-infrastructure/developer-platform/build-farm/), [Test Infrastructure](../../../../universe/server-infrastructure/developer-platform/test-infrastructure/), [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/)
+
+**Depended on by:** [Release Manager](../../../../universe/server-infrastructure/developer-platform/release-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

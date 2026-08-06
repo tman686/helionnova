@@ -13,6 +13,12 @@ Executes tool-using agents with budgets, tracing, and sandboxing.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

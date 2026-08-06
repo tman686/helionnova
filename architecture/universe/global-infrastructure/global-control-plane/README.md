@@ -11,6 +11,12 @@ Single authoritative control surface for every region, cloud, and tenant in the 
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Infrastructure Telemetry](../../../universe/global-infrastructure/infrastructure-telemetry/), [Region Manager](../../../universe/global-infrastructure/region-manager/), [Multi-Cloud Manager](../../../universe/global-infrastructure/multi-cloud-manager/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

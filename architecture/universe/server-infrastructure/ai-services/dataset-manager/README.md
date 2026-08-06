@@ -11,6 +11,12 @@ Versioned datasets, splits, labels, and access control.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Data Lake](../../../../universe/server-infrastructure/data-tier/data-lake/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/)
+
+**Depended on by:** [Evaluation](../../../../universe/server-infrastructure/ai-services/evaluation/), [Model Versioning](../../../../universe/server-infrastructure/ai-services/model-versioning/), [Training Pipeline](../../../../universe/server-infrastructure/ai-services/training-pipeline/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

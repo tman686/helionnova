@@ -13,6 +13,12 @@ Federated authentication and identity-token issuance.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Identity Provider](../../../../universe/server-infrastructure/identity-and-security/identity-provider/), [Token Service](../../../../universe/server-infrastructure/identity-and-security/token-service/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

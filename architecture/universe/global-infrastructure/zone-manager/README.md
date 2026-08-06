@@ -11,6 +11,12 @@ Availability-zone placement, spread, and zone-level fault isolation.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Multi-Region Manager](../../../universe/global-infrastructure/multi-region-manager/), [Region Manager](../../../universe/global-infrastructure/region-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

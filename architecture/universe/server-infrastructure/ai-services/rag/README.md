@@ -13,6 +13,12 @@ Retrieval-augmented generation pipeline joining retrieved context to prompts.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Vector Search](../../../../universe/server-infrastructure/ai-services/vector-search/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

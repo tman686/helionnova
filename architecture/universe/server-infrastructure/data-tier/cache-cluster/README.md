@@ -13,6 +13,12 @@ Distributed in-memory cache sitting in front of hot data paths.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Build Farm](../../../../universe/server-infrastructure/developer-platform/build-farm/), [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Model Cache](../../../../universe/server-infrastructure/ai-services/model-cache/), [Rate Limiter](../../../../universe/server-infrastructure/gateway-tier/rate-limiter/), [Redis Streams](../../../../universe/server-infrastructure/messaging/redis-streams/), [Session Store](../../../../universe/server-infrastructure/identity-and-security/session-store/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

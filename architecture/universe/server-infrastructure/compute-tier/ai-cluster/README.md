@@ -11,6 +11,12 @@ Accelerator-backed nodes dedicated to inference and training.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [GPU Cluster](../../../../universe/server-infrastructure/compute-tier/gpu-cluster/), [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/)
+
+**Depended on by:** [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/), [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Speech](../../../../universe/server-infrastructure/ai-services/speech/), [Training Pipeline](../../../../universe/server-infrastructure/ai-services/training-pipeline/), [Vision](../../../../universe/server-infrastructure/ai-services/vision/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

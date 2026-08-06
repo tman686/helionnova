@@ -11,6 +11,12 @@ Schema-aware filtering that blocks malformed, abusive, and injection traffic.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Policy Engine](../../../../universe/server-infrastructure/identity-and-security/policy-engine/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

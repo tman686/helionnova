@@ -11,6 +11,12 @@ Debug symbols and source indexes for crash symbolication.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

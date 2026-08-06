@@ -13,6 +13,12 @@ Parallel environment cutover with instant switchback.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Traffic Director](../../../../universe/global-infrastructure/traffic-director/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

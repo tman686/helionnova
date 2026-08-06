@@ -13,6 +13,12 @@ REST surface with versioned resources and OpenAPI contracts.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Request Router](../../../../universe/server-infrastructure/gateway-tier/request-router/), [API Version Manager](../../../../universe/server-infrastructure/gateway-tier/api-version-manager/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

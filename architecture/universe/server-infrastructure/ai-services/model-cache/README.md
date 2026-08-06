@@ -13,6 +13,12 @@ Warm weights and prefix/KV cache tiers that cut cold-start and repeat cost.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

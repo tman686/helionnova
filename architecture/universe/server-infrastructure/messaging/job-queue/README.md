@@ -13,6 +13,12 @@ Prioritized background work with leases and idempotent execution.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Message Queue](../../../../universe/server-infrastructure/messaging/message-queue/), [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/)
+
+**Depended on by:** [Background Services](../../../../universe/server-infrastructure/compute-tier/background-services/), [Batch Cluster](../../../../universe/server-infrastructure/compute-tier/batch-cluster/), [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Webhook Dispatcher](../../../../universe/server-infrastructure/messaging/webhook-dispatcher/), [Worker Cluster](../../../../universe/server-infrastructure/compute-tier/worker-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

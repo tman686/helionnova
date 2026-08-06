@@ -13,6 +13,12 @@ System of record for models, lineage, and promotion state.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Model Versioning](../../../../universe/server-infrastructure/ai-services/model-versioning/)
+
+**Depended on by:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [Model Deployment](../../../../universe/server-infrastructure/ai-services/model-deployment/), [Training Pipeline](../../../../universe/server-infrastructure/ai-services/training-pipeline/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

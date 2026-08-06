@@ -13,6 +13,12 @@ Approximate nearest-neighbour index serving similarity queries at scale.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Vector Database](../../../../universe/server-infrastructure/data-tier/vector-database/), [Embeddings](../../../../universe/server-infrastructure/ai-services/embeddings/)
+
+**Depended on by:** [RAG](../../../../universe/server-infrastructure/ai-services/rag/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

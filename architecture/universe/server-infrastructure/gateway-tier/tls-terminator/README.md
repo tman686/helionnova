@@ -11,6 +11,12 @@ Certificate presentation, cipher policy, and mutual-TLS enforcement at the edge.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Certificate Authority](../../../../universe/server-infrastructure/identity-and-security/certificate-authority/), [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/)
+
+**Depended on by:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/), [Edge Gateway](../../../../universe/server-infrastructure/gateway-tier/edge-gateway/), [HTTP/3 Gateway](../../../../universe/server-infrastructure/gateway-tier/http-3-gateway/), [QUIC Gateway](../../../../universe/server-infrastructure/gateway-tier/quic-gateway/), [Reverse Proxy](../../../../universe/server-infrastructure/gateway-tier/reverse-proxy/), [WebSocket Gateway](../../../../universe/server-infrastructure/gateway-tier/websocket-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

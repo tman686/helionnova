@@ -13,6 +13,12 @@ Distributed training orchestration with checkpointing and resumption.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/), [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/), [Experiment Tracking](../../../../universe/server-infrastructure/ai-services/experiment-tracking/), [Model Registry](../../../../universe/server-infrastructure/ai-services/model-registry/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

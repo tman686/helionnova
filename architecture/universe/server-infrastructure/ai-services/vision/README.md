@@ -13,6 +13,12 @@ Image and video understanding — detection, classification, segmentation.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Inference](../../../../universe/server-infrastructure/ai-services/inference/), [AI Cluster](../../../../universe/server-infrastructure/compute-tier/ai-cluster/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

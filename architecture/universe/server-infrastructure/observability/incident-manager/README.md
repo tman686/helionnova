@@ -11,6 +11,12 @@ Declares, tracks, and reviews incidents end to end.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Alerting](../../../../universe/server-infrastructure/observability/alerting/), [Notification Hub](../../../../universe/server-infrastructure/messaging/notification-hub/)
+
+**Depended on by:** [Security Operations](../../../../universe/server-infrastructure/identity-and-security/security-operations/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

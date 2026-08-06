@@ -13,6 +13,12 @@ Behavioural and signature-based detection of active threats.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Security Monitoring](../../../../universe/server-infrastructure/identity-and-security/security-monitoring/), [SIEM](../../../../universe/server-infrastructure/identity-and-security/siem/)
+
+**Depended on by:** [DDoS Protection](../../../../universe/server-infrastructure/gateway-tier/ddos-protection/), [Security Operations](../../../../universe/server-infrastructure/identity-and-security/security-operations/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

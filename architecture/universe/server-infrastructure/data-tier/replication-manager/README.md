@@ -11,6 +11,12 @@ Cross-zone and cross-region replication with lag monitoring.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Disaster Recovery Controller](../../../../universe/global-infrastructure/disaster-recovery-controller/), [Failover Manager](../../../../universe/server-infrastructure/platform-operations/failover-manager/), [NoSQL Cluster](../../../../universe/server-infrastructure/data-tier/nosql-cluster/), [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

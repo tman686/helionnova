@@ -11,6 +11,12 @@ Headroom and saturation analysis feeding capacity planning.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/)
+
+**Depended on by:** [Capacity Planner](../../../../universe/global-infrastructure/capacity-planner/), [Resource Optimizer](../../../../universe/server-infrastructure/platform-operations/resource-optimizer/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

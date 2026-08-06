@@ -13,6 +13,12 @@ HTTP/3 termination for multiplexed transport without head-of-line blocking.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [QUIC Gateway](../../../../universe/server-infrastructure/gateway-tier/quic-gateway/), [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

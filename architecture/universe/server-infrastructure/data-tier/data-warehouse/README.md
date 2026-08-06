@@ -11,6 +11,12 @@ Modeled analytical store for business intelligence and reporting.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

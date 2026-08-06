@@ -11,6 +11,12 @@ Queue-driven workers that drain asynchronous job backlogs.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Job Queue](../../../../universe/server-infrastructure/messaging/job-queue/), [Message Queue](../../../../universe/server-infrastructure/messaging/message-queue/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

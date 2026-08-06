@@ -13,6 +13,12 @@ Owns region topology, placement rules, and cross-region promotion.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Region Manager](../../../universe/global-infrastructure/region-manager/), [Zone Manager](../../../universe/global-infrastructure/zone-manager/)
+
+**Depended on by:** [Disaster Recovery Controller](../../../universe/global-infrastructure/disaster-recovery-controller/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

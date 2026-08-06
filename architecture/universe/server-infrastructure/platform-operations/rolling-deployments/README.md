@@ -13,6 +13,12 @@ Incremental instance replacement behind health gates.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Health Monitoring](../../../../universe/server-infrastructure/observability/health-monitoring/)
+
+**Depended on by:** [CD](../../../../universe/server-infrastructure/developer-platform/cd/), [Canary Deployments](../../../../universe/server-infrastructure/platform-operations/canary-deployments/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

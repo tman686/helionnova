@@ -13,6 +13,12 @@ gRPC ingress with protobuf contracts and HTTP/JSON transcoding.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Request Router](../../../../universe/server-infrastructure/gateway-tier/request-router/), [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

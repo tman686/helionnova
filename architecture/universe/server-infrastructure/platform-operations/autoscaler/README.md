@@ -11,6 +11,12 @@ Horizontal, vertical, and cluster autoscaling driven by live signals.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Cluster Scheduler](../../../../universe/server-infrastructure/platform-operations/cluster-scheduler/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

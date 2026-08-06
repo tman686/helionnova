@@ -11,6 +11,12 @@ Declarative infrastructure with reviewed plan and apply.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Configuration Management](../../../../universe/server-infrastructure/platform-operations/configuration-management/), [Secret Distribution](../../../../universe/server-infrastructure/platform-operations/secret-distribution/)
+
+**Depended on by:** [Multi-Cloud Manager](../../../../universe/global-infrastructure/multi-cloud-manager/), [Region Manager](../../../../universe/global-infrastructure/region-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -11,6 +11,12 @@ One-command return to the last known-good version.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/), [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

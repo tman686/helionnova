@@ -13,6 +13,12 @@ Server-side session state with revocation and device binding.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/), [Token Service](../../../../universe/server-infrastructure/identity-and-security/token-service/)
+
+**Depended on by:** [WebSocket Gateway](../../../../universe/server-infrastructure/gateway-tier/websocket-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

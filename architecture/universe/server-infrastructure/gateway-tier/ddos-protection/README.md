@@ -11,6 +11,12 @@ Volumetric and application-layer attack absorption and scrubbing.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Threat Detection](../../../../universe/server-infrastructure/identity-and-security/threat-detection/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

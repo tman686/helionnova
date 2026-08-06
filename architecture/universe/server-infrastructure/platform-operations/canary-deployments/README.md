@@ -13,6 +13,12 @@ Small-slice exposure with automated metric analysis.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Rolling Deployments](../../../../universe/server-infrastructure/platform-operations/rolling-deployments/), [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Traffic Director](../../../../universe/global-infrastructure/traffic-director/)
+
+**Depended on by:** [Model Deployment](../../../../universe/server-infrastructure/ai-services/model-deployment/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

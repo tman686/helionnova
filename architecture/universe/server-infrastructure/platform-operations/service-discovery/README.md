@@ -13,6 +13,12 @@ Resolves service endpoints as instances come and go.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Service Registry](../../../../universe/server-infrastructure/platform-operations/service-registry/)
+
+**Depended on by:** [API Cluster](../../../../universe/server-infrastructure/compute-tier/api-cluster/), [GraphQL Gateway](../../../../universe/server-infrastructure/gateway-tier/graphql-gateway/), [Kubernetes](../../../../universe/server-infrastructure/platform-operations/kubernetes/), [Load Balancer](../../../../universe/server-infrastructure/platform-operations/load-balancer/), [Microservice Runtime](../../../../universe/server-infrastructure/compute-tier/microservice-runtime/), [Request Router](../../../../universe/server-infrastructure/gateway-tier/request-router/), [Reverse Proxy](../../../../universe/server-infrastructure/gateway-tier/reverse-proxy/), [Service Mesh](../../../../universe/server-infrastructure/platform-operations/service-mesh/), [gRPC Gateway](../../../../universe/server-infrastructure/gateway-tier/grpc-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

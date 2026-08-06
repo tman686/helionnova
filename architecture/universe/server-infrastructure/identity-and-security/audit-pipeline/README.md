@@ -13,6 +13,12 @@ Tamper-evident log of privileged and tenant-visible actions.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Logging](../../../../universe/server-infrastructure/observability/logging/)
+
+**Depended on by:** [Compliance](../../../../universe/server-infrastructure/identity-and-security/compliance/), [Secret Vault](../../../../universe/server-infrastructure/identity-and-security/secret-vault/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

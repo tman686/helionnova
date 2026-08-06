@@ -13,6 +13,12 @@ Single front door for external traffic — auth, routing, quotas, and transforms
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/), [Rate Limiter](../../../../universe/server-infrastructure/gateway-tier/rate-limiter/), [Request Router](../../../../universe/server-infrastructure/gateway-tier/request-router/), [Authorization](../../../../universe/server-infrastructure/identity-and-security/authorization/), [Token Service](../../../../universe/server-infrastructure/identity-and-security/token-service/)
+
+**Depended on by:** [API Explorer](../../../../universe/server-infrastructure/developer-platform/api-explorer/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

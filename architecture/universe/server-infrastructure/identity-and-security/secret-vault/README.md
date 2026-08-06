@@ -11,6 +11,12 @@ Dynamic secrets and short-lived credential leasing for workloads.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/), [Audit Pipeline](../../../../universe/server-infrastructure/identity-and-security/audit-pipeline/)
+
+**Depended on by:** [Secret Distribution](../../../../universe/server-infrastructure/platform-operations/secret-distribution/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

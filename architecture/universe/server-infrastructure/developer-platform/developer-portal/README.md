@@ -11,6 +11,12 @@ Single entry point to services, ownership, and self-service actions.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Service Registry](../../../../universe/server-infrastructure/platform-operations/service-registry/), [Documentation Portal](../../../../universe/server-infrastructure/developer-platform/documentation-portal/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

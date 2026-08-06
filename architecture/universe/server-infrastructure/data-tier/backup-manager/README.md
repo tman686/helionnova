@@ -13,6 +13,12 @@ Scheduled backups, rehearsed restores, and retention policy.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [Archive Manager](../../../../universe/server-infrastructure/data-tier/archive-manager/)
+
+**Depended on by:** [Disaster Recovery Controller](../../../../universe/global-infrastructure/disaster-recovery-controller/), [File Storage](../../../../universe/server-infrastructure/data-tier/file-storage/), [Graph Database](../../../../universe/server-infrastructure/data-tier/graph-database/), [NoSQL Cluster](../../../../universe/server-infrastructure/data-tier/nosql-cluster/), [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/), [Vector Database](../../../../universe/server-infrastructure/data-tier/vector-database/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

@@ -13,6 +13,12 @@ Durable versioned object store for large immutable payloads.
 | **Status** | ○ Planned |
 | **Owner** | `data-platform` |
 
+## Dependencies
+
+**Depends on:** [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/), [Replication Manager](../../../../universe/server-infrastructure/data-tier/replication-manager/)
+
+**Depended on by:** [Archive Manager](../../../../universe/server-infrastructure/data-tier/archive-manager/), [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/), [Audit Pipeline](../../../../universe/server-infrastructure/identity-and-security/audit-pipeline/), [Backup Manager](../../../../universe/server-infrastructure/data-tier/backup-manager/), [Blob Storage](../../../../universe/server-infrastructure/data-tier/blob-storage/), [CDN](../../../../universe/global-infrastructure/cdn/), [Data Lake](../../../../universe/server-infrastructure/data-tier/data-lake/), [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/), [Documentation Portal](../../../../universe/server-infrastructure/developer-platform/documentation-portal/), [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Experiment Tracking](../../../../universe/server-infrastructure/ai-services/experiment-tracking/), [Knowledge Service](../../../../universe/server-infrastructure/ai-services/knowledge-service/), [Logging](../../../../universe/server-infrastructure/observability/logging/), [Model Cache](../../../../universe/server-infrastructure/ai-services/model-cache/), [Model Registry](../../../../universe/server-infrastructure/ai-services/model-registry/), [Model Versioning](../../../../universe/server-infrastructure/ai-services/model-versioning/), [OCR](../../../../universe/server-infrastructure/ai-services/ocr/), [Package Registry](../../../../universe/server-infrastructure/developer-platform/package-registry/), [Search Engine](../../../../universe/server-infrastructure/data-tier/search-engine/), [Symbol Server](../../../../universe/server-infrastructure/developer-platform/symbol-server/), [Vector Database](../../../../universe/server-infrastructure/data-tier/vector-database/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

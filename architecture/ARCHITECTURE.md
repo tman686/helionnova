@@ -490,6 +490,88 @@ The path from a commit to a running release, plus the surfaces engineers use to 
 | [Internal Package Manager](./universe/server-infrastructure/developer-platform/internal-package-manager/) | ○ Planned | Private dependency resolution and mirroring. |
 | [License Service](./universe/server-infrastructure/developer-platform/license-service/) | ○ Planned | Entitlement and license validation for distributed builds. |
 
+## Dependencies
+
+278 edges across 157 components. 146 declare a dependency; 11 are foundations that depend on nothing.
+
+The generator rejects a cycle outright — a dependency loop means nothing in it
+can start.
+
+### Most depended on
+
+The load-bearing components. An outage here fans out furthest.
+
+| Component | Depended on by |
+| --- | --- |
+| [Object Storage](./universe/server-infrastructure/data-tier/object-storage/) | 22 |
+| [Metrics](./universe/server-infrastructure/observability/metrics/) | 14 |
+| [Service Discovery](./universe/server-infrastructure/platform-operations/service-discovery/) | 9 |
+| [Artifact Repository](./universe/server-infrastructure/developer-platform/artifact-repository/) | 8 |
+| [Container Runtime](./universe/server-infrastructure/platform-operations/container-runtime/) | 7 |
+| [Key Management](./universe/server-infrastructure/identity-and-security/key-management/) | 7 |
+| [Backup Manager](./universe/server-infrastructure/data-tier/backup-manager/) | 6 |
+| [Cache Cluster](./universe/server-infrastructure/data-tier/cache-cluster/) | 6 |
+| [Health Monitoring](./universe/server-infrastructure/observability/health-monitoring/) | 6 |
+| [Identity Provider](./universe/server-infrastructure/identity-and-security/identity-provider/) | 6 |
+| [Inference](./universe/server-infrastructure/ai-services/inference/) | 6 |
+| [Message Queue](./universe/server-infrastructure/messaging/message-queue/) | 6 |
+
+### Coupling between tiers
+
+Cross-tier edges only. Edges inside a tier are omitted, as is the per-component
+graph — 157 nodes on one canvas is unreadable. Each component's own page lists
+its exact upstreams and downstreams.
+
+Rows depend on columns.
+
+| depends on → | AS | CT | DT | DP | GT | GI | IS | M | O | PO |
+| --- | ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:| ---:|
+| **AI Services** | · | 5 | 11 | · | · | · | 3 | · | 4 | 1 |
+| **Compute Tier** | · | · | 1 | · | · | · | · | 6 | · | 14 |
+| **Data Tier** | · | · | · | · | · | · | 1 | 2 | · | · |
+| **Developer Platform** | · | · | 6 | · | 1 | · | 1 | · | 1 | 4 |
+| **Gateway Tier** | · | 1 | 1 | · | · | · | 7 | · | · | 4 |
+| **Global Infrastructure** | · | 1 | 3 | · | 1 | · | 2 | · | 6 | 3 |
+| **Identity & Security** | · | · | 3 | 2 | · | · | · | 1 | 5 | 1 |
+| **Messaging** | · | · | 2 | · | · | · | 1 | · | · | · |
+| **Observability** | · | · | 4 | · | · | 1 | · | 2 | · | · |
+| **Platform Operations** | · | · | 1 | 3 | · | 2 | 3 | · | 7 | · |
+
+Only the strong links (3+ edges), so the shape stays legible:
+
+```mermaid
+flowchart LR
+    n_ai_services["AI Services"]
+    n_compute_tier["Compute Tier"]
+    n_data_tier["Data Tier"]
+    n_developer_platform["Developer Platform"]
+    n_gateway_tier["Gateway Tier"]
+    n_global_infrastructure["Global Infrastructure"]
+    n_identity_and_security["Identity &amp; Security"]
+    n_messaging["Messaging"]
+    n_observability["Observability"]
+    n_platform_operations["Platform Operations"]
+    n_compute_tier -->|14| n_platform_operations
+    n_ai_services -->|11| n_data_tier
+    n_gateway_tier -->|7| n_identity_and_security
+    n_platform_operations -->|7| n_observability
+    n_compute_tier -->|6| n_messaging
+    n_developer_platform -->|6| n_data_tier
+    n_global_infrastructure -->|6| n_observability
+    n_ai_services -->|5| n_compute_tier
+    n_identity_and_security -->|5| n_observability
+    n_ai_services -->|4| n_observability
+    n_developer_platform -->|4| n_platform_operations
+    n_gateway_tier -->|4| n_platform_operations
+    n_observability -->|4| n_data_tier
+    n_ai_services -->|3| n_identity_and_security
+    n_global_infrastructure -->|3| n_data_tier
+    n_global_infrastructure -->|3| n_platform_operations
+    n_identity_and_security -->|3| n_data_tier
+    n_platform_operations -->|3| n_developer_platform
+    n_platform_operations -->|3| n_identity_and_security
+```
+
 ## Ownership
 
 Owners are inherited down the tree — a tier's owner applies to every

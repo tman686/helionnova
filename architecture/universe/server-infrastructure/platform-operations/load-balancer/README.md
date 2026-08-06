@@ -11,6 +11,12 @@ In-cluster layer-4 and layer-7 balancing across service endpoints.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/), [Health Monitoring](../../../../universe/server-infrastructure/observability/health-monitoring/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

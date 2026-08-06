@@ -11,6 +11,12 @@ Offline and online evaluation suites that gate model promotion.
 | **Status** | ○ Planned |
 | **Owner** | `ai-platform` |
 
+## Dependencies
+
+**Depends on:** [Dataset Manager](../../../../universe/server-infrastructure/ai-services/dataset-manager/), [Experiment Tracking](../../../../universe/server-infrastructure/ai-services/experiment-tracking/)
+
+**Depended on by:** [Model Deployment](../../../../universe/server-infrastructure/ai-services/model-deployment/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

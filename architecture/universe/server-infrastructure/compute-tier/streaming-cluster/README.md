@@ -11,6 +11,12 @@ Continuous stream processors with checkpointing and exactly-once semantics.
 | **Status** | ○ Planned |
 | **Owner** | `platform-compute` |
 
+## Dependencies
+
+**Depends on:** [Kafka Cluster](../../../../universe/server-infrastructure/messaging/kafka-cluster/), [Compute Scheduler](../../../../universe/server-infrastructure/compute-tier/compute-scheduler/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

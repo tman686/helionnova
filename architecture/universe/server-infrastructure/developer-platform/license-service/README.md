@@ -13,6 +13,12 @@ Entitlement and license validation for distributed builds.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [SQL Cluster](../../../../universe/server-infrastructure/data-tier/sql-cluster/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

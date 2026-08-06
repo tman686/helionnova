@@ -13,6 +13,12 @@ Backbone carrying domain events between services.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Kafka Cluster](../../../../universe/server-infrastructure/messaging/kafka-cluster/)
+
+**Depended on by:** [Pub/Sub](../../../../universe/server-infrastructure/messaging/pub-sub/), [Serverless Runtime](../../../../universe/server-infrastructure/compute-tier/serverless-runtime/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

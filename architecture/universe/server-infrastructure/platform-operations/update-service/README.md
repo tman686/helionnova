@@ -13,6 +13,12 @@ Delivers signed updates to agents, edge nodes, and clients.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Artifact Repository](../../../../universe/server-infrastructure/developer-platform/artifact-repository/), [Key Management](../../../../universe/server-infrastructure/identity-and-security/key-management/)
+
+**Depended on by:** [Fleet Manager](../../../../universe/server-infrastructure/platform-operations/fleet-manager/), [Node Manager](../../../../universe/server-infrastructure/platform-operations/node-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

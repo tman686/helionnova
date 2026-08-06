@@ -13,6 +13,12 @@ Curated views by service, tenant, and user journey.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Logging](../../../../universe/server-infrastructure/observability/logging/), [Distributed Tracing](../../../../universe/server-infrastructure/observability/distributed-tracing/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

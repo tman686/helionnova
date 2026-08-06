@@ -11,6 +11,12 @@ Delivers vault-issued secrets to workloads without persisting them.
 | **Status** | ○ Planned |
 | **Owner** | `platform-ops` |
 
+## Dependencies
+
+**Depends on:** [Secret Vault](../../../../universe/server-infrastructure/identity-and-security/secret-vault/)
+
+**Depended on by:** [Infrastructure as Code](../../../../universe/server-infrastructure/platform-operations/infrastructure-as-code/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

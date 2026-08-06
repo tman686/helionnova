@@ -11,6 +11,12 @@ Path, host, and header routing plus traffic splitting for progressive delivery.
 | **Status** | ○ Planned |
 | **Owner** | `platform-edge` |
 
+## Dependencies
+
+**Depends on:** [Service Discovery](../../../../universe/server-infrastructure/platform-operations/service-discovery/)
+
+**Depended on by:** [API Gateway](../../../../universe/server-infrastructure/gateway-tier/api-gateway/), [GraphQL Gateway](../../../../universe/server-infrastructure/gateway-tier/graphql-gateway/), [REST Gateway](../../../../universe/server-infrastructure/gateway-tier/rest-gateway/), [gRPC Gateway](../../../../universe/server-infrastructure/gateway-tier/grpc-gateway/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

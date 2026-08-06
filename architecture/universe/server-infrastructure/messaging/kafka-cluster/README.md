@@ -11,6 +11,12 @@ Partitioned, replayable log for high-throughput streams.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [ETL Platform](../../../../universe/server-infrastructure/data-tier/etl-platform/), [Event Bus](../../../../universe/server-infrastructure/messaging/event-bus/), [Streaming Cluster](../../../../universe/server-infrastructure/compute-tier/streaming-cluster/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

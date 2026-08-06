@@ -11,6 +11,12 @@ External synthetic probes measuring user-visible availability.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Alerting](../../../../universe/server-infrastructure/observability/alerting/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

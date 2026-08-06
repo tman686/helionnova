@@ -13,6 +13,12 @@ End-to-end spans across services with configurable sampling.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [Agent Runtime](../../../../universe/server-infrastructure/ai-services/agent-runtime/), [Dashboards](../../../../universe/server-infrastructure/observability/dashboards/), [Performance Analytics](../../../../universe/server-infrastructure/observability/performance-analytics/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

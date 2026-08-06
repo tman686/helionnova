@@ -11,6 +11,12 @@ Spend attribution by service, tenant, and request.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Metrics](../../../../universe/server-infrastructure/observability/metrics/), [Infrastructure Telemetry](../../../../universe/global-infrastructure/infrastructure-telemetry/)
+
+**Depended on by:** [Cost Optimizer](../../../../universe/global-infrastructure/cost-optimizer/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

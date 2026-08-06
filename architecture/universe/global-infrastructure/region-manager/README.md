@@ -11,6 +11,12 @@ Lifecycle of an individual region — build out, drain, decommission.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Zone Manager](../../../universe/global-infrastructure/zone-manager/), [Infrastructure as Code](../../../universe/server-infrastructure/platform-operations/infrastructure-as-code/)
+
+**Depended on by:** [Global Control Plane](../../../universe/global-infrastructure/global-control-plane/), [Multi-Region Manager](../../../universe/global-infrastructure/multi-region-manager/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

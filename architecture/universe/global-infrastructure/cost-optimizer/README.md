@@ -11,6 +11,12 @@ Continuous rightsizing, commitment coverage, and waste elimination.
 | **Status** | ○ Planned |
 | **Owner** | `infra-global` |
 
+## Dependencies
+
+**Depends on:** [Cost Analytics](../../../universe/server-infrastructure/observability/cost-analytics/), [Resource Optimizer](../../../universe/server-infrastructure/platform-operations/resource-optimizer/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

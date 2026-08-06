@@ -13,6 +13,12 @@ Language and container package hosting.
 | **Status** | ○ Planned |
 | **Owner** | `developer-experience` |
 
+## Dependencies
+
+**Depends on:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/)
+
+**Depended on by:** [Internal Package Manager](../../../../universe/server-infrastructure/developer-platform/internal-package-manager/), [Plugin Marketplace](../../../../universe/server-infrastructure/developer-platform/plugin-marketplace/), [SDK Registry](../../../../universe/server-infrastructure/developer-platform/sdk-registry/), [Template Generator](../../../../universe/server-infrastructure/developer-platform/template-generator/), [Vulnerability Scanner](../../../../universe/server-infrastructure/identity-and-security/vulnerability-scanner/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

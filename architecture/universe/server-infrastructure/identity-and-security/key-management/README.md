@@ -13,6 +13,12 @@ Envelope-encryption keys with scheduled rotation and hardware backing.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** _nothing — this is a foundation._
+
+**Depended on by:** [Object Storage](../../../../universe/server-infrastructure/data-tier/object-storage/), [PKI](../../../../universe/server-infrastructure/identity-and-security/pki/), [Secret Vault](../../../../universe/server-infrastructure/identity-and-security/secret-vault/), [TLS Terminator](../../../../universe/server-infrastructure/gateway-tier/tls-terminator/), [Token Service](../../../../universe/server-infrastructure/identity-and-security/token-service/), [Update Service](../../../../universe/server-infrastructure/platform-operations/update-service/), [Webhook Dispatcher](../../../../universe/server-infrastructure/messaging/webhook-dispatcher/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

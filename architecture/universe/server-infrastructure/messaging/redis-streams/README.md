@@ -11,6 +11,12 @@ Low-latency stream primitives with consumer groups.
 | **Status** | ○ Planned |
 | **Owner** | `platform-messaging` |
 
+## Dependencies
+
+**Depends on:** [Cache Cluster](../../../../universe/server-infrastructure/data-tier/cache-cluster/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

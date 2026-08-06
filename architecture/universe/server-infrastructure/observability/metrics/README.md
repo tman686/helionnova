@@ -13,6 +13,12 @@ Time-series collection, aggregation, and recording rules.
 | **Status** | ○ Planned |
 | **Owner** | `observability` |
 
+## Dependencies
+
+**Depends on:** [Time-Series Database](../../../../universe/server-infrastructure/data-tier/time-series-database/)
+
+**Depended on by:** [Alerting](../../../../universe/server-infrastructure/observability/alerting/), [Autoscaler](../../../../universe/server-infrastructure/platform-operations/autoscaler/), [Benchmark Platform](../../../../universe/server-infrastructure/developer-platform/benchmark-platform/), [Canary Deployments](../../../../universe/server-infrastructure/platform-operations/canary-deployments/), [Capacity Analytics](../../../../universe/server-infrastructure/observability/capacity-analytics/), [Cost Analytics](../../../../universe/server-infrastructure/observability/cost-analytics/), [Dashboards](../../../../universe/server-infrastructure/observability/dashboards/), [Experiment Tracking](../../../../universe/server-infrastructure/ai-services/experiment-tracking/), [Health Monitoring](../../../../universe/server-infrastructure/observability/health-monitoring/), [Infrastructure Telemetry](../../../../universe/global-infrastructure/infrastructure-telemetry/), [Model Monitoring](../../../../universe/server-infrastructure/ai-services/model-monitoring/), [Performance Analytics](../../../../universe/server-infrastructure/observability/performance-analytics/), [Resource Optimizer](../../../../universe/server-infrastructure/platform-operations/resource-optimizer/), [Security Monitoring](../../../../universe/server-infrastructure/identity-and-security/security-monitoring/)
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 

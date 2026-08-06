@@ -13,6 +13,12 @@ Response workflows, on-call rotation, and containment runbooks.
 | **Status** | ○ Planned |
 | **Owner** | `security` |
 
+## Dependencies
+
+**Depends on:** [SIEM](../../../../universe/server-infrastructure/identity-and-security/siem/), [Incident Manager](../../../../universe/server-infrastructure/observability/incident-manager/), [Threat Detection](../../../../universe/server-infrastructure/identity-and-security/threat-detection/)
+
+**Depended on by:** _nothing yet._
+
 This directory holds the component's implementation, config, and runbook.
 Change its status in `architecture/universe.yaml` and regenerate.
 
