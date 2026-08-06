@@ -7,7 +7,9 @@ platform is planned to run, in one place.
 | --- | --- |
 | [`universe.yaml`](./universe.yaml) | **Source of truth.** Hand-edited. |
 | [`scaffold.py`](./scaffold.py) | Generator. Reads the spec, writes everything below. |
+| [`page.py`](./page.py) | Renders the spec as a self-contained browsable page. |
 | [`test_scaffold.py`](./test_scaffold.py) | Tests for the generator, chiefly the validator. |
+| [`test_page.py`](./test_page.py) | Tests for the page generator. |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Generated. Full tree, per-tier tables, alias index. |
 | [`universe/`](./universe/) | Generated. One directory per node, each with a `README.md`. |
 
@@ -22,6 +24,30 @@ python3 -m unittest discover -s architecture -t architecture   # tests
 
 Both the tests and the staleness check run in CI on any change under
 `architecture/`.
+
+## The browsable page
+
+`page.py` renders the whole tree as one self-contained page — every component
+as a chip with its status and dependency degree, plus the tier map, the
+load-bearing chart, and the coupling matrix, over a filter box.
+
+```sh
+python3 architecture/page.py --standalone -o /tmp/architecture.html   # open locally
+python3 architecture/page.py -o /tmp/fragment.html                    # for publishing
+```
+
+The output is **not committed** — regenerate it when you want a current view, so
+it can never disagree with the spec. Every figure on the page is computed from
+`universe.yaml`; none is written by hand.
+
+The default output is a fragment with no `<html>`/`<head>`/`<body>`, because a
+publishing host supplies its own skeleton and a nested document breaks it.
+`--standalone` wraps it into a real document you can open in a browser.
+
+Two constraints are load-bearing and fail *silently* rather than erroring, so
+`test_page.py` asserts both: no external resources of any kind (a blocked font
+would just fall back to something arbitrary), and no document wrapper on the
+fragment.
 
 Edit `universe.yaml` and regenerate. Never hand-edit `ARCHITECTURE.md` or
 anything under `universe/` — the generator deletes and rewrites that tree, so
