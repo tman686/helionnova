@@ -21,6 +21,11 @@ $ hn what depends on object storage
 
 ## Talking to it
 
+```sh
+./bin/hn-up          # starts Ollama if needed, then opens the prompt
+./bin/hn             # just the prompt; patterns only unless Ollama is already up
+```
+
 Run it with no arguments and keep typing:
 
 ```

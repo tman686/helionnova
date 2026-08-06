@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Start Ollama quietly if it is not already up, then open the prompt.
+#
+#   ./bin/hn-up                 prompt, with the model behind it
+#   ./bin/hn-up status          one question and out
+#
+# Safe to run twice: if a server is already answering it is left alone.
+# Ollama's logs go to a file rather than your terminal, which is the whole
+# point — run `ollama serve` in the foreground and it buries the prompt.
+
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+HOST="${OLLAMA_HOST:-http://localhost:11434}"
+LOG="${HN_OLLAMA_LOG:-$HOME/.ollama-serve.log}"
+WAIT="${HN_OLLAMA_WAIT:-40}"
+
+say() { printf '%s\n' "$*" >&2; }
+
+up() {
+  if command -v curl >/dev/null; then
+    curl -sf -m 2 "$HOST/api/tags" >/dev/null 2>&1
+  else
+    python3 - "$HOST" <<'PY' >/dev/null 2>&1
+import sys, urllib.request
+urllib.request.urlopen(sys.argv[1] + "/api/tags", timeout=2)
+PY
+  fi
+}
+
+if up; then
+  say "Ollama already running."
+else
+  if ! command -v ollama >/dev/null; then
+    say "Ollama is not installed. Either:"
+    say "    pkg install ollama        # then run this again"
+    say "    ./bin/hn                  # works fine without it, patterns only"
+    exec "$here/bin/hn" "$@"
+  fi
+
+  # Keeps Android from suspending the server the moment the screen locks.
+  command -v termux-wake-lock >/dev/null && termux-wake-lock 2>/dev/null
+
+  say "Starting Ollama (log: $LOG)…"
+  nohup ollama serve >"$LOG" 2>&1 &
+
+  for _ in $(seq "$WAIT"); do
+    up && break
+    sleep 1
+  done
+
+  if ! up; then
+    say "Ollama did not come up in ${WAIT}s. Last lines of $LOG:"
+    tail -n 15 "$LOG" >&2 2>/dev/null || say "  (no log written)"
+    say ""
+    say "Carrying on without it — patterns still work."
+  fi
+fi
+
+exec "$here/bin/hn" "$@"

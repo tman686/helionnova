@@ -40,6 +40,10 @@ case "${1:-}" in
   --help|-h) cat <<'USAGE'
 hn — talk to the architecture spec in plain English
 
+Use hn-up instead if you want Ollama started for you:
+
+  hn-up                            starts the server quietly, then this prompt
+
 Run it with no arguments for a prompt you can keep typing into:
 
   hn
