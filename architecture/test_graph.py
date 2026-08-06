@@ -236,7 +236,7 @@ class OllamaFallback(unittest.TestCase):
         original = brain.translate
         brain.translate = lambda spec, message: "make key management depend on object storage"
         try:
-            reply, code = command.run("tangle the storage keys", brain_enabled=True)
+            reply, code = command.run("tangle the storage keys", brain_mode="on")
             self.assertEqual(code, 1)
             self.assertIn("Not saved", reply.text)
         finally:
@@ -251,10 +251,140 @@ class OllamaFallback(unittest.TestCase):
 
         brain.translate = explode
         try:
-            reply, code = command.run("status", brain_enabled=True)
+            reply, code = command.run("status", brain_mode="on")
             self.assertEqual(code, 0)
         finally:
             brain.translate = original
+
+
+class StubOllama(unittest.TestCase):
+    """Talk to a real HTTP server that answers like Ollama.
+
+    No model is involved, but everything between us and one is exercised for
+    real: the request shape, the JSON, the response parsing, and the hand-off
+    into the router. Mocks would not have caught a malformed request body.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import json
+        import threading
+        from http.server import BaseHTTPRequestHandler, HTTPServer
+
+        cls.seen: list[dict] = []
+        reply_with = cls.reply_with = {"value": "what depends on object storage"}
+
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+            def do_GET(self):
+                body = json.dumps({"models": [{"name": brain.MODEL}]}).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def do_POST(self):
+                raw = self.rfile.read(int(self.headers["Content-Length"]))
+                cls.seen.append(json.loads(raw))
+                body = json.dumps({"response": reply_with["value"]}).encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        cls.server = HTTPServer(("127.0.0.1", 0), Handler)
+        cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
+        cls.thread.start()
+        cls.original_host = brain.HOST
+        brain.HOST = f"http://127.0.0.1:{cls.server.server_port}"
+
+    @classmethod
+    def tearDownClass(cls):
+        brain.HOST = cls.original_host
+        cls.server.shutdown()
+
+    def setUp(self):
+        type(self).seen.clear()
+        self.reply_with["value"] = "what depends on object storage"
+
+    def test_availability_check_finds_it(self):
+        self.assertTrue(brain.available())
+
+    def test_a_real_round_trip_reaches_the_router(self):
+        reply, code = command.run("which things lean on the object store", brain_mode="on")
+        self.assertEqual(code, 0)
+        self.assertIn("depend on **Object Storage**", reply.text)
+
+    def test_the_request_we_send_is_shaped_like_ollama_expects(self):
+        command.run("something unparseable by patterns", brain_mode="on")
+        sent = self.seen[-1]
+        self.assertEqual(sent["model"], brain.MODEL)
+        self.assertFalse(sent["stream"])
+        self.assertEqual(sent["options"]["temperature"], 0)
+        self.assertIn("Request: something unparseable by patterns", sent["prompt"])
+
+    def test_the_prompt_carries_the_grammar_and_a_shortlist(self):
+        command.run("tell me about the object store thing", brain_mode="on")
+        prompt = self.seen[-1]["prompt"]
+        self.assertIn("what depends on <component>", prompt)
+        self.assertIn("Object Storage", prompt)
+        self.assertIn("Data Tier", prompt)
+
+    def test_a_chatty_model_reply_still_works(self):
+        self.reply_with["value"] = "```\nCommand: what depends on object storage\n```\nHope that helps!"
+        reply, code = command.run("lean on object store", brain_mode="on")
+        self.assertEqual(code, 0)
+        self.assertIn("depend on **Object Storage**", reply.text)
+
+    def test_a_model_that_says_unknown_falls_through_to_prose(self):
+        self.reply_with["value"] = "UNKNOWN"
+        reply, _ = command.run("what is the airspeed of a swallow", brain_mode="on")
+        # Second call is the prose attempt, given graph facts.
+        self.assertEqual(len(self.seen), 2)
+        self.assertIn("FACTS:", self.seen[-1]["prompt"])
+
+    def test_auto_mode_uses_it_when_present(self):
+        reply, code = command.run("which things lean on the object store", brain_mode="auto")
+        self.assertIn("Object Storage", reply.text)
+
+    def test_off_mode_never_calls_it(self):
+        reply, code = command.run("which things lean on the object store", brain_mode="off")
+        self.assertEqual(self.seen, [])
+        self.assertEqual(code, 2)
+
+    def test_known_phrasings_never_call_it(self):
+        command.run("status", brain_mode="auto")
+        command.run("what depends on metrics", brain_mode="auto")
+        self.assertEqual(self.seen, [])
+
+
+class Shortlisting(unittest.TestCase):
+    """A 1B model drowns in 180 names, so the list is trimmed per message."""
+
+    def test_the_shortlist_is_much_smaller_than_everything(self):
+        full = brain.vocabulary(REAL_SPEC)
+        short = brain.vocabulary(REAL_SPEC, "which storage bits actually matter")
+        self.assertLess(len(short), len(full) / 2)
+
+    def test_the_obvious_match_survives_the_cut(self):
+        short = brain.vocabulary(REAL_SPEC, "tell me about kafka")
+        self.assertIn("Kafka Cluster", short)
+
+    def test_tiers_are_always_included(self):
+        short = brain.vocabulary(REAL_SPEC, "kafka")
+        for tier in ("Data Tier", "Messaging", "Gateway Tier"):
+            self.assertIn(tier, short)
+
+    def test_no_message_means_no_trimming(self):
+        self.assertEqual(brain.vocabulary(REAL_SPEC), brain.vocabulary(REAL_SPEC, ""))
+
+    def test_a_vague_message_falls_back_to_the_load_bearing_ones(self):
+        short = brain.vocabulary(REAL_SPEC, "what should I worry about")
+        self.assertIn("Object Storage", short)
 
 
 if __name__ == "__main__":

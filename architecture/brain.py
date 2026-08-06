@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Hand free-form English to a local Ollama model, then run what it says.
 
-    OLLAMA_MODEL=llama3.2 ./bin/hn --brain "which bits of storage matter most"
+    ./bin/hn "which bits of storage matter most"   # used automatically if running
 
 The pattern matcher in command.py is fast, free, and deterministic, but it
 only knows the phrasings it was taught. This is the fallback: when a message
@@ -22,7 +22,7 @@ you have pulled.
 
 Configuration:
     OLLAMA_HOST     default http://localhost:11434
-    OLLAMA_MODEL    default llama3.2
+    OLLAMA_MODEL    default llama3.2:1b
     OLLAMA_TIMEOUT  seconds, default 60
 """
 
@@ -37,8 +37,13 @@ import urllib.request
 import scaffold
 
 HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+# A 1B model is what actually runs on a phone. Anything bigger is a choice.
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:1b")
 TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "60"))
+
+# How many component names to show a small model. All 180 buries the request
+# and a 1B model loses the thread; the shortlist is picked per message.
+VOCAB_LIMIT = int(os.environ.get("OLLAMA_VOCAB", "30"))
 
 GRAMMAR = """\
 status
@@ -101,18 +106,38 @@ def available() -> bool:
         return False
 
 
-def vocabulary(spec: dict) -> str:
-    """The names the model is allowed to use, so it stops inventing them."""
+def vocabulary(spec: dict, message: str = "", limit: int = 0) -> str:
+    """The names the model may use, shortlisted to the ones plausibly meant.
+
+    Handing a 1B model all 180 names costs most of its attention and it starts
+    answering about whatever it read last. Scoring against the message keeps
+    the prompt short and the answer on topic. Names it does not see, it cannot
+    pick — but a wrong pick is caught downstream anyway, so a tight list costs
+    little and buys a lot.
+    """
+    limit = limit or VOCAB_LIMIT
     tiers = [
         node["name"]
         for node, _ in scaffold.walk(spec)
         if scaffold.children(node) and any(scaffold.is_leaf(c) for c in scaffold.children(node))
     ]
     components = sorted(n["name"] for n in scaffold.leaves(spec))
-    return (
-        f"TIERS: {', '.join(tiers)}\n\n"
-        f"COMPONENTS: {', '.join(components)}"
-    )
+
+    words = {w for w in re.split(r"\W+", message.lower()) if len(w) > 2}
+    if words and len(components) > limit:
+        reverse = scaffold.dependents_map(spec)
+
+        def score(name: str) -> tuple[int, int]:
+            tokens = {w for w in re.split(r"\W+", name.lower()) if w}
+            overlap = len(words & tokens)
+            # Break ties toward the components most things depend on: if the
+            # message is vague, those are the likeliest subject.
+            return (overlap, len(reverse.get(name, [])))
+
+        ranked = sorted(components, key=score, reverse=True)
+        components = sorted(ranked[:limit])
+
+    return f"TIERS: {', '.join(tiers)}\n\nCOMPONENTS: {', '.join(components)}"
 
 
 def prompt_for(spec: dict, message: str) -> str:
@@ -125,7 +150,7 @@ The only valid commands are:
 {GRAMMAR}
 
 Use only these names, spelled exactly as shown:
-{vocabulary(spec)}
+{vocabulary(spec, message)}
 
 If the request does not correspond to any command above, reply with exactly:
 UNKNOWN

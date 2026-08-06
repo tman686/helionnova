@@ -36,6 +36,9 @@ class Reply:
     changed: bool = False
     ok: bool = True
     summary: str = ""
+    # A route matched but the name did not resolve. Worth a second opinion from
+    # a model, which is better at "the object store thing" than a regex is.
+    retryable: bool = False
     _handled: bool = field(default=True, repr=False)
 
 
@@ -152,6 +155,7 @@ def cmd_dependents(spec: dict, m: re.Match) -> Reply:
         return Reply(
             f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
             ok=False,
+            retryable=True,
         )
     node = found[0]
     dependents = scaffold.dependents_map(spec).get(node["name"], [])
@@ -170,6 +174,7 @@ def cmd_dependencies(spec: dict, m: re.Match) -> Reply:
         return Reply(
             f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
             ok=False,
+            retryable=True,
         )
     node = found[0]
     needs = scaffold.depends_on(node)
@@ -213,7 +218,8 @@ def cmd_show(spec: dict, m: re.Match) -> Reply:
     found = find_group(spec, m.group("tier"), components_only=True)
     if not found:
         return Reply(
-            f"No tier called **{m.group('tier')}**. Try `tiers` for the list.", ok=False
+            f"No tier called **{m.group('tier')}**. Try `tiers` for the list.",
+            ok=False, retryable=True
         )
     node, ancestors = found
     rows = [
@@ -234,6 +240,7 @@ def cmd_mark(spec: dict, m: re.Match) -> Reply:
         return Reply(
             f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
             ok=False,
+            retryable=True,
         )
     node, ancestors = found
     if scaffold.children(node):
@@ -268,7 +275,8 @@ def cmd_add(spec: dict, m: re.Match) -> Reply:
     found_group = find_group(spec, m.group("tier"), components_only=True)
     if not found_group:
         return Reply(
-            f"No tier called **{m.group('tier')}**. Try `tiers` for the list.", ok=False
+            f"No tier called **{m.group('tier')}**. Try `tiers` for the list.",
+            ok=False, retryable=True
         )
     if find(spec, name):
         return Reply(f"**{name}** already exists.", ok=False)
@@ -287,9 +295,9 @@ def cmd_depend(spec: dict, m: re.Match) -> Reply:
     src = find(spec, m.group("name"))
     dst = find(spec, m.group("target"))
     if not src:
-        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+        return Reply(f"No component called **{m.group('name')}**.", ok=False, retryable=True)
     if not dst:
-        return Reply(f"No component called **{m.group('target')}**.", ok=False)
+        return Reply(f"No component called **{m.group('target')}**.", ok=False, retryable=True)
     node, target = src[0], dst[0]
     if scaffold.children(node) or scaffold.children(target):
         return Reply("Dependencies go between components, not tiers.", ok=False)
@@ -318,6 +326,7 @@ def cmd_blast(spec: dict, m: re.Match) -> Reply:
         return Reply(
             f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
             ok=False,
+            retryable=True,
         )
     node = found[0]
     direct = scaffold.dependents_map(spec).get(node["name"], [])
@@ -338,7 +347,7 @@ def cmd_needs_all(spec: dict, m: re.Match) -> Reply:
     """The full set that must exist before this can start."""
     found = find(spec, m.group("name"))
     if not found:
-        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+        return Reply(f"No component called **{m.group('name')}**.", ok=False, retryable=True)
     node = found[0]
     direct = scaffold.depends_on(node)
     everything = scaffold.reachable(scaffold.adjacency(spec), node["name"])
@@ -358,9 +367,9 @@ def cmd_why(spec: dict, m: re.Match) -> Reply:
     """Show the chain that connects two components."""
     src, dst = find(spec, m.group("name")), find(spec, m.group("target"))
     if not src:
-        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+        return Reply(f"No component called **{m.group('name')}**.", ok=False, retryable=True)
     if not dst:
-        return Reply(f"No component called **{m.group('target')}**.", ok=False)
+        return Reply(f"No component called **{m.group('target')}**.", ok=False, retryable=True)
     a, b = src[0]["name"], dst[0]["name"]
     path = scaffold.shortest_path(scaffold.adjacency(spec), a, b)
     if not path:
@@ -401,6 +410,7 @@ def cmd_about(spec: dict, m: re.Match) -> Reply:
         return Reply(
             f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
             ok=False,
+            retryable=True,
         )
     node, ancestors = found
     if scaffold.children(node):
@@ -487,7 +497,7 @@ def cmd_unlink(spec: dict, m: re.Match) -> Reply:
 def cmd_remove(spec: dict, m: re.Match) -> Reply:
     found = find(spec, m.group("name"))
     if not found:
-        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+        return Reply(f"No component called **{m.group('name')}**.", ok=False, retryable=True)
     node, ancestors = found
     if scaffold.children(node):
         return Reply(f"**{node['name']}** is a tier. I only remove components.", ok=False)
@@ -662,7 +672,7 @@ def ask_brain(spec: dict, message: str) -> Reply:
                  ok=reply.ok, summary=reply.summary)
 
 
-def run(message: str, apply: bool = False, brain_enabled: bool = False) -> tuple[Reply, int]:
+def run(message: str, apply: bool = False, brain_mode: str = "auto") -> tuple[Reply, int]:
     """Interpret the message; write only when `apply` and the result validates.
 
     ruamel is a *writing* dependency — it exists to keep comments and
@@ -674,8 +684,14 @@ def run(message: str, apply: bool = False, brain_enabled: bool = False) -> tuple
 
     # Pattern matching first: it is instant, free, and deterministic. The model
     # is only worth its latency on messages nothing else could parse.
-    if not reply._handled and brain_enabled:
-        reply = ask_brain(spec, message)
+    #
+    # "auto" also pays for a reachability check, so it only does that once the
+    # patterns have already failed — a known phrasing never touches the network.
+    if (not reply._handled or reply.retryable) and brain_mode != "off":
+        import brain as _brain
+
+        if brain_mode == "on" or _brain.available():
+            reply = ask_brain(spec, message)
 
     if not reply.changed:
         return reply, (0 if reply.ok else (2 if not reply._handled else 1))
@@ -734,13 +750,28 @@ def emit(reply: Reply, apply: bool, colour: bool) -> None:
     print(for_terminal(text, colour) if sys.stdout.isatty() else text)
 
 
-def interactive(apply: bool, brain_enabled: bool = False) -> int:
+def brain_mode(args) -> str:
+    """--brain requires it, --no-brain forbids it, otherwise use it if present."""
+    if args.no_brain:
+        return "off"
+    return "on" if args.brain else "auto"
+
+
+def interactive(apply: bool, mode: str = "auto") -> int:
     """Type messages one after another instead of re-invoking the command."""
     colour = sys.stdout.isatty()
     total = scaffold.count_leaves(yaml.safe_load(scaffold.SPEC.read_text(encoding="utf-8")))
     bold = BOLD if colour else ""
     reset = RESET if colour else ""
-    print(f"{bold}helionnova{reset} — {total} components. Ask in plain words.")
+    backing = ""
+    if mode != "off":
+        import brain as _brain
+
+        if _brain.available():
+            backing = f"  Model: {_brain.MODEL}."
+        elif mode == "on":
+            backing = "  Model: requested but not reachable."
+    print(f"{bold}helionnova{reset} — {total} components. Ask in plain words.{backing}")
     print(f"'help' for what I know, 'quit' to leave."
           f"{'' if apply else '  Nothing is saved in this mode.'}")
 
@@ -755,7 +786,7 @@ def interactive(apply: bool, brain_enabled: bool = False) -> int:
         if line.lower() in QUIT:
             return 0
         try:
-            reply, _ = run(line, apply=apply, brain_enabled=brain_enabled)
+            reply, _ = run(line, apply=apply, brain_mode=mode)
             emit(reply, apply, colour)
         except Exception as exc:  # a bad message must not end the session
             print(f"Something went wrong: {exc}")
@@ -773,15 +804,20 @@ def main() -> int:
     parser.add_argument(
         "--brain",
         action="store_true",
-        help="fall back to a local Ollama model for messages the router cannot parse",
+        help="require the Ollama fallback, and say so if it is not running",
+    )
+    parser.add_argument(
+        "--no-brain",
+        action="store_true",
+        help="patterns only; never consult a model",
     )
     parser.add_argument("--summary-to", help="append a one-line summary to this file")
     args = parser.parse_args()
 
     if args.interactive or not args.message:
-        return interactive(args.apply, args.brain)
+        return interactive(args.apply, brain_mode(args))
 
-    reply, code = run(args.message, apply=args.apply, brain_enabled=args.brain)
+    reply, code = run(args.message, apply=args.apply, brain_mode=brain_mode(args))
     emit(reply, args.apply, sys.stdout.isatty())
 
     if args.summary_to and reply.summary:
