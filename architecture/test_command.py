@@ -117,6 +117,112 @@ class Questions(unittest.TestCase):
         self.assertTrue(ask("find robots").ok)
 
 
+class GraphQuestions(unittest.TestCase):
+    """The point of a dependency graph is the questions one hop cannot answer."""
+
+    def test_blast_radius_exceeds_direct_dependents(self):
+        text = ask("what breaks if object storage fails").text
+        direct = len(scaffold.dependents_map(REAL_SPEC)["Object Storage"])
+        total = len(scaffold.reachable(
+            scaffold.adjacency(REAL_SPEC, reverse=True), "Object Storage"))
+        self.assertGreater(total, direct, "transitive reach should exceed one hop")
+        self.assertIn(f"**{total} of", text)
+
+    def test_failure_verbs_are_not_swallowed_into_the_name(self):
+        for message in (
+            "what breaks if object storage fails",
+            "what happens if object storage goes down",
+            "what breaks without object storage",
+            "blast radius of object storage",
+        ):
+            self.assertIn("**Object Storage**", ask(message).text, message)
+
+    def test_transitive_needs_exceed_direct(self):
+        text = ask("everything rag needs").text
+        direct = len(scaffold.depends_on(command.find(REAL_SPEC, "rag")[0]))
+        total = len(scaffold.reachable(scaffold.adjacency(REAL_SPEC), "RAG"))
+        self.assertGreater(total, direct)
+        self.assertIn(f"**{total}** components", text)
+
+    def test_why_shows_a_real_path(self):
+        text = ask("why does rag need object storage").text
+        self.assertIn("→", text)
+        self.assertIn("**RAG**", text)
+        self.assertIn("**Object Storage**", text)
+
+    def test_why_explains_when_the_arrow_points_the_other_way(self):
+        reply = ask("why does object storage need rag")
+        self.assertFalse(reply.ok)
+        self.assertIn("other way round", reply.text)
+
+    def test_why_says_so_when_unrelated(self):
+        reply = ask("why does zone manager need kafka cluster")
+        self.assertFalse(reply.ok)
+
+    def test_build_order_is_a_valid_topological_layering(self):
+        layers = scaffold.build_layers(REAL_SPEC)
+        placed = {name: i for i, layer in enumerate(layers) for name in layer}
+        self.assertEqual(len(placed), scaffold.count_leaves(REAL_SPEC))
+        graph = scaffold.adjacency(REAL_SPEC)
+        for name, level in placed.items():
+            for dep in graph[name]:
+                self.assertLess(placed[dep], level, f"{name} before its dependency {dep}")
+
+    def test_layer_zero_is_exactly_the_foundations(self):
+        layers = scaffold.build_layers(REAL_SPEC)
+        foundations = {n["name"] for n in scaffold.leaves(REAL_SPEC)
+                       if not scaffold.depends_on(n)}
+        self.assertEqual(set(layers[0]), foundations)
+
+    def test_about_card_carries_the_essentials(self):
+        text = ask("about inference").text
+        for fragment in ("### Inference", "**tier**", "**status**", "**owner**",
+                         "**needs**", "**needed by**"):
+            self.assertIn(fragment, text)
+
+    def test_check_reports_a_clean_spec(self):
+        self.assertTrue(ask("check").ok)
+
+    def test_shortest_path_is_actually_shortest(self):
+        graph = scaffold.adjacency(REAL_SPEC)
+        path = scaffold.shortest_path(graph, "RAG", "Object Storage")
+        self.assertIsNotNone(path)
+        for a, b in zip(path, path[1:]):
+            self.assertIn(b, graph[a], f"{a} -> {b} is not a real edge")
+
+    def test_reachable_excludes_the_starting_node(self):
+        self.assertNotIn(
+            "Metrics", scaffold.reachable(scaffold.adjacency(REAL_SPEC), "Metrics"))
+
+
+class Removal(unittest.TestCase):
+    def test_removing_something_depended_on_is_refused(self):
+        reply = ask("remove object storage")
+        self.assertFalse(reply.ok)
+        self.assertFalse(reply.changed)
+        self.assertIn("depend on it", reply.text)
+
+    def test_an_orphan_can_be_removed(self):
+        spec = fresh()
+        reply = command.dispatch(spec, "remove api explorer")
+        self.assertTrue(reply.changed, reply.text)
+        self.assertIsNone(command.find(spec, "api explorer"))
+        self.assertEqual(scaffold.validate(spec), [])
+
+    def test_removing_a_tier_is_refused(self):
+        self.assertFalse(ask("remove data tier").ok)
+
+    def test_unlink_removes_one_edge(self):
+        spec = fresh()
+        reply = command.dispatch(spec, "make rag no longer depend on web search")
+        self.assertTrue(reply.changed)
+        self.assertNotIn("Web Search", scaffold.depends_on(command.find(spec, "rag")[0]))
+        self.assertEqual(scaffold.validate(spec), [])
+
+    def test_unlinking_an_edge_that_is_not_there_is_refused(self):
+        self.assertFalse(ask("unlink rag from zone manager").ok)
+
+
 class Edits(unittest.TestCase):
     def test_mark_changes_status(self):
         spec = fresh()

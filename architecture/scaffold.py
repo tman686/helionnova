@@ -178,6 +178,72 @@ def find_cycles(spec: dict) -> list[list[str]]:
     return cycles
 
 
+def adjacency(spec: dict, reverse: bool = False) -> dict[str, list[str]]:
+    """Component -> what it depends on, or -> what depends on it."""
+    graph: dict[str, list[str]] = {n["name"]: [] for n in leaves(spec)}
+    for source, target in dependency_edges(spec):
+        if reverse:
+            graph.setdefault(target, []).append(source)
+        else:
+            graph.setdefault(source, []).append(target)
+    return graph
+
+
+def reachable(graph: dict[str, list[str]], start: str) -> set[str]:
+    """Everything reachable from `start`, excluding `start` itself."""
+    seen: set[str] = set()
+    stack = list(graph.get(start, []))
+    while stack:
+        node = stack.pop()
+        if node in seen:
+            continue
+        seen.add(node)
+        stack.extend(graph.get(node, []))
+    seen.discard(start)
+    return seen
+
+
+def shortest_path(graph: dict[str, list[str]], start: str, end: str) -> list[str] | None:
+    """Fewest hops from start to end, or None if end is unreachable."""
+    if start == end:
+        return [start]
+    queue = [[start]]
+    seen = {start}
+    while queue:
+        path = queue.pop(0)
+        for nxt in graph.get(path[-1], []):
+            if nxt == end:
+                return path + [nxt]
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(path + [nxt])
+    return None
+
+
+def build_layers(spec: dict) -> list[list[str]]:
+    """Components grouped into build order.
+
+    Layer 0 depends on nothing. Layer n depends only on layers below it, so
+    everything in a layer can be built in parallel once the previous one exists.
+    Requires an acyclic graph — validate first.
+    """
+    graph = adjacency(spec)
+    depth: dict[str, int] = {}
+    remaining = set(graph)
+    while remaining:
+        ready = [name for name in remaining if all(d in depth for d in graph[name])]
+        if not ready:  # only reachable with a cycle, which validation rejects
+            break
+        for name in ready:
+            depth[name] = 1 + max((depth[d] for d in graph[name]), default=-1)
+        remaining -= set(ready)
+
+    layers: list[list[str]] = [[] for _ in range(max(depth.values(), default=-1) + 1)]
+    for name, level in depth.items():
+        layers[level].append(name)
+    return [sorted(layer) for layer in layers]
+
+
 def dependents_map(spec: dict) -> dict[str, list[str]]:
     """Reverse edges: component -> everything that depends on it."""
     reverse: dict[str, list[str]] = {}

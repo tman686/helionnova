@@ -100,21 +100,32 @@ def did_you_mean(spec: dict, term: str, limit: int = 4) -> str:
 
 def cmd_help(spec: dict, m: re.Match) -> Reply:
     return Reply(
-        "**Commands I understand.** Anything in `<>` is yours to fill in.\n\n"
-        "*Asking:*\n"
-        "- `status` — component counts, dependency edges, cycles\n"
-        "- `what depends on <component>` — everything that would break with it\n"
-        "- `what does <component> need` — its upstreams\n"
-        "- `find <text>` — search names, aliases, and descriptions\n"
-        "- `show <tier>` — list a tier's components\n"
-        "- `tiers` — list every tier\n\n"
-        "*Changing:*\n"
-        "- `add <name> to <tier>: <description>`\n"
-        "- `mark <component> as planned|building|running`\n"
-        "- `set owner of <tier> to <team-slug>`\n"
-        "- `make <component> depend on <component>`\n\n"
-        "Every change is validated before it is written. If it would break the "
-        "tree, nothing is saved and I say why."
+        "Ask in ordinary words. Put your own component names where these use "
+        "examples — do not type any brackets.\n\n"
+        "**Following the graph**\n"
+        "- `what breaks if object storage fails` — everything downstream, not just\n"
+        "  the direct dependents\n"
+        "- `everything rag needs` — the full set that must exist first\n"
+        "- `why does inference need key management` — the chain that connects them\n"
+        "- `build order` — layers you could build in, foundations first\n"
+        "- `foundations` — depend on nothing\n"
+        "- `orphans` — nothing depends on them\n\n"
+        "**Looking things up**\n"
+        "- `about inference` — everything known about one component\n"
+        "- `what depends on metrics` / `what does rag need` — one hop\n"
+        "- `find kafka` — search names, aliases, descriptions\n"
+        "- `what's in messaging` — a tier's components\n"
+        "- `tiers`, `status`, `check`\n\n"
+        "**Changing**\n"
+        "- `add Redis Cache to Data Tier: Caches hot queries.`\n"
+        "- `mark inference as building`\n"
+        "- `set owner of data tier to storage-crew`\n"
+        "- `make web search depend on metrics`\n"
+        "- `make web search no longer depend on metrics`\n"
+        "- `remove redis cache`\n\n"
+        "Every change is validated against the whole tree before it is written. "
+        "A duplicate name, a dangling dependency, or a cycle is refused with a "
+        "reason. Removing something other components depend on is refused too."
     )
 
 
@@ -293,6 +304,209 @@ def cmd_depend(spec: dict, m: re.Match) -> Reply:
     )
 
 
+def _listing(names, limit: int = 25) -> str:
+    names = list(names)
+    shown = names[:limit]
+    tail = f"\n\n…and {len(names) - len(shown)} more." if len(names) > limit else ""
+    return "\n".join(f"- {n}" for n in shown) + tail
+
+
+def cmd_blast(spec: dict, m: re.Match) -> Reply:
+    """Everything that would break, not just the direct dependents."""
+    found = find(spec, m.group("name"))
+    if not found:
+        return Reply(
+            f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
+            ok=False,
+        )
+    node = found[0]
+    direct = scaffold.dependents_map(spec).get(node["name"], [])
+    everything = scaffold.reachable(scaffold.adjacency(spec, reverse=True), node["name"])
+    total = scaffold.count_leaves(spec)
+    indirect = sorted(everything - set(direct))
+    body = (
+        f"**{len(everything)} of {total} components** fail if **{node['name']}** does "
+        f"— {100 * len(everything) / total:.0f}% of the platform.\n\n"
+        f"**{len(direct)} directly:**\n{_listing(direct)}"
+    )
+    if indirect:
+        body += f"\n\n**{len(indirect)} further down the chain:**\n{_listing(indirect)}"
+    return Reply(body, summary=f"{node['name']}: blast radius {len(everything)}")
+
+
+def cmd_needs_all(spec: dict, m: re.Match) -> Reply:
+    """The full set that must exist before this can start."""
+    found = find(spec, m.group("name"))
+    if not found:
+        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+    node = found[0]
+    direct = scaffold.depends_on(node)
+    everything = scaffold.reachable(scaffold.adjacency(spec), node["name"])
+    if not everything:
+        return Reply(f"**{node['name']}** needs nothing — it is a foundation.")
+    indirect = sorted(everything - set(direct))
+    body = (
+        f"**{node['name']}** needs **{len(everything)}** components before it can run.\n\n"
+        f"**{len(direct)} directly:**\n{_listing(direct)}"
+    )
+    if indirect:
+        body += f"\n\n**{len(indirect)} transitively:**\n{_listing(indirect)}"
+    return Reply(body, summary=f"{node['name']} needs {len(everything)}")
+
+
+def cmd_why(spec: dict, m: re.Match) -> Reply:
+    """Show the chain that connects two components."""
+    src, dst = find(spec, m.group("name")), find(spec, m.group("target"))
+    if not src:
+        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+    if not dst:
+        return Reply(f"No component called **{m.group('target')}**.", ok=False)
+    a, b = src[0]["name"], dst[0]["name"]
+    path = scaffold.shortest_path(scaffold.adjacency(spec), a, b)
+    if not path:
+        back = scaffold.shortest_path(scaffold.adjacency(spec), b, a)
+        if back:
+            return Reply(
+                f"**{a}** does not depend on **{b}** — it is the other way round:\n\n"
+                + " → ".join(back),
+                ok=False,
+            )
+        return Reply(f"**{a}** does not depend on **{b}**, directly or otherwise.", ok=False)
+    hops = len(path) - 1
+    return Reply(
+        f"**{a}** needs **{b}** in {hops} hop{'s' if hops != 1 else ''}:\n\n"
+        + " → ".join(f"**{p}**" if p in (a, b) else p for p in path),
+        summary=f"{a} -> {b} in {hops}",
+    )
+
+
+def cmd_build_order(spec: dict, m: re.Match) -> Reply:
+    layers = scaffold.build_layers(spec)
+    if not layers:
+        return Reply("Nothing to order.", ok=False)
+    lines = [
+        f"**{len(layers)} build layers.** Everything in a layer can be built at once, "
+        "once the layer above it exists.\n"
+    ]
+    for i, layer in enumerate(layers):
+        head = "foundations" if i == 0 else f"layer {i}"
+        lines.append(f"**{head}** ({len(layer)}): " + ", ".join(layer))
+    return Reply("\n\n".join(lines), summary=f"{len(layers)} build layers")
+
+
+def cmd_about(spec: dict, m: re.Match) -> Reply:
+    """Everything known about one component, on one card."""
+    found = find(spec, m.group("name"))
+    if not found:
+        return Reply(
+            f"No component called **{m.group('name')}**." + did_you_mean(spec, m.group("name")),
+            ok=False,
+        )
+    node, ancestors = found
+    if scaffold.children(node):
+        return cmd_show(spec, m)
+    dependents = scaffold.dependents_map(spec).get(node["name"], [])
+    blast = scaffold.reachable(scaffold.adjacency(spec, reverse=True), node["name"])
+    needs = scaffold.reachable(scaffold.adjacency(spec), node["name"])
+    lines = [
+        f"### {node['name']}",
+        "",
+        scaffold.clean(node.get("description", "")),
+        "",
+        f"- **tier** {ancestors[-1]['name']}",
+        f"- **status** {scaffold.status_of(node, ancestors)}",
+        f"- **owner** `{scaffold.owner_of(node, ancestors)}`",
+    ]
+    if node.get("aliases"):
+        lines.append(f"- **also known as** {', '.join(node['aliases'])}")
+    lines += [
+        f"- **needs** {len(scaffold.depends_on(node))} directly, {len(needs)} in total",
+        f"- **needed by** {len(dependents)} directly, {len(blast)} in total",
+    ]
+    if scaffold.depends_on(node):
+        lines += ["", "**Depends on:** " + ", ".join(scaffold.depends_on(node))]
+    if dependents:
+        lines += ["**Depended on by:** " + ", ".join(dependents)]
+    return Reply("\n".join(lines), summary=f"about {node['name']}")
+
+
+def cmd_foundations(spec: dict, m: re.Match) -> Reply:
+    names = sorted(n["name"] for n in scaffold.leaves(spec) if not scaffold.depends_on(n))
+    return Reply(
+        f"**{len(names)} foundations** — they depend on nothing, so they get built "
+        f"first:\n\n{_listing(names, 60)}",
+        summary=f"{len(names)} foundations",
+    )
+
+
+def cmd_orphans(spec: dict, m: re.Match) -> Reply:
+    reverse = scaffold.dependents_map(spec)
+    names = sorted(n["name"] for n in scaffold.leaves(spec) if not reverse.get(n["name"]))
+    return Reply(
+        f"**{len(names)} components** have nothing depending on them. Leaves of the "
+        f"graph — safe to build last, or to cut:\n\n{_listing(names, 60)}",
+        summary=f"{len(names)} orphans",
+    )
+
+
+def cmd_check(spec: dict, m: re.Match) -> Reply:
+    errors = scaffold.validate(spec)
+    if errors:
+        return Reply(
+            f"**{len(errors)} problems:**\n\n" + _listing(errors, 20),
+            ok=False,
+            summary=f"{len(errors)} problems",
+        )
+    return Reply(
+        f"Clean. {scaffold.count_leaves(spec)} components, "
+        f"{len(scaffold.dependency_edges(spec))} edges, no cycles, every dependency "
+        "resolves.",
+        summary="spec clean",
+    )
+
+
+def cmd_unlink(spec: dict, m: re.Match) -> Reply:
+    src, dst = find(spec, m.group("name")), find(spec, m.group("target"))
+    if not src or not dst:
+        return Reply("I do not know one of those components.", ok=False)
+    node, target = src[0], dst[0]
+    existing = scaffold.depends_on(node)
+    match = [d for d in existing if d.lower() == target["name"].lower()]
+    if not match:
+        return Reply(f"**{node['name']}** does not depend on **{target['name']}**.", ok=False)
+    node["depends_on"] = [d for d in existing if d not in match]
+    if not node["depends_on"]:
+        del node["depends_on"]
+    return Reply(
+        f"**{node['name']}** no longer depends on **{target['name']}**.",
+        changed=True,
+        summary=f"unlink {node['name']} -> {target['name']}",
+    )
+
+
+def cmd_remove(spec: dict, m: re.Match) -> Reply:
+    found = find(spec, m.group("name"))
+    if not found:
+        return Reply(f"No component called **{m.group('name')}**.", ok=False)
+    node, ancestors = found
+    if scaffold.children(node):
+        return Reply(f"**{node['name']}** is a tier. I only remove components.", ok=False)
+    dependents = scaffold.dependents_map(spec).get(node["name"], [])
+    if dependents:
+        return Reply(
+            f"**{node['name']}** cannot go — {len(dependents)} depend on it:\n\n"
+            f"{_listing(dependents)}\n\nDetach them first.",
+            ok=False,
+        )
+    parent = ancestors[-1]
+    parent["children"] = [c for c in parent["children"] if c is not node]
+    return Reply(
+        f"Removed **{node['name']}** from **{parent['name']}**.",
+        changed=True,
+        summary=f"remove {node['name']}",
+    )
+
+
 NAME = r"(?P<name>.+?)"
 TARGET = r"(?P<target>.+?)"
 
@@ -301,10 +515,31 @@ ROUTES: list[tuple[str, callable]] = [
     (r"^\s*(help|commands|what can you do|\?)\s*$", cmd_help),
     (r"^\s*(status|stats|summary|how many|overview)\b", cmd_status),
     (r"^\s*(tiers|list tiers|what tiers)\b", cmd_tiers),
+    (r"^\s*(foundations|what are the foundations|roots)\s*$", cmd_foundations),
+    (r"^\s*(orphans|leaves|unused|what is unused)\s*$", cmd_orphans),
+    (r"^\s*(build order|build layers|order|topo|topological)\s*$", cmd_build_order),
+    (r"^\s*(check|validate|is it valid|lint|health)\s*$", cmd_check),
+    # Graph-reach questions — before the one-hop versions they generalise.
+    (rf"^\s*(?:blast radius|impact|impact of|blast)\s+(?:of\s+|i\s+lose\s+)?{NAME}\s*$", cmd_blast),
+    # "…if X fails" — the trailing verb is part of the phrasing, not the name.
+    (
+        rf"^\s*what\s+(?:all\s+)?(?:breaks|fails|happens)\s+"
+        rf"(?:if\s+(?:i\s+lose\s+)?|when\s+|without\s+)?{NAME}"
+        r"(?:\s+(?:fails|dies|breaks|goes\s+down|is\s+down|goes\s+away))?\s*$",
+        cmd_blast,
+    ),
+    (rf"^\s*(?:everything|all)\s+(?:that\s+)?{NAME}\s+needs\s*$", cmd_needs_all),
+    (rf"^\s*what\s+does\s+{NAME}\s+need\s+in\s+total\s*$", cmd_needs_all),
+    (rf"^\s*why\s+does\s+{NAME}\s+(?:need|depend on)\s+{TARGET}\s*$", cmd_why),
+    (rf"^\s*(?:path|chain)\s+from\s+{NAME}\s+to\s+{TARGET}\s*$", cmd_why),
+    (rf"^\s*(?:about|describe|tell me about|info(?:\s+on)?|explain)\s+{NAME}\s*$", cmd_about),
     (rf"^\s*(?:what|who)\s+(?:depends on|needs|uses)\s+{NAME}\s*$", cmd_dependents),
     (rf"^\s*dependents\s+(?:of\s+)?{NAME}\s*$", cmd_dependents),
     (rf"^\s*what\s+does\s+{NAME}\s+(?:need|depend on|use)\s*$", cmd_dependencies),
     (rf"^\s*(?:dependencies|upstreams)\s+(?:of\s+)?{NAME}\s*$", cmd_dependencies),
+    (rf"^\s*(?:remove|delete|drop)\s+{NAME}\s*$", cmd_remove),
+    (rf"^\s*(?:unlink|detach)\s+{NAME}\s+from\s+{TARGET}\s*$", cmd_unlink),
+    (rf"^\s*make\s+{NAME}\s+(?:no longer|not)\s+depend\s+on\s+{TARGET}\s*$", cmd_unlink),
     (r"^\s*what(?:'s|s| is)\s+in\s+(?:the\s+)?(?P<tier>.+?)\s*$", cmd_show),
     (r"^\s*(?:show|list)\s+(?:me\s+)?(?:the\s+)?(?P<tier>.+?)\s*$", cmd_show),
     (r"^\s*(?:find|search|where is|look up)\s+(?P<term>.+?)\s*$", cmd_find),
